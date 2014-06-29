@@ -100,7 +100,7 @@ void ThreadSafeResourceManager::RegisterLoader(IResourceLoader* loader, const st
 	assert(mResourceLoaders.find(suffix) == mResourceLoaders.end() && "You are trying to add the same loader twice");
 	mResourceLoaders.insert(std::make_pair(suffix, loader));
 
-	if (loader->WatchForFileSystemChanges() && Configuration::ToBool("resources.developmentmode", false)) {
+	if (Configuration::ToBool("resources.developmentmode", false)) {
 		std::string str = "[^\\s]+\\.";
 		str += suffix;
 		str += "$";
