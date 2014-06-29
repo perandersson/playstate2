@@ -1,0 +1,462 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core\camera\Camera.h" />
+    <ClInclude Include="..\..\core\camera\Frustum.h" />
+    <ClInclude Include="..\..\core\camera\FrustumPlanes.h" />
+    <ClInclude Include="..\..\core\collision\AABB.h" />
+    <ClInclude Include="..\..\core\collision\CollisionResult.h" />
+    <ClInclude Include="..\..\core\configuration\Configuration.h" />
+    <ClInclude Include="..\..\core\configuration\IConfiguration.h" />
+    <ClInclude Include="..\..\core\configuration\lua\LuaConfiguration.h" />
+    <ClInclude Include="..\..\core\Exception.h" />
+    <ClInclude Include="..\..\core\filesystem\FileSystem.h" />
+    <ClInclude Include="..\..\core\filesystem\IDirectory.h" />
+    <ClInclude Include="..\..\core\filesystem\exception\FileException.h" />
+    <ClInclude Include="..\..\core\filesystem\IFile.h" />
+    <ClInclude Include="..\..\core\filesystem\IFileSystem.h" />
+    <ClInclude Include="..\..\core\filesystem\IFileChangedListener.h" />
+    <ClInclude Include="..\..\core\filesystem\win32\Win32Directory.h" />
+    <ClInclude Include="..\..\core\filesystem\win32\Win32File.h" />
+    <ClInclude Include="..\..\core\filesystem\win32\Win32FileSystem.h" />
+    <ClInclude Include="..\..\core\filesystem\win32\Win32FileWatcher.h" />
+    <ClInclude Include="..\..\core\font\Font.h" />
+    <ClInclude Include="..\..\core\font\FontAlign.h" />
+    <ClInclude Include="..\..\core\font\FontCharInfo.h" />
+    <ClInclude Include="..\..\core\font\TrueTypeFontResourceLoader.h" />
+    <ClInclude Include="..\..\core\game\Game.h" />
+    <ClInclude Include="..\..\core\game\IGame.h" />
+    <ClInclude Include="..\..\core\game\StandardGame.h" />
+    <ClInclude Include="..\..\core\input\IInputDevices.h" />
+    <ClInclude Include="..\..\core\input\InputDevices.h" />
+    <ClInclude Include="..\..\core\input\IKeyboardDevice.h" />
+    <ClInclude Include="..\..\core\input\IMouseDevice.h" />
+    <ClInclude Include="..\..\core\input\KeyboardKey.h" />
+    <ClInclude Include="..\..\core\input\MouseButton.h" />
+    <ClInclude Include="..\..\core\input\win32\Win32InputDevices.h" />
+    <ClInclude Include="..\..\core\input\win32\Win32KeyboardDevice.h" />
+    <ClInclude Include="..\..\core\input\win32\Win32MouseDevice.h" />
+    <ClInclude Include="..\..\core\integration\ActiveWindow_script.h" />
+    <ClInclude Include="..\..\core\integration\Camera_script.h" />
+    <ClInclude Include="..\..\core\integration\Component_script.h" />
+    <ClInclude Include="..\..\core\integration\Game_script.h" />
+    <ClInclude Include="..\..\core\integration\InputDevices_script.h" />
+    <ClInclude Include="..\..\core\integration\KeyboardDevice_script.h" />
+    <ClInclude Include="..\..\core\integration\LinkedListSceneGroup_script.h" />
+    <ClInclude Include="..\..\core\integration\MouseDevice_script.h" />
+    <ClInclude Include="..\..\core\integration\Music_script.h" />
+    <ClInclude Include="..\..\core\integration\PointLight_script.h" />
+    <ClInclude Include="..\..\core\integration\QuadTreeSceneGroup_script.h" />
+    <ClInclude Include="..\..\core\integration\RenderModelSceneNode_script.h" />
+    <ClInclude Include="..\..\core\integration\Resource_script.h" />
+    <ClInclude Include="..\..\core\integration\SceneGroup_script.h" />
+    <ClInclude Include="..\..\core\integration\SceneNode_script.h" />
+    <ClInclude Include="..\..\core\integration\Scene_script.h" />
+    <ClInclude Include="..\..\core\integration\SoundEffect_script.h" />
+    <ClInclude Include="..\..\core\integration\SoundEngine_script.h" />
+    <ClInclude Include="..\..\core\integration\SoundReceiver_script.h" />
+    <ClInclude Include="..\..\core\kernel\IKernel.h" />
+    <ClInclude Include="..\..\core\kernel\Kernel.h" />
+    <ClInclude Include="..\..\core\kernel\ThreadPool.h" />
+    <ClInclude Include="..\..\core\kernel\win32\Win32Kernel.h" />
+    <ClInclude Include="..\..\core\LinkedList.h" />
+    <ClInclude Include="..\..\core\logging\console\StdCoutLogger.h" />
+    <ClInclude Include="..\..\core\logging\ILogger.h" />
+    <ClInclude Include="..\..\core\logging\Logger.h" />
+    <ClInclude Include="..\..\core\math\Color.h" />
+    <ClInclude Include="..\..\core\math\MathUtils.h" />
+    <ClInclude Include="..\..\core\math\Matrix4x4.h" />
+    <ClInclude Include="..\..\core\math\Plane.h" />
+    <ClInclude Include="..\..\core\math\Point.h" />
+    <ClInclude Include="..\..\core\math\Quaternion.h" />
+    <ClInclude Include="..\..\core\math\Rect.h" />
+    <ClInclude Include="..\..\core\math\Vector2.h" />
+    <ClInclude Include="..\..\core\math\Vector3.h" />
+    <ClInclude Include="..\..\core\Memory.h" />
+    <ClInclude Include="..\..\core\MemoryPool.h" />
+    <ClInclude Include="..\..\core\model\Model.h" />
+    <ClInclude Include="..\..\core\model\ModelMesh.h" />
+    <ClInclude Include="..\..\core\model\ModelVertexTypeDeclaration.h" />
+    <ClInclude Include="..\..\core\model\PSMFResourceLoader.h" />
+    <ClInclude Include="..\..\core\model\WaveFrontResourceLoader.h" />
+    <ClInclude Include="..\..\core\playstate.h" />
+    <ClInclude Include="..\..\core\rendering\BlendFunc.h" />
+    <ClInclude Include="..\..\core\rendering\ClearType.h" />
+    <ClInclude Include="..\..\core\rendering\CullFace.h" />
+    <ClInclude Include="..\..\core\rendering\DepthFunc.h" />
+    <ClInclude Include="..\..\core\rendering\effect\DefaultUniform.h" />
+    <ClInclude Include="..\..\core\rendering\effect\Effect.h" />
+    <ClInclude Include="..\..\core\rendering\effect\EffectResourceLoader.h" />
+    <ClInclude Include="..\..\core\rendering\effect\EffectState.h" />
+    <ClInclude Include="..\..\core\rendering\effect\EffectXmlVisitor.h" />
+    <ClInclude Include="..\..\core\rendering\effect\FloatUniform.h" />
+    <ClInclude Include="..\..\core\rendering\effect\IntUniform.h" />
+    <ClInclude Include="..\..\core\rendering\effect\MatrixUniform.h" />
+    <ClInclude Include="..\..\core\rendering\effect\Sampler2DUniform.h" />
+    <ClInclude Include="..\..\core\rendering\effect\SamplerStateXmlVisitor.h" />
+    <ClInclude Include="..\..\core\rendering\effect\UniformNotFound.h" />
+    <ClInclude Include="..\..\core\rendering\effect\UniformProperty.h" />
+    <ClInclude Include="..\..\core\rendering\exception\RenderingException.h" />
+    <ClInclude Include="..\..\core\rendering\GeometryBuilder.h" />
+    <ClInclude Include="..\..\core\rendering\GraphicsCapabilities.h" />
+    <ClInclude Include="..\..\core\rendering\IndexBuffer.h" />
+    <ClInclude Include="..\..\core\rendering\IRenderContext.h" />
+    <ClInclude Include="..\..\core\rendering\MagFilter.h" />
+    <ClInclude Include="..\..\core\rendering\MinFilter.h" />
+    <ClInclude Include="..\..\core\rendering\PrimitiveType.h" />
+    <ClInclude Include="..\..\core\rendering\OpenGLRenderContext.h" />
+    <ClInclude Include="..\..\core\rendering\RenderContext.h" />
+    <ClInclude Include="..\..\core\rendering\RenderContextResourceLoader.h" />
+    <ClInclude Include="..\..\core\rendering\IRenderPipeline.h" />
+    <ClInclude Include="..\..\core\rendering\RenderState.h" />
+    <ClInclude Include="..\..\core\rendering\RenderTarget2D.h" />
+    <ClInclude Include="..\..\core\rendering\SamplerObject.h" />
+    <ClInclude Include="..\..\core\rendering\Texture.h" />
+    <ClInclude Include="..\..\core\rendering\Texture2D.h" />
+    <ClInclude Include="..\..\core\rendering\TextureFormat.h" />
+    <ClInclude Include="..\..\core\rendering\TextureResourceLoader.h" />
+    <ClInclude Include="..\..\core\rendering\TextureWrap.h" />
+    <ClInclude Include="..\..\core\rendering\IUniform.h" />
+    <ClInclude Include="..\..\core\rendering\VertexBuffer.h" />
+    <ClInclude Include="..\..\core\rendering\VertexType.h" />
+    <ClInclude Include="..\..\core\rendering\VertexTypes.h" />
+    <ClInclude Include="..\..\core\rendering\win32\Win32RenderContext.h" />
+    <ClInclude Include="..\..\core\resource\exception\LoadResourceException.h" />
+    <ClInclude Include="..\..\core\resource\exception\ResourceException.h" />
+    <ClInclude Include="..\..\core\resource\Resource.h" />
+    <ClInclude Include="..\..\core\resource\ResourceAccess.h" />
+    <ClInclude Include="..\..\core\resource\ResourceData.h" />
+    <ClInclude Include="..\..\core\resource\IResourceLoader.h" />
+    <ClInclude Include="..\..\core\resource\IResourceManager.h" />
+    <ClInclude Include="..\..\core\resource\ResourceManager.h" />
+    <ClInclude Include="..\..\core\resource\ResourceObject.h" />
+    <ClInclude Include="..\..\core\resource\threadsafe\ThreadSafeResourceManager.h" />
+    <ClInclude Include="..\..\core\scene\Component.h" />
+    <ClInclude Include="..\..\core\scene\Event.h" />
+    <ClInclude Include="..\..\core\scene\FindQuery.h" />
+    <ClInclude Include="..\..\core\scene\light\LightSource.h" />
+    <ClInclude Include="..\..\core\scene\light\LightSourceBlock.h" />
+    <ClInclude Include="..\..\core\scene\light\LightSourceResultSet.h" />
+    <ClInclude Include="..\..\core\scene\light\LightSourceBlockResultSetIterator.h" />
+    <ClInclude Include="..\..\core\scene\light\PointLight.h" />
+    <ClInclude Include="..\..\core\scene\LinkedListSceneGroup.h" />
+    <ClInclude Include="..\..\core\scene\QuadTreeSceneGroup.h" />
+    <ClInclude Include="..\..\core\scene\rendering\DefaultRenderBlockResultSetSorter.h" />
+    <ClInclude Include="..\..\core\scene\rendering\IRenderBlockSorter.h" />
+    <ClInclude Include="..\..\core\scene\rendering\Renderable.h" />
+    <ClInclude Include="..\..\core\scene\rendering\RenderBlock.h" />
+    <ClInclude Include="..\..\core\scene\rendering\RenderBlockResultSet.h" />
+    <ClInclude Include="..\..\core\scene\rendering\RenderBlockResultSetIterator.h" />
+    <ClInclude Include="..\..\core\scene\rendering\RenderModelSceneNode.h" />
+    <ClInclude Include="..\..\core\scene\Scene.h" />
+    <ClInclude Include="..\..\core\scene\SceneGroup.h" />
+    <ClInclude Include="..\..\core\scene\SceneNode.h" />
+    <ClInclude Include="..\..\core\scene\SpatialSceneNode.h" />
+    <ClInclude Include="..\..\core\scene\Tickable.h" />
+    <ClInclude Include="..\..\core\scene\tree\ISpatialTreeVisitor.h" />
+    <ClInclude Include="..\..\core\scene\tree\QuadTree.h" />
+    <ClInclude Include="..\..\core\scene\tree\ISpatialTree.h" />
+    <ClInclude Include="..\..\core\scene\Updatable.h" />
+    <ClInclude Include="..\..\core\script\ClassLoader.h" />
+    <ClInclude Include="..\..\core\script\lua\LuaScriptEnum.h" />
+    <ClInclude Include="..\..\core\script\IScriptEnum.h" />
+    <ClInclude Include="..\..\core\script\ScriptManager.h" />
+    <ClInclude Include="..\..\core\script\ScriptMethod.h" />
+    <ClInclude Include="..\..\core\script\Table.h" />
+    <ClInclude Include="..\..\core\script\exception\ScriptException.h" />
+    <ClInclude Include="..\..\core\script\exception\ScriptNotFoundException.h" />
+    <ClInclude Include="..\..\core\script\lua\LuaScriptFile.h" />
+    <ClInclude Include="..\..\core\script\lua\LuaScriptManager.h" />
+    <ClInclude Include="..\..\core\script\lua\LuaScriptType.h" />
+    <ClInclude Include="..\..\core\script\LuaStateScopedLock.h" />
+    <ClInclude Include="..\..\core\script\ScriptObject.h" />
+    <ClInclude Include="..\..\core\script\ScriptUtils.h" />
+    <ClInclude Include="..\..\core\script\IScriptFile.h" />
+    <ClInclude Include="..\..\core\script\IScriptManager.h" />
+    <ClInclude Include="..\..\core\script\IClassLoader.h" />
+    <ClInclude Include="..\..\core\script\ScriptResult.h" />
+    <ClInclude Include="..\..\core\script\IScriptType.h" />
+    <ClInclude Include="..\..\core\Singleton.h" />
+    <ClInclude Include="..\..\core\sound\exception\SoundException.h" />
+    <ClInclude Include="..\..\core\sound\Music.h" />
+    <ClInclude Include="..\..\core\sound\openal\OpenALMusic.h" />
+    <ClInclude Include="..\..\core\sound\openal\OpenALMusicResourceLoader.h" />
+    <ClInclude Include="..\..\core\sound\openal\OpenALSoundEffect.h" />
+    <ClInclude Include="..\..\core\sound\openal\OpenALSoundEffectResourceLoader.h" />
+    <ClInclude Include="..\..\core\sound\openal\OpenALSoundEngine.h" />
+    <ClInclude Include="..\..\core\sound\Sound.h" />
+    <ClInclude Include="..\..\core\sound\SoundEffect.h" />
+    <ClInclude Include="..\..\core\sound\ISoundEngine.h" />
+    <ClInclude Include="..\..\core\sound\ISoundReceiver.h" />
+    <ClInclude Include="..\..\core\sound\SoundEngine.h" />
+    <ClInclude Include="..\..\core\StringUtils.h" />
+    <ClInclude Include="..\..\core\ThreadLocal.h" />
+    <ClInclude Include="..\..\core\typedefs.h" />
+    <ClInclude Include="..\..\core\window\AlertType.h" />
+    <ClInclude Include="..\..\core\window\IActiveWindow.h" />
+    <ClInclude Include="..\..\core\window\ActiveWindow.h" />
+    <ClInclude Include="..\..\core\window\win32\Win32GLActiveWindow.h" />
+    <ClInclude Include="..\..\core\window\win32\Win32ActiveWindow.h" />
+    <ClInclude Include="..\..\core\window\win32\Win32ExternalWindow.h" />
+    <ClInclude Include="..\..\core\window\IWindowClosedListener.h" />
+    <ClInclude Include="..\..\core\window\IWindowResizedListener.h" />
+    <ClInclude Include="..\..\core\xml\TagsAndAttributes.h" />
+    <ClInclude Include="..\..\core\xml\XMLDefaultVisitor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\core\camera\Camera.cpp" />
+    <ClCompile Include="..\..\core\camera\Frustum.cpp" />
+    <ClCompile Include="..\..\core\collision\AABB.cpp" />
+    <ClCompile Include="..\..\core\configuration\Configuration.cpp" />
+    <ClCompile Include="..\..\core\configuration\lua\LuaConfiguration.cpp" />
+    <ClCompile Include="..\..\core\Exception.cpp" />
+    <ClCompile Include="..\..\core\filesystem\exception\FileException.cpp" />
+    <ClCompile Include="..\..\core\filesystem\FileSystem.cpp" />
+    <ClCompile Include="..\..\core\filesystem\win32\Win32Directory.cpp" />
+    <ClCompile Include="..\..\core\filesystem\win32\Win32File.cpp" />
+    <ClCompile Include="..\..\core\filesystem\win32\Win32FileSystem.cpp" />
+    <ClCompile Include="..\..\core\filesystem\win32\Win32FileWatcher.cpp" />
+    <ClCompile Include="..\..\core\font\Font.cpp" />
+    <ClCompile Include="..\..\core\font\TrueTypeFontResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\game\Game.cpp" />
+    <ClCompile Include="..\..\core\game\StandardGame.cpp" />
+    <ClCompile Include="..\..\core\input\InputDevices.cpp" />
+    <ClCompile Include="..\..\core\input\KeyboardKey.cpp" />
+    <ClCompile Include="..\..\core\input\MouseButton.cpp" />
+    <ClCompile Include="..\..\core\input\win32\Win32InputDevices.cpp" />
+    <ClCompile Include="..\..\core\input\win32\Win32KeyboardDevice.cpp" />
+    <ClCompile Include="..\..\core\input\win32\Win32MouseDevice.cpp" />
+    <ClCompile Include="..\..\core\integration\ActiveWindow_script.cpp" />
+    <ClCompile Include="..\..\core\integration\Camera_script.cpp" />
+    <ClCompile Include="..\..\core\integration\Component_script.cpp" />
+    <ClCompile Include="..\..\core\integration\Game_script.cpp" />
+    <ClCompile Include="..\..\core\integration\InputDevices_script.cpp" />
+    <ClCompile Include="..\..\core\integration\KeyboardDevice_script.cpp" />
+    <ClCompile Include="..\..\core\integration\LinkedListSceneGroup_script.cpp" />
+    <ClCompile Include="..\..\core\integration\MouseDevice_script.cpp" />
+    <ClCompile Include="..\..\core\integration\Music_script.cpp" />
+    <ClCompile Include="..\..\core\integration\PointLight_script.cpp" />
+    <ClCompile Include="..\..\core\integration\QuadTreeSceneGroup_script.cpp" />
+    <ClCompile Include="..\..\core\integration\RenderModelSceneNode_script.cpp" />
+    <ClCompile Include="..\..\core\integration\Resource_script.cpp" />
+    <ClCompile Include="..\..\core\integration\SceneGroup_script.cpp" />
+    <ClCompile Include="..\..\core\integration\SceneNode_script.cpp" />
+    <ClCompile Include="..\..\core\integration\Scene_script.cpp" />
+    <ClCompile Include="..\..\core\integration\SoundEffect_script.cpp" />
+    <ClCompile Include="..\..\core\integration\SoundEngine_script.cpp" />
+    <ClCompile Include="..\..\core\integration\SoundReceiver_script.cpp" />
+    <ClCompile Include="..\..\core\kernel\Kernel.cpp" />
+    <ClCompile Include="..\..\core\kernel\ThreadPool.cpp" />
+    <ClCompile Include="..\..\core\kernel\win32\Win32Kernel.cpp" />
+    <ClCompile Include="..\..\core\logging\console\StdCoutLogger.cpp" />
+    <ClCompile Include="..\..\core\logging\Logger.cpp" />
+    <ClCompile Include="..\..\core\math\Color.cpp" />
+    <ClCompile Include="..\..\core\math\MathUtils.cpp" />
+    <ClCompile Include="..\..\core\math\Matrix4x4.cpp" />
+    <ClCompile Include="..\..\core\math\Plane.cpp" />
+    <ClCompile Include="..\..\core\math\Point.cpp" />
+    <ClCompile Include="..\..\core\math\Quaternion.cpp" />
+    <ClCompile Include="..\..\core\math\Rect.cpp" />
+    <ClCompile Include="..\..\core\math\Vector2.cpp" />
+    <ClCompile Include="..\..\core\math\Vector3.cpp" />
+    <ClCompile Include="..\..\core\model\Model.cpp" />
+    <ClCompile Include="..\..\core\model\PSMFResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\model\WaveFrontResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\rendering\BlendFunc.cpp" />
+    <ClCompile Include="..\..\core\rendering\CullFace.cpp" />
+    <ClCompile Include="..\..\core\rendering\DepthFunc.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\DefaultUniform.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\Effect.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\EffectResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\EffectState.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\EffectXmlVisitor.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\FloatUniform.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\IntUniform.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\MatrixUniform.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\Sampler2DUniform.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\SamplerStateXmlVisitor.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\UniformNotFound.cpp" />
+    <ClCompile Include="..\..\core\rendering\exception\RenderingException.cpp" />
+    <ClCompile Include="..\..\core\rendering\IndexBuffer.cpp" />
+    <ClCompile Include="..\..\core\rendering\MagFilter.cpp" />
+    <ClCompile Include="..\..\core\rendering\MinFilter.cpp" />
+    <ClCompile Include="..\..\core\rendering\PrimitiveType.cpp" />
+    <ClCompile Include="..\..\core\rendering\OpenGLRenderContext.cpp" />
+    <ClCompile Include="..\..\core\rendering\RenderContext.cpp" />
+    <ClCompile Include="..\..\core\rendering\RenderContextResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\rendering\RenderState.cpp" />
+    <ClCompile Include="..\..\core\rendering\RenderTarget2D.cpp" />
+    <ClCompile Include="..\..\core\rendering\SamplerObject.cpp" />
+    <ClCompile Include="..\..\core\rendering\Texture.cpp" />
+    <ClCompile Include="..\..\core\rendering\Texture2D.cpp" />
+    <ClCompile Include="..\..\core\rendering\TextureResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\rendering\TextureWrap.cpp" />
+    <ClCompile Include="..\..\core\rendering\VertexBuffer.cpp" />
+    <ClCompile Include="..\..\core\rendering\VertexType.cpp" />
+    <ClCompile Include="..\..\core\rendering\win32\Win32RenderContext.cpp" />
+    <ClCompile Include="..\..\core\resource\exception\LoadResourceException.cpp" />
+    <ClCompile Include="..\..\core\resource\exception\ResourceException.cpp" />
+    <ClCompile Include="..\..\core\resource\ResourceManager.cpp" />
+    <ClCompile Include="..\..\core\resource\ResourceObject.cpp" />
+    <ClCompile Include="..\..\core\resource\threadsafe\ThreadSafeResourceManager.cpp" />
+    <ClCompile Include="..\..\core\scene\Component.cpp" />
+    <ClCompile Include="..\..\core\scene\light\LightSource.cpp" />
+    <ClCompile Include="..\..\core\scene\light\LightSourceResultSet.cpp" />
+    <ClCompile Include="..\..\core\scene\light\LightSourceBlockResultSetIterator.cpp" />
+    <ClCompile Include="..\..\core\scene\light\PointLight.cpp" />
+    <ClCompile Include="..\..\core\scene\LinkedListSceneGroup.cpp" />
+    <ClCompile Include="..\..\core\scene\QuadTreeSceneGroup.cpp" />
+    <ClCompile Include="..\..\core\scene\rendering\DefaultRenderBlockResultSetSorter.cpp" />
+    <ClCompile Include="..\..\core\scene\rendering\Renderable.cpp" />
+    <ClCompile Include="..\..\core\scene\rendering\RenderBlockResultSet.cpp" />
+    <ClCompile Include="..\..\core\scene\rendering\RenderBlockResultSetIterator.cpp" />
+    <ClCompile Include="..\..\core\scene\rendering\RenderModelSceneNode.cpp" />
+    <ClCompile Include="..\..\core\scene\Scene.cpp" />
+    <ClCompile Include="..\..\core\scene\SceneGroup.cpp" />
+    <ClCompile Include="..\..\core\scene\SceneNode.cpp" />
+    <ClCompile Include="..\..\core\scene\SpatialSceneNode.cpp" />
+    <ClCompile Include="..\..\core\scene\Tickable.cpp" />
+    <ClCompile Include="..\..\core\scene\tree\QuadTree.cpp" />
+    <ClCompile Include="..\..\core\scene\Udatable.cpp" />
+    <ClCompile Include="..\..\core\script\ClassLoader.cpp" />
+    <ClCompile Include="..\..\core\script\lua\LuaScriptEnum.cpp" />
+    <ClCompile Include="..\..\core\script\ScriptManager.cpp" />
+    <ClCompile Include="..\..\core\script\ScriptMethod.cpp" />
+    <ClCompile Include="..\..\core\script\Table.cpp" />
+    <ClCompile Include="..\..\core\script\exception\ScriptException.cpp" />
+    <ClCompile Include="..\..\core\script\exception\ScriptNotFoundException.cpp" />
+    <ClCompile Include="..\..\core\script\lua\LuaScriptFile.cpp" />
+    <ClCompile Include="..\..\core\script\lua\LuaScriptManager.cpp" />
+    <ClCompile Include="..\..\core\script\lua\LuaScriptType.cpp" />
+    <ClCompile Include="..\..\core\script\LuaStateScopedLock.cpp" />
+    <ClCompile Include="..\..\core\script\ScriptObject.cpp" />
+    <ClCompile Include="..\..\core\script\ScriptUtils.cpp" />
+    <ClCompile Include="..\..\core\script\ScriptResult.cpp" />
+    <ClCompile Include="..\..\core\sound\exception\SoundException.cpp" />
+    <ClCompile Include="..\..\core\sound\Music.cpp" />
+    <ClCompile Include="..\..\core\sound\openal\OpenALMusic.cpp" />
+    <ClCompile Include="..\..\core\sound\openal\OpenALMusicResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\sound\openal\OpenALSoundEffect.cpp" />
+    <ClCompile Include="..\..\core\sound\openal\OpenALSoundEffectResourceLoader.cpp" />
+    <ClCompile Include="..\..\core\sound\openal\OpenALSoundEngine.cpp" />
+    <ClCompile Include="..\..\core\sound\Sound.cpp" />
+    <ClCompile Include="..\..\core\sound\SoundEffect.cpp" />
+    <ClCompile Include="..\..\core\sound\SoundEngine.cpp" />
+    <ClCompile Include="..\..\core\window\ActiveWindow.cpp" />
+    <ClCompile Include="..\..\core\window\win32\Win32GLActiveWindow.cpp" />
+    <ClCompile Include="..\..\core\window\win32\Win32ActiveWindow.cpp" />
+    <ClCompile Include="..\..\core\window\win32\Win32ExternalWindow.cpp" />
+    <ClCompile Include="..\..\core\xml\XMLDefaultVisitor.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9E3A0758-7E01-4FC5-8C5F-F41A6DA8E767}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>core</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)../../bin/</OutDir>
+    <IntDir>$(SolutionDir)../../bin/$(Configuration)/$(ProjectName)/intermediate/</IntDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)../../bin/</OutDir>
+    <IntDir>$(SolutionDir)../../bin/$(Configuration)/$(ProjectName)/intermediate/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../3rdparty/tinyxml2/include;../../3rdparty/glew-1.9.0/include;../../3rdparty/FreeImage/include;../../3rdparty/openal-soft/include;../../3rdparty/libvorbis/include;../../3rdparty/libogg/include;../../3rdparty/lua-5.2.3/include;../../3rdparty/freetype-2.4.11/include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Link>
+    <Lib>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
+      <Inputs>
+      </Inputs>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../3rdparty/tinyxml2/include;../../3rdparty/glew-1.9.0/include;../../3rdparty/FreeImage/include;../../3rdparty/openal-soft/include;../../3rdparty/libvorbis/include;../../3rdparty/libogg/include;../../3rdparty/lua-5.2.3/include;../../3rdparty/freetype-2.4.11/include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

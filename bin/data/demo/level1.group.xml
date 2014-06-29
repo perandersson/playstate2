@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Group Type="core:LinkedListSceneGroup" Id="level1">
+	<Position>0 0 0</Position>
+	<QuadTree>
+		<Width>1100.0</Width>
+		<Height>1100.0</Height>
+		<MaxDepth>3</MaxDepth>
+	</QuadTree>
+	<Nodes>
+		<Node Id="nodeId1">
+			<Position>0 0 0</Position>
+			<Components>
+				<Component Type="demo:MovePlayerComponent">
+					<Speed>10.0</Speed>
+					<SoundEffects>
+						<SoundEffect>/game/sound/soundeffects/footstep0.wav</SoundEffect>
+						<SoundEffect>/game/sound/soundeffects/footstep1.wav</SoundEffect>
+					</SoundEffects>
+				</Component>
+				<Component Type="core:RenderModel">
+					<Path>/game/models/player/player.obj</Path>
+				</Component>
+				<Component Type="demo:FollowCameraComponent" />
+				<Component Type="core:PointLight">
+					<Color>1.0 0.8 0.4 1.0</Color>
+					<Radius>10.0</Radius>
+					<ConstantAttenuation>0.0</ConstantAttenuation>
+					<LinearAttenuation>0.0</LinearAttenuation>
+					<QuadricAttenuation>0.0</QuadricAttenuation>
+				</Component>
+			</Components>
+		</Node>
+		<Node Id="nodeId2">
+			<Position>20 0 20</Position>
+			<Components>
+				<Component Type="core:RenderModel">
+					<Path>/game/models/chinalamp/China_lampEX.obj</Path>
+				</Component>
+			</Components>
+			<Nodes>
+				<Node>
+					<Position>0 5 0</Position>
+					<Components>
+						<Component Type="core:PointLight">
+							<Color>0.0 0.2 0.1 1.0</Color>
+							<Radius>10.0</Radius>
+							<ConstantAttenuation>0.0</ConstantAttenuation>
+							<LinearAttenuation>0.0</LinearAttenuation>
+							<QuadricAttenuation>0.0</QuadricAttenuation>
+						</Component>
+					</Components>
+				</Node>
+			</Nodes>
+		</Node>
+		<Node Type="core:SceneNode" Id="nodeId2">
+			<Components>
+				<Component Type="core:Scriptable">
+					<Path>/game/script/MovePlayerComponent.as</Path>
+				</Component>
+			</Components>
+		</Node>
+		<Node Id="nodeId3">
+			<Components>
+				<Component Type="core:Scriptable">
+					<Path>/path/to/script.lua</Path>
+				</Component>
+			</Components>
+		</Node>
+	</Nodes>
+</Group>

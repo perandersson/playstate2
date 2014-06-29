@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Effect>
+	<DepthTest>false</DepthTest>
+	<VertexShader>
+	<![CDATA[
+		#version 330
+
+		uniform mat4 ProjectionMatrix;
+		
+		layout(location = 0) in vec3 position;
+		layout(location = 2) in vec2 texcoord;
+
+		out vec2 uvCoords;
+
+		void main()
+		{
+			gl_Position = ProjectionMatrix * vec4(position.x, position.y, -1.0, 1.0);
+			uvCoords = texcoord;
+		}
+	]]>
+	</VertexShader>
+	<SamplerState Id="DiffuseTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<SamplerState Id="NormalsTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<FragmentShader>
+	<![CDATA[
+		#version 330
+
+		uniform sampler2D PositionsTexture;
+		uniform sampler2D DiffuseTexture;
+		uniform sampler2D NormalsTexture;
+		uniform sampler2D LightTexture;
+
+		uniform vec3 AmbientColor;
+
+		in vec2 uvCoords;
+
+		void main()
+		{
+			vec4 image = texture2D(DiffuseTexture, uvCoords);
+			
+			vec3 position = texture2D(PositionsTexture, uvCoords).xyz;
+			vec3 normal = texture2D(NormalsTexture, uvCoords).xyz;
+			normal = normalize(normal);
+			
+			//image *= texture2D(LightTexture, uvCoords);
+			vec4 light = texture2D(LightTexture, uvCoords);
+			gl_FragColor = (image + vec4(AmbientColor, 1.0)) * (light + vec4(AmbientColor, 1.0));
+			//gl_FragColor = image;
+			//gl_FragColor = vec4(normal, 1.0);
+		}
+	]]>
+	</FragmentShader>
+</Effect>

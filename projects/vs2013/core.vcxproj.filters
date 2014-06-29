@@ -1,0 +1,1163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\resource">
+      <UniqueIdentifier>{cb57b4ab-2e0a-4655-9486-0e6751546713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resource\exception">
+      <UniqueIdentifier>{bfcb4535-4655-4249-ab8b-9934a899d120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resource\threadsafe">
+      <UniqueIdentifier>{cbbd633e-a5a5-47b0-b2eb-32196ca455ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\window">
+      <UniqueIdentifier>{0531a9b4-19de-4809-91af-8afe3ef927e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering">
+      <UniqueIdentifier>{2296b5e2-01eb-448e-9274-88b6b97b8450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\window\win32">
+      <UniqueIdentifier>{f0a1d87f-f217-47f3-b81b-03860c8f3008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{e0c6d491-4ebe-430d-8c64-0dbdf28e2f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{1071d1e3-3ca5-40ce-bbe8-50dff1d4fb43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering\exception">
+      <UniqueIdentifier>{62031605-9a86-40af-a14c-ea794ccfbec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{c74b287a-835c-452f-be12-20898b2979fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene\light">
+      <UniqueIdentifier>{4680a41a-1f57-4f67-97de-60b656dc8722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene\rendering">
+      <UniqueIdentifier>{06fcf34e-15f8-49e7-a668-fdb9210351e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{dbe23948-cbf8-4cc0-8ed6-680afee90d14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\collision">
+      <UniqueIdentifier>{9943fa1a-8f3b-4242-b8f1-1cc08302ff40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\logging">
+      <UniqueIdentifier>{0508c017-487c-4b72-be64-95446503ce0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\logging\console">
+      <UniqueIdentifier>{0d7c98bf-518e-4b32-af8c-571d8dd11adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{b0072ff8-9376-4eb2-8bcc-e2ec5b62c7ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering\win32">
+      <UniqueIdentifier>{06571a21-dc06-4e11-8e0f-6bd9aabbc89e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input">
+      <UniqueIdentifier>{368a3d16-c4ed-45a5-8da2-96f3f55fe28a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input\win32">
+      <UniqueIdentifier>{535e00f3-37b6-4551-826b-33f684c7f6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sound">
+      <UniqueIdentifier>{7fbe9c5f-9b78-410f-9022-b3439540a8bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sound\openal">
+      <UniqueIdentifier>{a584dd0c-344e-4504-9ef1-598fcec4d233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sound\exception">
+      <UniqueIdentifier>{fcd49322-3fe0-44b4-9579-66f71da35076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\script">
+      <UniqueIdentifier>{e4986e97-0892-4519-b790-4590bd73c806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\script\exception">
+      <UniqueIdentifier>{46701004-f8f9-441e-b32b-c7021451781d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\script\lua">
+      <UniqueIdentifier>{0a896a60-8a58-4bfc-991f-f5111e8d18bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\xml">
+      <UniqueIdentifier>{8efccd08-6963-4ccf-a398-b8c3ce1ead04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\configuration">
+      <UniqueIdentifier>{ba10bbed-badf-4ad7-bf3f-3cdcc824b6cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\filesystem">
+      <UniqueIdentifier>{e74432ec-52b8-4131-bbb5-95923957d0c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\filesystem\win32">
+      <UniqueIdentifier>{9ecd41d3-7684-4e3d-8894-de311bc149e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\filesystem\exception">
+      <UniqueIdentifier>{d6a44d96-6380-4fa9-aab4-9211da0192d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\configuration\lua">
+      <UniqueIdentifier>{2d65d493-d1a2-45be-b093-d2bd033f3c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\kernel">
+      <UniqueIdentifier>{d9c51e6d-0342-4231-b98a-1a7073a46e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\kernel\win32">
+      <UniqueIdentifier>{52e30b84-1a6b-41e3-9dcf-9790a891be6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\integration">
+      <UniqueIdentifier>{079235a9-54a3-4004-bc3c-c3440b015b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\font">
+      <UniqueIdentifier>{410a0e60-7488-4b2e-91aa-99859963ad14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering\effect">
+      <UniqueIdentifier>{ce53b46b-664a-410c-b0ad-31890657b24f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene\tree">
+      <UniqueIdentifier>{9b71548a-205b-4bab-aacf-49289813441e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core\playstate.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\typedefs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\camera\Camera.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\camera\Frustum.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\collision\AABB.h">
+      <Filter>Source Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\collision\CollisionResult.h">
+      <Filter>Source Files\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\camera\FrustumPlanes.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\configuration\IConfiguration.h">
+      <Filter>Source Files\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\configuration\Configuration.h">
+      <Filter>Source Files\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\game\IGame.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\game\Game.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\game\StandardGame.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\IInputDevices.h">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\InputDevices.h">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\IKeyboardDevice.h">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\IMouseDevice.h">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\KeyboardKey.h">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\MouseButton.h">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\win32\Win32InputDevices.h">
+      <Filter>Source Files\input\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\win32\Win32KeyboardDevice.h">
+      <Filter>Source Files\input\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\input\win32\Win32MouseDevice.h">
+      <Filter>Source Files\input\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\exception\FileException.h">
+      <Filter>Source Files\filesystem\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\IDirectory.h">
+      <Filter>Source Files\filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\IFile.h">
+      <Filter>Source Files\filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\IFileChangedListener.h">
+      <Filter>Source Files\filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\IFileSystem.h">
+      <Filter>Source Files\filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\FileSystem.h">
+      <Filter>Source Files\filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\win32\Win32FileSystem.h">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\win32\Win32FileWatcher.h">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\win32\Win32File.h">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\win32\Win32Directory.h">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\logging\ILogger.h">
+      <Filter>Source Files\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\logging\Logger.h">
+      <Filter>Source Files\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\logging\console\StdCoutLogger.h">
+      <Filter>Source Files\logging\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Color.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\MathUtils.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Matrix4x4.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Plane.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Point.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Quaternion.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Rect.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Vector2.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\math\Vector3.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\model\Model.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\model\ModelMesh.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\model\ModelVertexTypeDeclaration.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\model\PSMFResourceLoader.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\model\WaveFrontResourceLoader.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\StringUtils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\RenderContextResourceLoader.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\MinFilter.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\MagFilter.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\IndexBuffer.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\VertexBuffer.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\VertexType.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\PrimitiveType.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\VertexTypes.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\IUniform.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\Texture2D.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\TextureWrap.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\TextureResourceLoader.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\TextureFormat.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\Texture.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\SamplerObject.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\RenderTarget2D.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\IRenderPipeline.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\GraphicsCapabilities.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\DepthFunc.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\CullFace.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\ClearType.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\BlendFunc.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\win32\Win32RenderContext.h">
+      <Filter>Source Files\rendering\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\ResourceData.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\IResourceLoader.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\Resource.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\IResourceManager.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\ResourceManager.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\ResourceObject.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\ResourceAccess.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\exception\ResourceException.h">
+      <Filter>Source Files\resource\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\exception\LoadResourceException.h">
+      <Filter>Source Files\resource\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\resource\threadsafe\ThreadSafeResourceManager.h">
+      <Filter>Source Files\resource\threadsafe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\light\PointLight.h">
+      <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\LinkedList.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\ThreadLocal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\MemoryPool.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\Exception.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\Singleton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\xml\XMLDefaultVisitor.h">
+      <Filter>Source Files\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\xml\TagsAndAttributes.h">
+      <Filter>Source Files\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\IWindowResizedListener.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\IWindowClosedListener.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\IActiveWindow.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\AlertType.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\win32\Win32ExternalWindow.h">
+      <Filter>Source Files\window\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\win32\Win32ActiveWindow.h">
+      <Filter>Source Files\window\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\exception\RenderingException.h">
+      <Filter>Source Files\rendering\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\ISoundReceiver.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\ISoundEngine.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\SoundEffect.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\Sound.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\Music.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\SoundEngine.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\openal\OpenALSoundEngine.h">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\openal\OpenALMusic.h">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\openal\OpenALMusicResourceLoader.h">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\openal\OpenALSoundEffect.h">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\openal\OpenALSoundEffectResourceLoader.h">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\sound\exception\SoundException.h">
+      <Filter>Source Files\sound\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\ScriptUtils.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\IScriptType.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\Table.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\IScriptManager.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\IScriptFile.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\IScriptEnum.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\LuaStateScopedLock.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\lua\LuaScriptEnum.h">
+      <Filter>Source Files\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\lua\LuaScriptType.h">
+      <Filter>Source Files\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\ScriptObject.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\Updatable.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\Tickable.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\SceneNode.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\SceneGroup.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\Scene.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\FindQuery.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\Event.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\Component.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\ScriptMethod.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\ScriptResult.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\configuration\lua\LuaConfiguration.h">
+      <Filter>Source Files\configuration\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\lua\LuaScriptManager.h">
+      <Filter>Source Files\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\exception\ScriptException.h">
+      <Filter>Source Files\script\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\exception\ScriptNotFoundException.h">
+      <Filter>Source Files\script\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\lua\LuaScriptFile.h">
+      <Filter>Source Files\script\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\ScriptManager.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\LinkedListSceneGroup.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\QuadTreeSceneGroup.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\kernel\IKernel.h">
+      <Filter>Source Files\kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\kernel\Kernel.h">
+      <Filter>Source Files\kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\kernel\win32\Win32Kernel.h">
+      <Filter>Source Files\kernel\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\IClassLoader.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\script\ClassLoader.h">
+      <Filter>Source Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\Game_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\ActiveWindow_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\Music_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\SoundEffect_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\SoundEngine_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\SoundReceiver_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\Component_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\Scene_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\InputDevices_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\KeyboardDevice_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\MouseDevice_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\SceneGroup_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\LinkedListSceneGroup_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\SceneNode_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\PointLight_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\Resource_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\Camera_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\win32\Win32GLActiveWindow.h">
+      <Filter>Source Files\window\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\ActiveWindow.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\font\Font.h">
+      <Filter>Source Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\font\FontCharInfo.h">
+      <Filter>Source Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\font\TrueTypeFontResourceLoader.h">
+      <Filter>Source Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\font\FontAlign.h">
+      <Filter>Source Files\font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\DefaultUniform.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\Effect.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\EffectResourceLoader.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\EffectState.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\FloatUniform.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\IntUniform.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\MatrixUniform.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\Sampler2DUniform.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\UniformNotFound.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\EffectXmlVisitor.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\SamplerStateXmlVisitor.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\UniformProperty.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\IRenderContext.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\OpenGLRenderContext.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\RenderContext.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\RenderState.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\tree\ISpatialTree.h">
+      <Filter>Source Files\scene\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\tree\QuadTree.h">
+      <Filter>Source Files\scene\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\tree\ISpatialTreeVisitor.h">
+      <Filter>Source Files\scene\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\QuadTreeSceneGroup_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\SpatialSceneNode.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\rendering\RenderModelSceneNode.h">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\RenderModelSceneNode_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\rendering\Renderable.h">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\light\LightSource.h">
+      <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\light\LightSourceBlock.h">
+      <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\light\LightSourceResultSet.h">
+      <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\rendering\RenderBlock.h">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\rendering\RenderBlockResultSet.h">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\GeometryBuilder.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\Memory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\rendering\DefaultRenderBlockResultSetSorter.h">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\rendering\RenderBlockResultSetIterator.h">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\rendering\IRenderBlockSorter.h">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\light\LightSourceBlockResultSetIterator.h">
+      <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\kernel\ThreadPool.h">
+      <Filter>Source Files\kernel</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\core\camera\Camera.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\camera\Frustum.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\collision\AABB.cpp">
+      <Filter>Source Files\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\configuration\Configuration.cpp">
+      <Filter>Source Files\configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\game\Game.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\game\StandardGame.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\input\InputDevices.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\input\win32\Win32InputDevices.cpp">
+      <Filter>Source Files\input\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\input\win32\Win32KeyboardDevice.cpp">
+      <Filter>Source Files\input\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\input\win32\Win32MouseDevice.cpp">
+      <Filter>Source Files\input\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\filesystem\exception\FileException.cpp">
+      <Filter>Source Files\filesystem\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\filesystem\FileSystem.cpp">
+      <Filter>Source Files\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\filesystem\win32\Win32FileSystem.cpp">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\filesystem\win32\Win32FileWatcher.cpp">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\filesystem\win32\Win32File.cpp">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\filesystem\win32\Win32Directory.cpp">
+      <Filter>Source Files\filesystem\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\logging\Logger.cpp">
+      <Filter>Source Files\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\logging\console\StdCoutLogger.cpp">
+      <Filter>Source Files\logging\console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Color.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\MathUtils.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Matrix4x4.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Plane.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Point.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Quaternion.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Rect.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Vector2.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\math\Vector3.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\model\Model.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\model\PSMFResourceLoader.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\model\WaveFrontResourceLoader.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\RenderContextResourceLoader.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\MinFilter.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\MagFilter.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\IndexBuffer.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\VertexBuffer.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\VertexType.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\PrimitiveType.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\Texture2D.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\TextureWrap.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\TextureResourceLoader.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\Texture.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\SamplerObject.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\RenderTarget2D.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\DepthFunc.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\CullFace.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\BlendFunc.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\win32\Win32RenderContext.cpp">
+      <Filter>Source Files\rendering\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\resource\ResourceObject.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\resource\ResourceManager.cpp">
+      <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\resource\exception\ResourceException.cpp">
+      <Filter>Source Files\resource\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\resource\exception\LoadResourceException.cpp">
+      <Filter>Source Files\resource\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\resource\threadsafe\ThreadSafeResourceManager.cpp">
+      <Filter>Source Files\resource\threadsafe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\light\PointLight.cpp">
+      <Filter>Source Files\scene\light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\xml\XMLDefaultVisitor.cpp">
+      <Filter>Source Files\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\window\win32\Win32ExternalWindow.cpp">
+      <Filter>Source Files\window\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\window\win32\Win32ActiveWindow.cpp">
+      <Filter>Source Files\window\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\exception\RenderingException.cpp">
+      <Filter>Source Files\rendering\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\SoundEffect.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\Sound.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\Music.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\SoundEngine.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\openal\OpenALSoundEngine.cpp">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\openal\OpenALMusic.cpp">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\openal\OpenALMusicResourceLoader.cpp">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\openal\OpenALSoundEffect.cpp">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\openal\OpenALSoundEffectResourceLoader.cpp">
+      <Filter>Source Files\sound\openal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\sound\exception\SoundException.cpp">
+      <Filter>Source Files\sound\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\ScriptUtils.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\Table.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\LuaStateScopedLock.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\lua\LuaScriptEnum.cpp">
+      <Filter>Source Files\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\lua\LuaScriptType.cpp">
+      <Filter>Source Files\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\ScriptObject.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\Udatable.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\Tickable.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\SceneNode.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\SceneGroup.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\Scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\Component.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\ScriptMethod.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\ScriptResult.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\configuration\lua\LuaConfiguration.cpp">
+      <Filter>Source Files\configuration\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\lua\LuaScriptManager.cpp">
+      <Filter>Source Files\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\exception\ScriptException.cpp">
+      <Filter>Source Files\script\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\exception\ScriptNotFoundException.cpp">
+      <Filter>Source Files\script\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\lua\LuaScriptFile.cpp">
+      <Filter>Source Files\script\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\ScriptManager.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\LinkedListSceneGroup.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\QuadTreeSceneGroup.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\kernel\Kernel.cpp">
+      <Filter>Source Files\kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\kernel\win32\Win32Kernel.cpp">
+      <Filter>Source Files\kernel\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\script\ClassLoader.cpp">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\Game_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\ActiveWindow_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\Music_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\SoundEffect_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\SoundEngine_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\SoundReceiver_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\Component_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\Scene_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\InputDevices_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\KeyboardDevice_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\MouseDevice_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\SceneGroup_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\LinkedListSceneGroup_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\SceneNode_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\PointLight_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\Resource_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\Camera_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\window\win32\Win32GLActiveWindow.cpp">
+      <Filter>Source Files\window\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\window\ActiveWindow.cpp">
+      <Filter>Source Files\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\input\MouseButton.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\input\KeyboardKey.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\font\Font.cpp">
+      <Filter>Source Files\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\font\TrueTypeFontResourceLoader.cpp">
+      <Filter>Source Files\font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\DefaultUniform.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\Effect.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\EffectResourceLoader.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\EffectState.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\FloatUniform.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\IntUniform.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\MatrixUniform.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\Sampler2DUniform.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\UniformNotFound.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\EffectXmlVisitor.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\SamplerStateXmlVisitor.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\OpenGLRenderContext.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\RenderContext.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\RenderState.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\tree\QuadTree.cpp">
+      <Filter>Source Files\scene\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\QuadTreeSceneGroup_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\SpatialSceneNode.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\rendering\RenderModelSceneNode.cpp">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\RenderModelSceneNode_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\rendering\Renderable.cpp">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\light\LightSource.cpp">
+      <Filter>Source Files\scene\light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\light\LightSourceResultSet.cpp">
+      <Filter>Source Files\scene\light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\rendering\RenderBlockResultSet.cpp">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\rendering\DefaultRenderBlockResultSetSorter.cpp">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\rendering\RenderBlockResultSetIterator.cpp">
+      <Filter>Source Files\scene\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\light\LightSourceBlockResultSetIterator.cpp">
+      <Filter>Source Files\scene\light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\kernel\ThreadPool.cpp">
+      <Filter>Source Files\kernel</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
