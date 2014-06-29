@@ -13,8 +13,6 @@ namespace core
 		Sampler2DUniform(const Effect* effect, RenderState* state, GLint componentID, uint32 textureIndex, SamplerObject* samplerObject);
 		virtual ~Sampler2DUniform();
 		
-	// IGfxProgramComponent
-	public:
 		virtual void Apply();
 		virtual void SetTexture(const Texture2D* texture);
 		virtual void SetTexture(const RenderTarget2D* texture);

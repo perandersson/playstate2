@@ -354,5 +354,6 @@ namespace core
 		EffectStates mEffectStates;
 		uint32 mNextTextureIndex;
 		GLuint mMaxTextureIndexes;
+		bool mEffectApplied;
 	};
 }

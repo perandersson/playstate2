@@ -20,7 +20,7 @@ mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
 mActiveTextureIndex(0),
 mDepthRenderTarget(nullptr), mDepthRenderTargetType(GL_DEPTH_ATTACHMENT), mDepthRenderTargetUID(0), mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
-mNextTextureIndex(0), mMaxTextureIndexes(0)
+mNextTextureIndex(0), mMaxTextureIndexes(0), mEffectApplied(false)
 {
 	memset(mTextureUID, 0, sizeof(mTextureUID));
 	memset(mTextureTarget, 0, sizeof(mTextureTarget));
@@ -48,6 +48,7 @@ mNextTextureIndex(0), mMaxTextureIndexes(0)
 RenderState::~RenderState()
 {
 	if (mFrameBufferID != 0) {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glDeleteFramebuffers(1, &mFrameBufferID);
 		mFrameBufferID = 0;
 	}
@@ -79,6 +80,10 @@ void RenderState::Clear(uint32 clearBits)
 
 	if (clear != 0)
 		glClear(clear);
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not clear the screen");
 }
 
 EffectState* RenderState::BindEffect(const Effect* effect)
@@ -88,8 +93,16 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	if (uid == mEffectUID)
 		return mEffectState;
 
+	// Find the appropriate effect state
+	mEffectState = GetEffectState(effect);
+	mEffectApplied = false;
+
 	glUseProgram(effect->GetProgramID());
 	mEffectUID = uid;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render faces on the screen");
 
 	//
 	// Set this render state's properties based on the supplied effect
@@ -113,8 +126,9 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	SetDepthRenderTarget(effect->GetDepthRenderTarget());
 	ApplyRenderTargets();
 
-	mEffectState = GetEffectState(effect);
-	mEffectState->ApplyUniforms();
+	// Apply the effects various uniform variables
+	//mEffectState->ApplyUniforms();
+	//mEffectApplied = true;
 
 	return mEffectState;
 }
@@ -145,6 +159,11 @@ void RenderState::Render(const VertexBuffer* buffer, const IndexBuffer* indexBuf
 		buffer->Render(indexBuffer, startIndex);
 	else
 		buffer->Render(startIndex);
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not render index and vertex buffers");
+
 }
 
 void RenderState::Render(const VertexBuffer* buffer, const IndexBuffer* indexBuffer, uint32 startIndex, uint32 numVertices)
@@ -170,9 +189,17 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 	if (mVertexArrayID == 0) {
 		glGenVertexArrays(1, &mVertexArrayID);
 		glBindVertexArray(mVertexArrayID);
+
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+			THROW_EXCEPTION(RenderingException, "Could not bind the newly vertex array");
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetBufferID());
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not bind the supplied vertex buffer");
 
 	//
 	// Calculate the object's stride
@@ -231,6 +258,10 @@ void RenderState::BindIndexBuffer(const IndexBuffer* indexBuffer)
 	const GLuint bufferID = indexBuffer == nullptr ? indexBuffer->GetBufferID() : 0;
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
 	mIndexBufferUID = uid;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not bind the supplied index buffer");
 }
 
 void RenderState::SetViewport(const Rect& viewport)
@@ -239,6 +270,10 @@ void RenderState::SetViewport(const Rect& viewport)
 		glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
 		mViewport = viewport;
 	}
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not set the screen viewport");
 }
 
 void RenderState::SetDepthTest(bool enable)
@@ -251,6 +286,10 @@ void RenderState::SetDepthTest(bool enable)
 	else
 		glDisable(GL_DEPTH_TEST);
 	mDepthTest = enable;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not enable/disable depth testing");
 }
 
 void RenderState::SetDepthFunc(DepthFunc::Enum func)
@@ -260,6 +299,10 @@ void RenderState::SetDepthFunc(DepthFunc::Enum func)
 
 	glDepthFunc(GetDepthFuncAsEnum(func));
 	mDepthFunc = func;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not set the depth function used when render faces on the screen");
 }
 
 void RenderState::SetBlend(bool enable)
@@ -272,6 +315,10 @@ void RenderState::SetBlend(bool enable)
 	else
 		glDisable(GL_BLEND);
 	mBlend = enable;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not enable/disable blending");
 }
 
 void RenderState::SetBlendFunc(SrcFactor::Enum sfactor, DestFactor::Enum dfactor)
@@ -282,6 +329,10 @@ void RenderState::SetBlendFunc(SrcFactor::Enum sfactor, DestFactor::Enum dfactor
 	glBlendFunc(GetSrcFactorAsEnum(sfactor), GetDestFactorAsEnum(dfactor));
 	mBlendFunc.sfactor = sfactor;
 	mBlendFunc.dfactor = dfactor;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not change the blend functions the cull faces used when render faces on the screen");
 }
 
 void RenderState::SetCullFace(CullFace::Enum cullFace)
@@ -298,6 +349,10 @@ void RenderState::SetCullFace(CullFace::Enum cullFace)
 		glCullFace(GL_BACK);
 	}
 	mCullFace = cullFace;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not change the cull faces used when render faces on the screen");
 }
 
 void RenderState::SetClearColor(const Color& color)
@@ -307,6 +362,10 @@ void RenderState::SetClearColor(const Color& color)
 
 	glClearColor(color.r, color.g, color.b, color.a);
 	mClearColor = color;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not set the colors used whenever clearing the screen");
 }
 
 void RenderState::SetClearDepth(float32 depth)
@@ -316,6 +375,10 @@ void RenderState::SetClearDepth(float32 depth)
 
 	glClearDepth(depth);
 	mClearDepth = depth;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not change the clearing depth");
 }
 
 void RenderState::BindTexture(const Texture* texture, uint32 index)
@@ -324,6 +387,10 @@ void RenderState::BindTexture(const Texture* texture, uint32 index)
 	if (mActiveTextureIndex != index) {
 		glActiveTexture(GL_TEXTURE0 + index);
 		mActiveTextureIndex = index;
+
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+			THROW_EXCEPTION(RenderingException, "Could not activate texture index: %d", index);
 	}
 
 	const uint32 uid = texture != nullptr ? texture->GetUID() : 0;
@@ -336,6 +403,10 @@ void RenderState::BindTexture(const Texture* texture, uint32 index)
 
 	mTextureUID[index] = uid;
 	mTextureTarget[index] = textureTarget;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not bind texture");
 }
 
 void RenderState::BindSampler(SamplerObject* samplerObject, uint32 index)
@@ -347,6 +418,10 @@ void RenderState::BindSampler(SamplerObject* samplerObject, uint32 index)
 	const GLuint samplerID = samplerObject != nullptr ? samplerObject->GetSamplerID() : 0;
 	glBindSampler(index, samplerID);
 	mSamplerObjectUID[index] = uid;
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not bind the texture sampler object");
 }
 
 void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, GLenum index)
@@ -407,9 +482,9 @@ void RenderState::ApplyRenderTargets()
 			mDepthRenderTarget = 0;
 			mDepthRenderTargetUID = 0;
 
-			GLenum error = glGetError();
-			if (error != GL_NO_ERROR)
-				THROW_EXCEPTION(RenderingException, "Could not unbind frame buffer object. Reason: %d", error);
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				THROW_EXCEPTION(RenderingException, "Could not unbind frame buffer object. Reason: %d", err);
 		}
 
 		return;
@@ -418,17 +493,22 @@ void RenderState::ApplyRenderTargets()
 	// Create frame buffer if exists
 	if (mFrameBufferID == 0) {
 		glGenFramebuffers(1, &mFrameBufferID);
-		GLenum error = glGetError();
-		if (error != GL_NO_ERROR)
-			THROW_EXCEPTION(RenderingException, "Could not create frame buffer object. Reason: %d", error);
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+			THROW_EXCEPTION(RenderingException, "Could not create frame buffer object. Reason: %d", err);
 	}
 
 	// Bind frame buffer if it's not already bound to this render context
 	if (!mFrameBufferApplied) {
 		glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferID);
 		mFrameBufferApplied = true;
-	}
 
+		// Check for any GL errors
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+			THROW_EXCEPTION(RenderingException, "Could not bind frame buffer");
+	}
+	
 	Size size;
 	const uint32 depthUID = mDepthRenderTarget != nullptr ? mDepthRenderTarget->GetUID() : 0;
 	if (mDepthRenderTargetUID != depthUID) {
@@ -436,14 +516,24 @@ void RenderState::ApplyRenderTargets()
 			GLenum attachmentType = GL_DEPTH_ATTACHMENT;
 			if (mDepthRenderTarget->GetTextureFormat() == TextureFormat::DEPTH24_STENCIL8)
 				attachmentType = GL_DEPTH_STENCIL_ATTACHMENT;
+
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, mDepthRenderTarget->GetTextureID(), 0);
+
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				THROW_EXCEPTION(RenderingException, "Could not attach depth render target to frame buffer. Reason: %d", err);
+
 			mDepthRenderTargetType = attachmentType;
 		}
 		else {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, mDepthRenderTargetType, GL_TEXTURE_2D, 0, 0);
+
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				THROW_EXCEPTION(RenderingException, "Could not detach depth render target from the frame buffer. Reason: %d", err);
 		}
+		mDepthRenderTargetUID = depthUID;
 	}
-	mDepthRenderTargetUID = depthUID;
 
 
 	GLenum drawBuffers[MAX_RENDER_TARGETS] = { 0 };
@@ -463,21 +553,29 @@ void RenderState::ApplyRenderTargets()
 			size = rt->GetSize();
 			drawBuffers[numDrawBuffers++] = GL_COLOR_ATTACHMENT0 + i;
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, rt->GetTextureID(), 0);
+
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				THROW_EXCEPTION(RenderingException, "Could not attach render target to frame buffer. Reason: %d", err);
 		}
 		else {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
+
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				THROW_EXCEPTION(RenderingException, "Could not detach render target from the frame buffer. Reason: %d", err);
 		}
 		mRenderTargetUID[i] = uid;
 	}
 	glDrawBuffers(numDrawBuffers, drawBuffers);
 
 	// Check for any GL errors
-	GLenum status = glGetError();
-	if (status != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Could not apply render targets. Reason: %d", status);
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not apply render targets. Reason: %d", err);
 
 	// Check if all worked fine and unbind the FBO
-	status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	switch (status)
 	{
 	case GL_FRAMEBUFFER_COMPLETE_EXT:
@@ -525,6 +623,11 @@ void RenderState::ApplyBuffers(const VertexBuffer* buffer, const IndexBuffer* in
 	// Update the render targets if they have been changed since the last draw
 	//
 
+	if (!mEffectApplied) {
+		mEffectState->ApplyUniforms();
+		mEffectApplied = true;
+	}
+
 	if (mApplyRenderTarget) {
 		mApplyRenderTarget = false;
 		ApplyRenderTargets();
@@ -532,10 +635,6 @@ void RenderState::ApplyBuffers(const VertexBuffer* buffer, const IndexBuffer* in
 
 	BindVertexBuffer(buffer);
 	BindIndexBuffer(indexBuffer);
-
-	GLenum err = glGetError();
-	if (err != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Could not apply vertex and index buffers");
 }
 
 EffectState* RenderState::GetEffectState(const Effect* effect)
