@@ -53,8 +53,8 @@ void Win32FileWatcher::AddListener(const std::regex& regex, IFileChangedListener
 	std::lock_guard<std::mutex> lg(mListenersLock);
 
 	Win32FileListener* fileListener = new Win32FileListener();
-	fileListener->Callback = listener;
-	fileListener->Regex = regex;
+	fileListener->callback = listener;
+	fileListener->regex = regex;
 	mFileChangedListeners.push_back(fileListener);
 }
 
@@ -67,7 +67,7 @@ void Win32FileWatcher::RemoveListener(IFileChangedListener* listener)
 	std::vector<FileChangedListeners::iterator> listenersToRemove;
 	for(; it != end; ++it) {
 		Win32FileListener* fileListener = (*it);
-		if(fileListener->Callback == listener) {
+		if(fileListener->callback == listener) {
 			listenersToRemove.push_back(it);
 			delete fileListener;
 		}
@@ -123,15 +123,45 @@ void Win32FileWatcher::RunFromThread()
 			prevFile = fileName;
 
 			std::lock_guard<std::mutex> lg(mListenersLock);
-			FileChangedListeners::iterator it = mFileChangedListeners.begin();
-			FileChangedListeners::iterator end = mFileChangedListeners.end();
+			auto it = mFileChangedListeners.begin();
+			auto end = mFileChangedListeners.end();
 			for(;it != end; ++it) {
 				Win32FileListener* listener = *it;
-				if(std::regex_match(fileName, listener->Regex)) {
-					auto file = mFileSystem->OpenFile(fileName);
-					listener->Callback->OnFileChanged(file.get(), action);
+				if (std::regex_match(fileName, listener->regex)) {
+					std::lock_guard<std::mutex> lg(mFileEventsLock);
+					Win32FileEvent* fileEvent = new Win32FileEvent();
+					fileEvent->action = action;
+					fileEvent->callback = listener->callback;
+					fileEvent->fileName = fileName;
+					mFileEvents.push_back(fileEvent);
 				}
 			}
 		} while(pNotify->NextEntryOffset != 0);
 	}
+}
+
+void Win32FileWatcher::LookForChanges()
+{
+	FileEvents events;
+	GetAndClearEvents(events);
+	if (!events.empty()) {
+		FileEvents::size_type size = events.size();
+		for (FileEvents::size_type i = 0; i < size; ++i) {
+			auto fileEvent = events[i];
+			auto file = mFileSystem->OpenFile(fileEvent->fileName);
+			fileEvent->callback->OnFileChanged(file.get(), fileEvent->action);
+			delete fileEvent;
+		}
+	}
+}
+
+void Win32FileWatcher::GetAndClearEvents(FileEvents& events)
+{
+	if (mFileEvents.empty())
+		return;
+
+	std::lock_guard<std::mutex> lg(mFileEventsLock);
+
+	events = FileEvents(mFileEvents);
+	mFileEvents.clear();
 }

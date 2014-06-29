@@ -8,6 +8,7 @@
 namespace core
 {
 	class Scene;
+	class Component;
 	class SceneNode;
 	class Updatable;
 	class Tickable;
@@ -41,6 +42,30 @@ namespace core
 		// @param node
 		virtual void RemoveSceneNode(SceneNode* node);
 		
+		/*!
+			\brief Add the supplied component to this group
+
+			\param component
+					The component we want to add
+		*/
+		void AddComponent(Component* component);
+
+		/*!
+			\brief Remove the supplied component from this group
+
+			\param component
+					The component we want to remove
+		*/
+		void RemoveComponent(Component* component);
+
+		/*!
+			\brief Retrieves the first component matching the the supplied type. 
+			
+			\param typeMask
+			\return The component if found; nullptr otherwise.
+		*/
+		Component* GetFirstComponent(typemask typeMask);
+
 		/*!
 			\brief Attach this group to the scene
 		*/
@@ -209,6 +234,7 @@ namespace core
 
 		Vector3 mPosition;
 
+		LinkedList<Component> mComponents;
 		LinkedList<SceneNode> mChildren;
 
 		std::shared_ptr<ScriptMethod> mOnAttachedToSceneMethodPtr;

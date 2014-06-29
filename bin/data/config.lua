@@ -17,6 +17,10 @@ config.camera.up = {0, 1, 0}
 config.graphics = {}
 config.graphics.developmentmode = true
 
+-- Development mode
+config.resources = {}
+config.resources.developmentmode = true
+
 -- Sound 
 config.sound = {}
 config.sound.mastervolume = 1.0

@@ -10,8 +10,15 @@ namespace core
 {
 	struct Win32FileListener	
 	{
-		IFileChangedListener* Callback;
-		std::regex Regex;
+		IFileChangedListener* callback;
+		std::regex regex;
+	};
+
+	struct Win32FileEvent
+	{
+		IFileChangedListener* callback;
+		std::string fileName;
+		FileChangeAction::Enum action;
 	};
 
 	class Win32FileSystem;
@@ -19,6 +26,7 @@ namespace core
 	class Win32FileWatcher
 	{
 		typedef std::list<Win32FileListener*> FileChangedListeners;
+		typedef std::vector<Win32FileEvent*> FileEvents;
 
 	public:
 		Win32FileWatcher(Win32FileSystem* fileSystem, const std::string& rootDirPath);
@@ -36,6 +44,13 @@ namespace core
 		void RemoveListener(IFileChangedListener* listener);
 
 		//
+		// Refresh this file watcher and look file changes in the file system
+		//
+		void LookForChanges();
+
+		void GetAndClearEvents(FileEvents& events);
+
+		//
 		// This method is executed from another thread
 		void RunFromThread();
 
@@ -43,6 +58,9 @@ namespace core
 		Win32FileSystem* mFileSystem;
 		FileChangedListeners mFileChangedListeners;
 		std::mutex mListenersLock;
+
+		FileEvents mFileEvents;
+		std::mutex mFileEventsLock;
 
 		HANDLE mRootDirHandle;
 		std::thread mThread;

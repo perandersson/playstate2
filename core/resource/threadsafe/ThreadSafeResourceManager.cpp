@@ -1,6 +1,7 @@
 #include "../../Memory.h"
 #include "ThreadSafeResourceManager.h"
 #include "../../logging/Logger.h"
+#include "../../configuration/Configuration.h"
 using namespace core;
 
 ThreadSafeResourceManager::ThreadSafeResourceManager(IFileSystem* fileSystem)
@@ -11,6 +12,8 @@ ThreadSafeResourceManager::ThreadSafeResourceManager(IFileSystem* fileSystem)
 
 ThreadSafeResourceManager::~ThreadSafeResourceManager()
 {
+	mFileSystem->RemoveFileChangedListener(this);
+
 	ResourceNameToResource::iterator rit = mResources.begin();
 	ResourceNameToResource::const_iterator rend = mResources.end();
 	for (; rit != rend; ++rit) {
@@ -96,6 +99,13 @@ void ThreadSafeResourceManager::RegisterLoader(IResourceLoader* loader, const st
 {
 	assert(mResourceLoaders.find(suffix) == mResourceLoaders.end() && "You are trying to add the same loader twice");
 	mResourceLoaders.insert(std::make_pair(suffix, loader));
+
+	if (loader->WatchForFileSystemChanges() && Configuration::ToBool("resources.developmentmode", false)) {
+		std::string str = "[^\\s]+\\.";
+		str += suffix;
+		str += "$";
+		mFileSystem->AddFileChangedListener(std::regex(str), this);
+	}
 }
 
 void ThreadSafeResourceManager::UnloadResource(Resource<ResourceObject> resource)
@@ -135,4 +145,31 @@ std::string ThreadSafeResourceManager::GetSuffixFromName(const std::string& name
 bool ThreadSafeResourceManager::IsDefaultResource(ResourceData* data) const
 {
 	return data->resource == data->defaultResource;
+}
+
+void ThreadSafeResourceManager::OnFileChanged(const IFile* file, FileChangeAction::Enum action)
+{
+	const std::string& absolutePath = file->GetAbsolutePath();
+	if (action != FileChangeAction::MODIFIED)
+		return;
+
+	std::lock_guard<std::recursive_mutex> lg(mResourcesMutex);
+	ResourceNameToResource::iterator it = mResources.find(absolutePath);
+	if (it != mResources.end()) {
+		ResourceData* data = it->second;
+		if (!IsDefaultResource(data)) {
+			auto suffix = GetSuffixFromName(absolutePath);
+			auto resourceLoader = GetLoaderFromSuffix(suffix);
+			try {
+				auto prevResource = data->resource.load();
+				data->resource = resourceLoader->Load(file);
+				delete prevResource;
+			}
+			catch (LoadResourceException e) {
+#undef GetMessage
+				Logger::Error("Could not load resource: '%s'. Reson: '%s'. Use default resource instead", file->GetAbsolutePath().c_str(), e.GetMessage().c_str());
+				data->resource = data->defaultResource;
+			}
+		}
+	}
 }

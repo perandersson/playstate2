@@ -3,11 +3,13 @@
 #include "SceneNode.h"
 #include "Updatable.h"
 #include "Tickable.h"
+#include "Component.h"
 #include "../script/ScriptUtils.h"
 using namespace core;
 
 SceneGroup::SceneGroup()
 : ScriptObject(), mTypeMask(0),
+mComponents(offsetof(Component, ComponentLink)),
 mChildren(offsetof(SceneNode, SceneNodeLink))
 {
 }
@@ -15,6 +17,7 @@ mChildren(offsetof(SceneNode, SceneNodeLink))
 SceneGroup::~SceneGroup()
 {
 	mChildren.DeleteAll();
+	mComponents.DeleteAll();
 }
 
 void SceneGroup::AddSceneNode(SceneNode* node)
@@ -34,6 +37,22 @@ void SceneGroup::RemoveSceneNode(SceneNode* node)
 	mChildren.Remove(node);
 	node->RemovedFromSceneGroup(this);
 	OnSceneNodeRemoved(node);
+}
+
+void SceneGroup::AddComponent(Component* component)
+{
+	assert_not_implemented();
+}
+
+void SceneGroup::RemoveComponent(Component* component)
+{
+	assert_not_implemented();
+}
+
+Component* SceneGroup::GetFirstComponent(typemask typeMask)
+{
+	assert_not_implemented();
+	return nullptr;
 }
 
 void SceneGroup::AttachedToScene()

@@ -82,7 +82,7 @@ namespace core
 		void AddComponent(Component* component);
 
 		//
-		// Remove the supplied component and deletes it's internal resources
+		// Remove the supplied component from this node
 		//
 		// @param component
 		//			The component we want to remove

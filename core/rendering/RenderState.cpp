@@ -20,7 +20,7 @@ mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
 mActiveTextureIndex(0),
 mDepthRenderTarget(nullptr), mDepthRenderTargetType(GL_DEPTH_ATTACHMENT), mDepthRenderTargetUID(0), mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
-mNextTextureIndex(0), mMaxTextureIndexes(0), mEffectApplied(false)
+mNextTextureIndex(0), mMaxTextureIndexes(0), mApplyEffectState(true)
 {
 	memset(mTextureUID, 0, sizeof(mTextureUID));
 	memset(mTextureTarget, 0, sizeof(mTextureTarget));
@@ -95,7 +95,7 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 
 	// Find the appropriate effect state
 	mEffectState = GetEffectState(effect);
-	mEffectApplied = false;
+	mApplyEffectState = true;
 
 	glUseProgram(effect->GetProgramID());
 	mEffectUID = uid;
@@ -623,9 +623,9 @@ void RenderState::ApplyBuffers(const VertexBuffer* buffer, const IndexBuffer* in
 	// Update the render targets if they have been changed since the last draw
 	//
 
-	if (!mEffectApplied) {
+	if (mApplyEffectState) {
+		mApplyEffectState = false;
 		mEffectState->ApplyUniforms();
-		mEffectApplied = true;
 	}
 
 	if (mApplyRenderTarget) {

@@ -29,5 +29,10 @@ namespace core
 					or if it fails to load by some reason.
 		*/
 		virtual ResourceObject* GetDefaultResource() = 0;
+
+		/*!
+			\return TRUE if the resource loader want to listen for file system changes; FALSE otherwise
+		*/
+		virtual bool WatchForFileSystemChanges() const = 0;
 	};
 }

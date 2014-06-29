@@ -147,6 +147,7 @@ bool Win32Kernel::ProcessEvents()
 {
 	mSoundEngine->UpdateStreamingBuffers();
 	mScriptManager->GC();
+	mFileSystem->ProcessEvents();
 	return mActiveWindow->ProcessEvents();
 }
 

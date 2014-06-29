@@ -54,64 +54,62 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 
 void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 {
-	FindQuery query;
-	query.camera = camera;
-	query.filter = RenderableFilter::DEFAULT;
-	if (scene.Find(query, &mRenderBlockResultSet)) {
-		auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
-			RenderState* state = RenderContext::Activate(mDeferredEffect);
-			state->SetRenderTarget(mDiffuseRenderTarget, 0);
-			state->SetRenderTarget(mPositionsRenderTarget, 1);
-			state->SetRenderTarget(mNormalsRenderTarget, 2);
-			state->SetDepthRenderTarget(mDepthRenderTarget);
-			state->Clear(ClearType::COLOR | ClearType::DEPTH);
-
-			// Set camera properties
-			state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-			state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-
-			IUniform* modelMatrix = state->FindUniform("ModelMatrix");
-			IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
-			IUniform* diffuseColor = state->FindUniform("DiffuseColor");
-
-			RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
-			RenderBlockResultSet::Type block;
-			while (block = it.Next()) {
-				diffuseTexture->SetTexture(block->diffuseTexture);
-				diffuseColor->SetColorRGB(block->diffuseColor);
-				modelMatrix->SetMatrix(block->modelMatrix);
-				state->Render(block->vertexBuffer, block->indexBuffer);
-			}
-			return true;
-		});
-		fut.get();
-	}
-
+	FindQuery query = { camera, RenderableFilter::DEFAULT };
 	//if (scene.Find(query, &mRenderBlockResultSet)) {
-	//	RenderState* state = RenderContext::Activate(mDeferredEffect);
-	//	state->SetRenderTarget(mDiffuseRenderTarget, 0);
-	//	state->SetRenderTarget(mPositionsRenderTarget, 1);
-	//	state->SetRenderTarget(mNormalsRenderTarget, 2);
-	//	state->SetDepthRenderTarget(mDepthRenderTarget);
-	//	state->Clear(ClearType::COLOR | ClearType::DEPTH);
+	//	auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
+	//		RenderState* state = RenderContext::Activate(mDeferredEffect);
+	//		state->SetRenderTarget(mDiffuseRenderTarget, 0);
+	//		state->SetRenderTarget(mPositionsRenderTarget, 1);
+	//		state->SetRenderTarget(mNormalsRenderTarget, 2);
+	//		state->SetDepthRenderTarget(mDepthRenderTarget);
+	//		state->Clear(ClearType::COLOR | ClearType::DEPTH);
 
-	//	// Set camera properties
-	//	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-	//	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+	//		// Set camera properties
+	//		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+	//		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
 
-	//	IUniform* modelMatrix = state->FindUniform("ModelMatrix");
-	//	IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
-	//	IUniform* diffuseColor = state->FindUniform("DiffuseColor");
+	//		IUniform* modelMatrix = state->FindUniform("ModelMatrix");
+	//		IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
+	//		IUniform* diffuseColor = state->FindUniform("DiffuseColor");
 
-	//	ResultSetIterator<RenderBlock> it = mRenderBlockResultSet.GetIterator();
-	//	ResultSetIterator<RenderBlock>::Type block;
-	//	while (block = it.Next()) {
-	//		diffuseTexture->SetTexture(block->diffuseTexture);
-	//		diffuseColor->SetColorRGB(block->diffuseColor);
-	//		modelMatrix->SetMatrix(block->modelMatrix);
-	//		state->Render(block->vertexBuffer, block->indexBuffer);
-	//	}
+	//		RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
+	//		RenderBlockResultSet::Type block;
+	//		while (block = it.Next()) {
+	//			diffuseTexture->SetTexture(block->diffuseTexture);
+	//			diffuseColor->SetColorRGB(block->diffuseColor);
+	//			modelMatrix->SetMatrix(block->modelMatrix);
+	//			state->Render(block->vertexBuffer, block->indexBuffer);
+	//		}
+	//		return true;
+	//	});
+	//	fut.get();
 	//}
+
+	if (scene.Find(query, &mRenderBlockResultSet)) {
+		RenderState* state = RenderContext::Activate(mDeferredEffect);
+		state->SetRenderTarget(mDiffuseRenderTarget, 0);
+		state->SetRenderTarget(mPositionsRenderTarget, 1);
+		state->SetRenderTarget(mNormalsRenderTarget, 2);
+		state->SetDepthRenderTarget(mDepthRenderTarget);
+		state->Clear(ClearType::COLOR | ClearType::DEPTH);
+
+		// Set camera properties
+		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+
+		IUniform* modelMatrix = state->FindUniform("ModelMatrix");
+		IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
+		IUniform* diffuseColor = state->FindUniform("DiffuseColor");
+
+		RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
+		RenderBlockResultSet::Type block;
+		while (block = it.Next()) {
+			diffuseTexture->SetTexture(block->diffuseTexture);
+			diffuseColor->SetColorRGB(block->diffuseColor);
+			modelMatrix->SetMatrix(block->modelMatrix);
+			state->Render(block->vertexBuffer, block->indexBuffer);
+		}
+	}
 
 	DrawLighting(scene, camera);
 	DrawFinalResultToScreen(scene, camera);
@@ -134,10 +132,7 @@ void DeferredRenderPipeline::OnWindowResized(const Size& newSize)
 
 void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* camera)
 {
-	FindQuery query;
-	query.camera = camera;
-	query.filter = RenderableFilter::DEFAULT;
-
+	FindQuery query = { camera, RenderableFilter::DEFAULT };
 	RenderState* state = RenderContext::Activate(mPointLightEffect);
 	state->SetRenderTarget(mLightRenderTarget, 0);
 	state->Clear(ClearType::COLOR);

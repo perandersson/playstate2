@@ -70,6 +70,11 @@ HANDLE Win32FileSystem::GetHighestPriorityPathHandle(const std::string& path) co
 	return NULL;
 }
 
+void Win32FileSystem::ProcessEvents()
+{
+	mFileWatcher.LookForChanges();
+}
+
 bool Win32FileSystem::IsRelative(const std::string& path)
 {
 	if(path.empty())

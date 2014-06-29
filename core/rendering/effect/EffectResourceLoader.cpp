@@ -1,6 +1,7 @@
 #include "../../Memory.h"
 #include "EffectResourceLoader.h"
 #include "EffectXmlVisitor.h"
+#include "../../configuration/Configuration.h"
 #include <tinyxml2.h>
 using namespace core;
 using namespace tinyxml2;
@@ -24,11 +25,18 @@ ResourceObject* EffectResourceLoader::Load(const IFile* file)
 	if (result != XML_SUCCESS)
 		THROW_EXCEPTION(LoadResourceException, "Could not parse file: '%s'", file->GetAbsolutePath().c_str());
 
-	EffectXmlVisitor visitor(GetRenderContext());
-	if (!document.Accept(&visitor))
-		THROW_EXCEPTION(LoadResourceException, "Could not build scene group: '%s'", file->GetAbsolutePath().c_str());
-
-	return visitor.GetEffect();
+	try {
+		EffectXmlVisitor visitor(GetRenderContext());
+		if (!document.Accept(&visitor))
+			THROW_EXCEPTION(LoadResourceException, "Could not build scene group: '%s'", file->GetAbsolutePath().c_str());
+		return visitor.GetEffect();
+	}
+	catch (LoadResourceException e) {
+		if (Configuration::ToBool("graphics.developmentmode", false)) {
+			return new Effect(0);
+		}
+		throw e;
+	}
 }
 
 ResourceObject* EffectResourceLoader::GetDefaultResource()

@@ -1,6 +1,7 @@
 #include "../Memory.h"
 #include "SceneGroup_script.h"
 #include "SceneNode_script.h"
+#include "Component_script.h"
 using namespace core;
 
 int SceneGroup_Factory(struct lua_State* L)
@@ -36,6 +37,30 @@ int SceneGroup_RemoveSceneNode(struct lua_State* L)
 	SceneGroup* self = ScriptUtils::ToObject<SceneGroup>(L);
 	if (node != nullptr && self != nullptr)
 		self->RemoveSceneNode(node);
+
+	return 0;
+}
+
+int SceneGroup_AddComponent(struct lua_State* L)
+{
+	Component* component = ScriptUtils::ToObject<Component>(L);
+	SceneGroup* self = ScriptUtils::ToObject<SceneGroup>(L);
+	if (component != nullptr && self != nullptr)
+		self->AddComponent(component);
+	else
+		ScriptUtils::LogError(L, "Expected: SceneGroup.AddComponent(self, Component)");
+
+	return 0;
+}
+
+int SceneGroup_RemoveComponent(struct lua_State* L)
+{
+	Component* component = ScriptUtils::ToObject<Component>(L);
+	SceneGroup* self = ScriptUtils::ToObject<SceneGroup>(L);
+	if (component != nullptr && self != nullptr)
+		self->RemoveComponent(component);
+	else
+		ScriptUtils::LogError(L, "Expected: SceneGroup.RemoveComponent(self, Component)");
 
 	return 0;
 }

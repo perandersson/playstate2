@@ -12,14 +12,12 @@
 
 namespace core
 {
-//	class DefaultUniform;
 	class VertexBuffer;
 	class IndexBuffer;
 	class RenderTarget2D;
 
 	class Effect : public ResourceObject
 	{
-		///typedef std::hash_map<std::string, DefaultUniform*> Uniforms;
 		typedef std::hash_map<std::string, std::shared_ptr<UniformProperty>> UniformProperties;
 
 	public:

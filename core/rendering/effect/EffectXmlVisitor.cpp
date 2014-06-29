@@ -124,7 +124,6 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 		glGetProgramInfoLog(program, sizeof(infoLogg)-1, NULL, infoLogg);
 		if (!status) {
 			glDeleteProgram(program);
-
 			THROW_EXCEPTION(LoadResourceException, "Could not link the shaders programs for resource. Reason: %s", infoLogg);
 		}
 		mEffect = new Effect(program);

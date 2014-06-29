@@ -23,6 +23,11 @@ namespace core
 		// @param path
 		HANDLE GetHighestPriorityPathHandle(const std::string& path) const;
 
+		/*!
+			\brief Processes the internal file system events
+		*/
+		void ProcessEvents();
+
 	// IFileSystem
 	public:
 		virtual std::shared_ptr<IFile> OpenFile(const std::string& path) const;

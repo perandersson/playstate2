@@ -44,6 +44,7 @@ namespace core
 	public:
 		virtual ResourceObject* Load(const IFile* file);
 		virtual ResourceObject* GetDefaultResource();
+		virtual bool WatchForFileSystemChanges() const { return false; }
 
 	private:
 		//

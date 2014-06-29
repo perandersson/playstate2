@@ -13,12 +13,15 @@ mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }), mCullFac
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
 mDepthRenderTarget(nullptr)
 {
-	assert(programID != 0 && "Invalid programID supplied to this effect");
 	memset(mRenderTargets, 0, sizeof(mRenderTargets));
 }
 
 Effect::~Effect()
 {
+	if (mProgramID != 0) {
+		glDeleteProgram(mProgramID);
+		mProgramID = 0;
+	}
 }
 
 void Effect::AddUniformProperty(std::shared_ptr<UniformProperty> p)

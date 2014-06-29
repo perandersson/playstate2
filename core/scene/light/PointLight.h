@@ -4,6 +4,9 @@
 
 namespace core
 {
+	/*!
+		\brief 
+	*/
 	class PointLight : public LightSource
 	{
 		DECLARE_SCRIPT_OBJECT(PointLight);
