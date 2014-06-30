@@ -92,6 +92,17 @@ int SceneNode_RemoveChildNode(struct lua_State* L)
 	return 0;
 }
 
+int SceneNode_RemoveFromParent(struct lua_State* L)
+{
+	SceneNode* self = ScriptUtils::ToObject<SceneNode>(L);
+	if (self != nullptr)
+		self->RemoveFromParent();
+	else
+		ScriptUtils::LogError(L, "Expected: SceneNode.RemoveFromParent(self)");
+
+	return 0;
+}
+
 int SceneNode_AddComponent(struct lua_State* L)
 {
 	Component* component = ScriptUtils::ToObject<Component>(L);

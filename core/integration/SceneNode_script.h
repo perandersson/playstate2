@@ -10,6 +10,7 @@ int SceneNode_SetID(struct lua_State* L);
 int SceneNode_GetID(struct lua_State* L);
 int SceneNode_AddChildNode(struct lua_State* L);
 int SceneNode_RemoveChildNode(struct lua_State* L);
+int SceneNode_RemoveFromParent(struct lua_State* L);
 int SceneNode_AddComponent(struct lua_State* L);
 int SceneNode_RemoveComponent(struct lua_State* L);
 int SceneNode_SetPosition(struct lua_State* L);
@@ -32,6 +33,7 @@ static luaL_Reg SceneNode_Methods[] = {
 	{ "GetID", SceneNode_GetID },
 	{ "AddChildNode", SceneNode_AddChildNode },
 	{ "RemoveChildNode", SceneNode_RemoveChildNode },
+	{ "RemoveFromParent", SceneNode_RemoveFromParent },
 	{ "AddComponent", SceneNode_AddComponent },
 	{ "RemoveComponent", SceneNode_RemoveComponent },
 	{ "SetPosition", SceneNode_SetPosition },

@@ -93,7 +93,7 @@ int Component_GetSceneGroup(struct lua_State* L)
 	if (self != nullptr) {
 		auto node = self->GetSceneNode();
 		if (node != nullptr)
-			group = node->GetGroup();
+			group = node->GetSceneGroup();
 	}
 	else
 		ScriptUtils::LogError(L, "Expected: Component.GetSceneGroup(self)");

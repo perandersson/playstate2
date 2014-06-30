@@ -6,7 +6,7 @@
 using namespace core;
 
 SceneNode::SceneNode()
-: ScriptObject(), mParent(nullptr), mGroup(nullptr), mTypeMask(0), mScale(Vector3::ONE), mAbsoluteScale(Vector3::ONE),
+: ScriptObject(), mParent(nullptr), mSceneGroup(nullptr), mTypeMask(0), mScale(Vector3::ONE), mAbsoluteScale(Vector3::ONE),
 mChildren(offsetof(SceneNode, SceneNodeLink)), mComponents(offsetof(Component, ComponentLink))
 {
 }
@@ -24,7 +24,7 @@ void SceneNode::AddChildNode(SceneNode* node)
 
 	mChildren.AddLast(node);
 	node->mParent = this;
-	node->mGroup = mGroup;
+	node->mSceneGroup = mSceneGroup;
 	node->UpdatePosition(mAbsolutePosition);
 	node->UpdateRotation(mAbsoluteRotation);
 	node->UpdateScale(mAbsoluteScale);
@@ -130,8 +130,8 @@ SceneNode* SceneNode::FindFirstSceneNode(typemask typeMask)
 }
 
 bool SceneNode::IsAttachedToScene() const {
-	if (mGroup != nullptr)
-		return mGroup->IsAttachedToScene();
+	if (mSceneGroup != nullptr)
+		return mSceneGroup->IsAttachedToScene();
 	return false;
 }
 
@@ -229,7 +229,7 @@ void SceneNode::SetTypeMask(typemask typeMask)
 
 void SceneNode::AddedToSceneGroup(SceneGroup* group)
 {
-	mGroup = group;
+	mSceneGroup = group;
 	auto component = mComponents.First();
 	while (component != nullptr) {
 		auto next = component->ComponentLink.Tail;
@@ -300,7 +300,7 @@ void SceneNode::RemovedFromSceneGroup(SceneGroup* group)
 	}
 
 	this->OnRemovedFromSceneGroup();
-	mGroup = nullptr;
+	mSceneGroup = nullptr;
 }
 
 void SceneNode::OnSceneNodeAdded(SceneNode* node)
@@ -342,58 +342,30 @@ void SceneNode::OnDetachedFromScene()
 void SceneNode::AddUpdatable(Updatable* updatable)
 {
 	assert_not_null(updatable);
-	if (IsAttachedToGroup())
-		mGroup->AddUpdatable(updatable);
+	if (IsAttachedToSceneGroup())
+		mSceneGroup->AddUpdatable(updatable);
 }
 
 void SceneNode::RemoveUpdatable(Updatable* updatable)
 {
 	assert_not_null(updatable);
-	if (IsAttachedToGroup())
-		mGroup->RemoveUpdatable(updatable);
+	if (IsAttachedToSceneGroup())
+		mSceneGroup->RemoveUpdatable(updatable);
 }
 
 void SceneNode::AddTickable(Tickable* tickable)
 {
 	assert_not_null(tickable);
-	if (IsAttachedToGroup())
-		mGroup->AddTickable(tickable);
+	if (IsAttachedToSceneGroup())
+		mSceneGroup->AddTickable(tickable);
 }
 
 void SceneNode::RemoveTickable(Tickable* tickable)
 {
 	assert_not_null(tickable);
-	if (IsAttachedToGroup())
-		mGroup->RemoveTickable(tickable);
+	if (IsAttachedToSceneGroup())
+		mSceneGroup->RemoveTickable(tickable);
 }
-//
-//void SceneNode::AddRenderable(Renderable* renderable)
-//{
-//	assert_not_null(renderable);
-//	if (IsAttachedToGroup())
-//		mGroup->AddRenderable(renderable);
-//}
-//
-//void SceneNode::RemoveRenderable(Renderable* renderable)
-//{
-//	assert_not_null(renderable);
-//	if (IsAttachedToGroup())
-//		mGroup->RemoveRenderable(renderable);
-//}
-
-//void SceneNode::AddLightSource(LightSource* lightSource)
-//{
-//	assert_not_null(lightSource);
-//	if (IsAttachedToGroup())
-//		mGroup->AddLightSource(lightSource);
-//}
-//
-//void SceneNode::RemoveLightSource(LightSource* lightSource)
-//{
-//	assert_not_null(lightSource);
-//	if (IsAttachedToGroup())
-//		mGroup->RemoveLightSource(lightSource);
-//}
 
 void SceneNode::SetID(const std::string& id)
 {
@@ -579,6 +551,9 @@ bool SceneNode::OnRegisterObject()
 	mOnRemovedFromSceneGroupPtr = GetMethodPtr("OnRemovedFromSceneGroup");
 	mOnAttachedToSceneMethodPtr = GetMethodPtr("OnAttachedToScene");
 	mOnDetachedFromSceneMethodPtr = GetMethodPtr("OnDetachedFromScene");
+	mOnPositionChangedPtr = GetMethodPtr("OnPositionChanged");
+	mOnRotationChangedPtr = GetMethodPtr("OnRotationChanged");
+	mOnScaleChangedPtr = GetMethodPtr("OnScaleChanged");
 	return true;
 }
 
@@ -588,15 +563,15 @@ void SceneNode::OnEventReceived(const Event* evt)
 
 void SceneNode::OnPositionChanged()
 {
-
+	mOnPositionChangedPtr->Invoke();
 }
 
 void SceneNode::OnRotationChanged()
 {
-
+	mOnRotationChangedPtr->Invoke();
 }
 
 void SceneNode::OnScaleChanged()
 {
-
+	mOnScaleChangedPtr->Invoke();
 }

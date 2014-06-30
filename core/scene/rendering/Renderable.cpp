@@ -46,12 +46,12 @@ void Renderable::OnScaleChanged()
 
 void Renderable::OnAddedToSceneGroup()
 {
-	SceneGroup* group = GetGroup();
+	SceneGroup* group = GetSceneGroup();
 	group->AddRenderable(this);
 }
 
 void Renderable::OnRemovedFromSceneGroup()
 {
-	SceneGroup* group = GetGroup();
+	SceneGroup* group = GetSceneGroup();
 	group->RemoveRenderable(this);
 }

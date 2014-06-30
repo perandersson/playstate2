@@ -14,6 +14,9 @@ namespace core
 	class Renderable;
 	class LightSource;
 
+	/*!
+		\brief 
+	*/
 	class SceneNode : public ScriptObject
 	{
 		friend class SceneGroup;
@@ -26,21 +29,26 @@ namespace core
 		SceneNode();
 		virtual ~SceneNode();
 
-		//
-		// Add the supplied node
-		//
-		// @param node
+		/*!
+			\brief Add the supplied node
+
+			\param node
+		*/
 		void AddChildNode(SceneNode* node);
 
-		//
-		// Remove the supplied scene node
-		//
-		// @param node
-		//			The node we want to remove
+		/*!
+			\brief Remove the supplied child scene node 
+
+			\param node
+						The node we want to remove
+		*/
 		void RemoveChildNode(SceneNode* node);
 
-		//
-		// Remove this item from the parent node
+		/*!
+			\brief Remove this node from the parent node
+
+			Call this on a node if you want it to be removed from it's parent
+		*/
 		void RemoveFromParent();
 		
 		/*!
@@ -53,12 +61,13 @@ namespace core
 		*/
 		void DetachedFromScene();
 
-		//
-		// Retrieves the group this node is attached to
-		//
-		// @return The group instance; nullptr if not attached to any group.
-		inline SceneGroup* GetGroup() const {
-			return mGroup;
+		/*!
+			\brief Retrieves the group this node is attached to
+
+			\return The group instance; nullptr if not attached to any group.
+		*/
+		inline SceneGroup* GetSceneGroup() const {
+			return mSceneGroup;
 		}
 
 		//
@@ -74,11 +83,12 @@ namespace core
 		// @return The first scene node; NULL if no node is found with the given type mask
 		SceneNode* FindFirstSceneNode(typemask typeMask);
 
-		//
-		// Add the supplied component to this node
-		//
-		// @param component 
-		//			The component we want to add to this node.
+		/*!
+			\brief Add the supplied component to this node
+
+			\param component
+					The component we want to add to this node
+		*/
 		void AddComponent(Component* component);
 
 		//
@@ -207,12 +217,13 @@ namespace core
 			return mParent != nullptr;
 		}
 
-		//
-		// Checks if this node is being attached to a parent scene group
-		//
-		// @return TRUE if this node is attached to a parent scene group; FALSE otherwise
-		inline bool IsAttachedToGroup() const {
-			return mGroup != nullptr;
+		/*!
+			\brief Check if this node is attached to a parent scene group
+
+			\return TRUE if this node is attached to a parent scene group; FALSE otherwise
+		*/
+		inline bool IsAttachedToSceneGroup() const {
+			return mSceneGroup != nullptr;
 		}
 
 		/*!
@@ -363,7 +374,7 @@ namespace core
 
 	private:
 		SceneNode* mParent;
-		SceneGroup* mGroup;
+		SceneGroup* mSceneGroup;
 		typemask mTypeMask;
 
 	protected:
@@ -382,5 +393,8 @@ namespace core
 		std::shared_ptr<ScriptMethod> mOnRemovedFromSceneGroupPtr;
 		std::shared_ptr<ScriptMethod> mOnAttachedToSceneMethodPtr;
 		std::shared_ptr<ScriptMethod> mOnDetachedFromSceneMethodPtr;
+		std::shared_ptr<ScriptMethod> mOnPositionChangedPtr;
+		std::shared_ptr<ScriptMethod> mOnRotationChangedPtr;
+		std::shared_ptr<ScriptMethod> mOnScaleChangedPtr;
 	};
 }

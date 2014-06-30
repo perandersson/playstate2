@@ -15,7 +15,7 @@ namespace {
 static const char* PLAYSTATE_CLASS_NAME = "playstate";
 
 Win32ActiveWindow::Win32ActiveWindow(HINSTANCE applicationHandle, IConfiguration* configuration, Win32InputDevices* inputDevices)
-: Win32GLActiveWindow(), mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL)
+: Win32GLActiveWindow(), mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL), mResizingWindow(false)
 {
 	_window = this;
 	memset(&mMessageQueue, 0, sizeof(MSG));
@@ -128,8 +128,14 @@ LRESULT CALLBACK Win32ActiveWindow::ProcessEvent(HWND hwnd, UINT message, WPARAM
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+	case WM_ENTERSIZEMOVE:
+		mResizingWindow = true;
+		break;
+	case WM_SIZE:
+		if (mResizingWindow) return DefWindowProc(hwnd, message, wparam, lparam);
 	case WM_EXITSIZEMOVE:
 	{
+		mResizingWindow = false;
 		RECT rect;
 		if (!GetClientRect(mWindowHandle, &rect))
 			break;

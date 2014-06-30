@@ -182,15 +182,25 @@ namespace core
 		/*!
 			\brief Set the render target at the given index
 
+			\remark Note that the render targets are not bound until you perform some kind of
+					rendering-action, such as clearing the screen.
+
 			\param renderTarget
+						The texture we want to draw our result to
 			\param index
+						The texture index for the render target. Useful if you want to
+						render to multiple textures at once.
 		*/
 		void SetRenderTarget(const RenderTarget2D* renderTarget, GLenum index);
 		
 		/*!
 			\brief Set the depth render target at the given index
 
+			\remark Note that the render targets are not bound until you perform some kind of
+					rendering-action, such as clearing the screen.
+
 			\param renderTarget
+						The texture we want to draw our depth result to
 		*/
 		void SetDepthRenderTarget(const RenderTarget2D* renderTarget);
 		

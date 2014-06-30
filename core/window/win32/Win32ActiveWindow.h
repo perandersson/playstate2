@@ -60,5 +60,7 @@ namespace core
 
 		Size mSize;
 		Size mPrevSize;
+
+		bool mResizingWindow;
 	};
 }

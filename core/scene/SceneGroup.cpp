@@ -32,7 +32,7 @@ void SceneGroup::AddSceneNode(SceneNode* node)
 void SceneGroup::RemoveSceneNode(SceneNode* node)
 {
 	assert_not_null(node);
-	assert(node->mGroup == this && "You are not allowed to remove another scene objects child node");
+	assert(node->mSceneGroup == this && "You are not allowed to remove another scene objects child node");
 
 	mChildren.Remove(node);
 	node->RemovedFromSceneGroup(this);

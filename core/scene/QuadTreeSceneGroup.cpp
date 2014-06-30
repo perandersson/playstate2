@@ -69,7 +69,7 @@ void QuadTreeSceneGroup::RemoveRenderable(Renderable* renderable)
 {
 	assert_not_null(renderable);
 #ifdef _DEBUG
-	assert(renderable->GetGroup() == this && "You are trying to remove someone elses renderable component");
+	assert(renderable->GetSceneGroup() == this && "You are trying to remove someone elses renderable component");
 #endif
 	QuadTree* tree = static_cast<QuadTree*>(renderable->GetSpatialTree());
 	tree->Remove(renderable);

@@ -14,12 +14,12 @@ LightSource::~LightSource()
 
 void LightSource::OnAddedToSceneGroup()
 {
-	SceneGroup* group = GetGroup();
+	SceneGroup* group = GetSceneGroup();
 	group->AddLightSource(this);
 }
 
 void LightSource::OnRemovedFromSceneGroup()
 {
-	SceneGroup* group = GetGroup();
+	SceneGroup* group = GetSceneGroup();
 	group->RemoveLightSource(this);
 }
