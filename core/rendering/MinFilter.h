@@ -30,10 +30,9 @@ namespace core
 		*/
 		static Enum Parse(const std::string& s, Enum defaultValue);
 
-		//
-		// Convert the supplied enum into a OpenGL enum
-		//
-		// @param e
+		/*!
+			\brief Convert the supplied enum into a OpenGL enum
+		*/
 		static GLenum Parse(Enum e);
 		
 		/*!

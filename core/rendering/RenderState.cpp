@@ -224,17 +224,6 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 		stride += elemDesc.fieldSize;
 	}
 
-	static const GLenum enums[VertexElementType::SIZE] = {
-		GL_BYTE,
-		GL_UNSIGNED_BYTE,
-		GL_SHORT,
-		GL_UNSIGNED_SHORT,
-		GL_INT,
-		GL_UNSIGNED_INT,
-		GL_FLOAT,
-		GL_DOUBLE
-	};
-
 	//
 	// Set the vertex attributes
 	//
@@ -249,10 +238,13 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 
 		glEnableVertexAttribArray(elemDesc.location);
 		if (HandleAsIntegerType(elemDesc)) {
-			glVertexAttribIPointer(elemDesc.location, elemDesc.numElementsInField, enums[elemDesc.type], stride, OFFSET(offset));
+			glVertexAttribIPointer(elemDesc.location, elemDesc.numElementsInField, 
+				VertexElementType::Parse(elemDesc.type), stride, OFFSET(offset));
 		}
 		else {
-			glVertexAttribPointer(elemDesc.location, elemDesc.numElementsInField, enums[elemDesc.type], elemDesc.normalized ? GL_TRUE : GL_FALSE, stride, OFFSET(offset));
+			GLboolean normalized = elemDesc.normalized ? GL_TRUE : GL_FALSE;
+			glVertexAttribPointer(elemDesc.location, elemDesc.numElementsInField, 
+				VertexElementType::Parse(elemDesc.type), normalized, stride, OFFSET(offset));
 		}
 		offset += elemDesc.fieldSize;
 	}

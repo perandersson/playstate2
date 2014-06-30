@@ -19,6 +19,11 @@ namespace core
 
 			SIZE
 		};
+		
+		/*!
+			\brief Convert the supplied enum into a OpenGL enum
+		*/
+		static GLenum Parse(Enum e);
 	};
 
 	//
