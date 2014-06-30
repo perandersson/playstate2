@@ -52,11 +52,17 @@ void Win32GLActiveWindow::InitializeDrivers(HWND windowHandle, const Size& size)
 
 	wglMakeCurrent(mDeviceContext, tempContext);
 
-	GLEWContext* glewContext = new GLEWContext; memset(glewContext, 0, sizeof(GLEWContext));
-	WGLEWContext* wglewContext = new WGLEWContext; memset(wglewContext, 0, sizeof(WGLEWContext));
+	//
+	// Initialize GLEW temporarily for this render context
+	//
 
-	SetGLEWContext(glewContext);
-	SetWGLEWContext(wglewContext);
+	std::shared_ptr<GLEWContext> tempGLEWContext(new GLEWContext); 
+	memset(tempGLEWContext.get(), 0, sizeof(GLEWContext));
+	std::shared_ptr<WGLEWContext> tempWGLEWContext(new WGLEWContext); 
+	memset(tempWGLEWContext.get(), 0, sizeof(WGLEWContext));
+
+	SetGLEWContext(tempGLEWContext.get());
+	SetWGLEWContext(tempWGLEWContext.get());
 
 	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
@@ -84,11 +90,22 @@ void Win32GLActiveWindow::InitializeDrivers(HWND windowHandle, const Size& size)
 	if (!windowsRenderContext) {
 		THROW_EXCEPTION(RenderingException, "You'r graphics card does not support OpenGL 3.3");
 	}
+	wglDeleteContext(tempContext);
 
-	mRenderContext = new Win32RenderContext(mDeviceContext, windowsRenderContext, glewContext, wglewContext);
+	//
+	// Make sure that the temporary GLEW contexts are unbound
+	//
+
+	SetGLEWContext(nullptr);
+	SetWGLEWContext(nullptr);
+
+	//
+	// Create and bind the OpenGL 3.3 render context
+	//
+
+	mRenderContext = new Win32RenderContext(mDeviceContext, windowsRenderContext);
 	Win32RenderContext::SetThreadLocal(mRenderContext);
 	mRenderContext->Bind();
-	wglDeleteContext(tempContext);
 }
 
 void Win32GLActiveWindow::ReleaseDrivers()

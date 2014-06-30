@@ -10,7 +10,7 @@ namespace core
 	class Win32RenderContext : public OpenGLRenderContext, public ThreadLocal<IRenderContext*>
 	{
 	public:
-		Win32RenderContext(HDC deviceContext, HGLRC renderContext, GLEWContext* glewContext, WGLEWContext* wglewContext);
+		Win32RenderContext(HDC deviceContext, HGLRC renderContext);
 		virtual ~Win32RenderContext();
 
 		inline HGLRC GetRenderContext() const {

@@ -6,13 +6,11 @@ using namespace core;
 
 template<> IRenderContext* ThreadLocal<IRenderContext*>::gThreadLocal = nullptr;
 
-Win32RenderContext::Win32RenderContext(HDC deviceContext, HGLRC renderContext, GLEWContext* glewContext, WGLEWContext* wglewContext)
-: OpenGLRenderContext(glewContext), mDeviceContext(deviceContext), mRenderContext(renderContext), mWGLEWContext(wglewContext)
+Win32RenderContext::Win32RenderContext(HDC deviceContext, HGLRC renderContext)
+: OpenGLRenderContext(), mDeviceContext(deviceContext), mRenderContext(renderContext), mWGLEWContext(nullptr)
 {
-	if (mWGLEWContext == nullptr) {
-		mWGLEWContext = new WGLEWContext;
-		memset(mWGLEWContext, 0, sizeof(WGLEWContext));
-	}
+	mWGLEWContext = new WGLEWContext;
+	memset(mWGLEWContext, 0, sizeof(WGLEWContext));
 }
 
 Win32RenderContext::~Win32RenderContext()
@@ -77,7 +75,7 @@ OpenGLRenderContext* Win32RenderContext::CreateRenderContext()
 	if (!windowsRenderContext) {
 		THROW_EXCEPTION(RenderingException, "You'r graphics card does not support OpenGL 3.3");
 	}
-	std::shared_ptr<OpenGLRenderContext> renderContext(new Win32RenderContext(mDeviceContext, windowsRenderContext, nullptr, nullptr));
+	std::shared_ptr<OpenGLRenderContext> renderContext(new Win32RenderContext(mDeviceContext, windowsRenderContext));
 	mRenderContextsCreatedByContext.push_back(renderContext);
 	return renderContext.get();
 }

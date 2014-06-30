@@ -21,7 +21,7 @@ namespace core
 	class OpenGLRenderContext : public IRenderContext
 	{
 	public:
-		OpenGLRenderContext(GLEWContext* glewContext);
+		OpenGLRenderContext();
 		virtual ~OpenGLRenderContext();
 
 		virtual RenderState* GetRenderState();
