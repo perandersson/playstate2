@@ -81,9 +81,11 @@ void RenderState::Clear(uint32 clearBits)
 	if (clear != 0)
 		glClear(clear);
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not clear the screen");
+#endif
 }
 
 EffectState* RenderState::BindEffect(const Effect* effect)
@@ -100,10 +102,11 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	glUseProgram(effect->GetProgramID());
 	mEffectUID = uid;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render faces on the screen");
-
+		THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render vertices on the screen");
+#endif
 	//
 	// Set this render state's properties based on the supplied effect
 	//
@@ -160,10 +163,11 @@ void RenderState::Render(const VertexBuffer* buffer, const IndexBuffer* indexBuf
 	else
 		buffer->Render(startIndex);
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not render index and vertex buffers");
-
+#endif
 }
 
 void RenderState::Render(const VertexBuffer* buffer, const IndexBuffer* indexBuffer, uint32 startIndex, uint32 numVertices)
@@ -197,9 +201,11 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetBufferID());
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not bind the supplied vertex buffer");
+#endif
 
 	//
 	// Calculate the object's stride
@@ -259,9 +265,11 @@ void RenderState::BindIndexBuffer(const IndexBuffer* indexBuffer)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
 	mIndexBufferUID = uid;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not bind the supplied index buffer");
+#endif
 }
 
 void RenderState::SetViewport(const Rect& viewport)
@@ -271,9 +279,11 @@ void RenderState::SetViewport(const Rect& viewport)
 		mViewport = viewport;
 	}
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not set the screen viewport");
+#endif
 }
 
 void RenderState::SetDepthTest(bool enable)
@@ -287,9 +297,11 @@ void RenderState::SetDepthTest(bool enable)
 		glDisable(GL_DEPTH_TEST);
 	mDepthTest = enable;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not enable/disable depth testing");
+#endif
 }
 
 void RenderState::SetDepthFunc(DepthFunc::Enum func)
@@ -300,9 +312,11 @@ void RenderState::SetDepthFunc(DepthFunc::Enum func)
 	glDepthFunc(GetDepthFuncAsEnum(func));
 	mDepthFunc = func;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not set the depth function used when render faces on the screen");
+#endif
 }
 
 void RenderState::SetBlend(bool enable)
@@ -316,9 +330,11 @@ void RenderState::SetBlend(bool enable)
 		glDisable(GL_BLEND);
 	mBlend = enable;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not enable/disable blending");
+#endif
 }
 
 void RenderState::SetBlendFunc(SrcFactor::Enum sfactor, DestFactor::Enum dfactor)
@@ -330,9 +346,11 @@ void RenderState::SetBlendFunc(SrcFactor::Enum sfactor, DestFactor::Enum dfactor
 	mBlendFunc.sfactor = sfactor;
 	mBlendFunc.dfactor = dfactor;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not change the blend functions the cull faces used when render faces on the screen");
+#endif
 }
 
 void RenderState::SetCullFace(CullFace::Enum cullFace)
@@ -350,9 +368,11 @@ void RenderState::SetCullFace(CullFace::Enum cullFace)
 	}
 	mCullFace = cullFace;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not change the cull faces used when render faces on the screen");
+#endif
 }
 
 void RenderState::SetClearColor(const Color& color)
@@ -363,9 +383,11 @@ void RenderState::SetClearColor(const Color& color)
 	glClearColor(color.r, color.g, color.b, color.a);
 	mClearColor = color;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not set the colors used whenever clearing the screen");
+#endif
 }
 
 void RenderState::SetClearDepth(float32 depth)
@@ -376,9 +398,11 @@ void RenderState::SetClearDepth(float32 depth)
 	glClearDepth(depth);
 	mClearDepth = depth;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not change the clearing depth");
+#endif
 }
 
 void RenderState::BindTexture(const Texture* texture, uint32 index)
@@ -388,9 +412,11 @@ void RenderState::BindTexture(const Texture* texture, uint32 index)
 		glActiveTexture(GL_TEXTURE0 + index);
 		mActiveTextureIndex = index;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 		GLenum err = glGetError();
 		if (err != GL_NO_ERROR)
 			THROW_EXCEPTION(RenderingException, "Could not activate texture index: %d", index);
+#endif
 	}
 
 	const uint32 uid = texture != nullptr ? texture->GetUID() : 0;
@@ -404,9 +430,11 @@ void RenderState::BindTexture(const Texture* texture, uint32 index)
 	mTextureUID[index] = uid;
 	mTextureTarget[index] = textureTarget;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not bind texture");
+#endif
 }
 
 void RenderState::BindSampler(SamplerObject* samplerObject, uint32 index)
@@ -419,9 +447,11 @@ void RenderState::BindSampler(SamplerObject* samplerObject, uint32 index)
 	glBindSampler(index, samplerID);
 	mSamplerObjectUID[index] = uid;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not bind the texture sampler object");
+#endif
 }
 
 void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, GLenum index)
@@ -482,9 +512,11 @@ void RenderState::ApplyRenderTargets()
 			mDepthRenderTarget = 0;
 			mDepthRenderTargetUID = 0;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
 				THROW_EXCEPTION(RenderingException, "Could not unbind frame buffer object. Reason: %d", err);
+#endif
 		}
 
 		return;
@@ -503,10 +535,12 @@ void RenderState::ApplyRenderTargets()
 		glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferID);
 		mFrameBufferApplied = true;
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 		// Check for any GL errors
 		GLenum err = glGetError();
 		if (err != GL_NO_ERROR)
 			THROW_EXCEPTION(RenderingException, "Could not bind frame buffer");
+#endif
 	}
 	
 	Size size;
@@ -569,10 +603,12 @@ void RenderState::ApplyRenderTargets()
 	}
 	glDrawBuffers(numDrawBuffers, drawBuffers);
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	// Check for any GL errors
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not apply render targets. Reason: %d", err);
+#endif
 
 	// Check if all worked fine and unbind the FBO
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);

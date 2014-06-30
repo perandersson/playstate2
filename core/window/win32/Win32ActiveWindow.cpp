@@ -165,9 +165,7 @@ bool Win32ActiveWindow::ProcessEvents()
 		if (mMessageQueue.message == WM_QUIT) {
 			WindowClosedListeners::size_type size = mWindowClosedListeners.size();
 			for (WindowClosedListeners::size_type i = 0; i < size; ++i) {
-				if (mWindowClosedListeners[i]->OnWindowClosing() == false) {
-					// TODO: IGNORE CLOSE!!!
-				}
+				mWindowClosedListeners[i]->OnWindowClosing();
 			}
 
 			return false;;
@@ -180,7 +178,6 @@ bool Win32ActiveWindow::ProcessEvents()
 	// Dispatch resize events if a resize has occured.
 	if (mSize != mPrevSize) {
 		mPrevSize = mSize;
-
 		WindowResizedListeners::size_type size = mWindowResizeListeners.size();
 		for (WindowResizedListeners::size_type i = 0; i < size; ++i) {
 			mWindowResizeListeners[i]->OnWindowResized(mSize);
