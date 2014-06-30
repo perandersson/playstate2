@@ -9,12 +9,24 @@
 #include "effect/Effect.h"
 using namespace core;
 
-OpenGLRenderContext::OpenGLRenderContext()
+OpenGLRenderContext::OpenGLRenderContext(GLEWContext* glewContext)
+: mGLEWContext(glewContext)
 {
+	if (mGLEWContext == nullptr) {
+		mGLEWContext = new GLEWContext;
+		memset(mGLEWContext, 0, sizeof(GLEWContext));
+	}
+
 }
 
 OpenGLRenderContext::~OpenGLRenderContext()
 {
+	mRenderStatesCreatedByContext.clear();
+
+	if (mGLEWContext != nullptr) {
+		delete mGLEWContext;
+		mGLEWContext = nullptr;
+	}
 }
 
 RenderState* OpenGLRenderContext::GetRenderState()

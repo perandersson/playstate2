@@ -1,6 +1,6 @@
 #pragma once
 #include "DefaultUniform.h"
-#include <gl/glew.h>
+#include "../GLEWMX.h"
 
 namespace core
 {

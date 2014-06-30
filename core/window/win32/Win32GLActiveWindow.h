@@ -3,8 +3,7 @@
 #include "../../rendering/win32/Win32RenderContext.h"
 
 #include <Windows.h>
-#include <gl/glew.h>
-#include <gl/wglew.h>
+#include "../../rendering/GLEWMX.h"
 
 namespace core
 {

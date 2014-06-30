@@ -2,7 +2,7 @@
 #include "../resource/ResourceObject.h"
 #include "../math/Point.h"
 #include "TextureFormat.h"
-#include <GL/glew.h>
+#include "GLEWMX.h"
 
 namespace core
 {

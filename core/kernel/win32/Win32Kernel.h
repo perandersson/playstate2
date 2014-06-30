@@ -16,6 +16,7 @@ namespace core
 	*/
 	class Win32Kernel : public IKernel
 	{
+		typedef std::list<OpenGLRenderContext*> FreeRenderContexts;
 	public:
 		Win32Kernel();
 		virtual ~Win32Kernel();
@@ -38,7 +39,8 @@ namespace core
 		virtual bool ProcessEvents();
 
 	private:
-		IRenderContext* GetFreeRenderContext();
+		OpenGLRenderContext* GetFreeRenderContext();
+		void ReturnRenderContext(OpenGLRenderContext* renderContext);
 
 	private:
 		LuaConfiguration* mConfiguration;
@@ -51,5 +53,9 @@ namespace core
 		OpenALSoundEngine* mSoundEngine;
 		Win32ActiveWindow* mActiveWindow;
 		ThreadPool* mThreadPool;
+
+		// List containing all the free render contexts
+		FreeRenderContexts mFreeRenderContexts;
+		std::mutex mFreeRenderContextsMutex;
 	};
 }

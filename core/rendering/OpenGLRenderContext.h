@@ -10,7 +10,7 @@
 #include "GraphicsCapabilities.h"
 #include "exception/RenderingException.h"
 #include "../resource/Resource.h"
-#include <gl/glew.h>
+#include "GLEWMX.h"
 #include <future>
 
 namespace core
@@ -21,7 +21,7 @@ namespace core
 	class OpenGLRenderContext : public IRenderContext
 	{
 	public:
-		OpenGLRenderContext();
+		OpenGLRenderContext(GLEWContext* glewContext);
 		virtual ~OpenGLRenderContext();
 
 		virtual RenderState* GetRenderState();
@@ -45,7 +45,12 @@ namespace core
 		GLuint GenBufferID() const;
 
 	private:
+		// Vector containing all the states created by this render context. Useful so that 
+		// we can safely cleanup all the memory we've been using
 		std::vector<std::shared_ptr<RenderState>> mRenderStatesCreatedByContext;
+
+	protected:
+		GLEWContext* mGLEWContext;
 	};
 
 }

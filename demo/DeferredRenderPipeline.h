@@ -18,8 +18,9 @@ public:
 private:
 	Resource<Effect> mDeferredEffect;
 	Resource<Effect> mTexturedEffect;
+	Resource<Effect> mShadowMappingEffect;
 	Resource<Effect> mPointLightEffect;
-	std::shared_ptr<VertexBuffer> mUniformBuffer;
+	std::shared_ptr<VertexBuffer> mFullscreenQuad;
 	Resource<Texture2D> mPointLightTexture;
 	Resource<Texture2D> mWhiteTexture;
 

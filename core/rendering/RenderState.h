@@ -10,7 +10,7 @@
 #include "GraphicsCapabilities.h"
 #include "effect/EffectState.h"
 #include "IUniform.h"
-#include <gl/glew.h>
+#include "GLEWMX.h"
 #include <mutex>
 
 namespace core

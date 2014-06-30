@@ -16,6 +16,7 @@ DeferredRenderPipeline::DeferredRenderPipeline()
 	mDeferredEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred.effect");
 	mPointLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred_point_light.effect");
 	mTexturedEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred_result.effect");
+	//mShadowMappingEffect = ResourceManager::GetResource<Effect>("/demo/effects/shadow_mapping.effect");
 
 	mPointLightTexture = ResourceManager::GetResource<Texture2D>("/demo/effects/light.png");
 
@@ -32,7 +33,7 @@ DeferredRenderPipeline::DeferredRenderPipeline()
 	elements[4].texCoord = Vector2(1.0f, 1.0f);
 	elements[5].pos = Vector3(1.0f, -1.0f, 0.0f);
 	elements[5].texCoord = Vector2(1.0f, 0.0f);
-	mUniformBuffer = std::shared_ptr<VertexBuffer>(RenderContext::CreateStaticBuffer(elements, 6));
+	mFullscreenQuad = std::shared_ptr<VertexBuffer>(RenderContext::CreateStaticBuffer(elements, 6));
 }
 
 DeferredRenderPipeline::~DeferredRenderPipeline()
@@ -55,61 +56,61 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 {
 	FindQuery query = { camera, RenderableFilter::DEFAULT };
-	//if (scene.Find(query, &mRenderBlockResultSet)) {
-	//	auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
-	//		RenderState* state = RenderContext::Activate(mDeferredEffect);
-	//		state->SetRenderTarget(mDiffuseRenderTarget, 0);
-	//		state->SetRenderTarget(mPositionsRenderTarget, 1);
-	//		state->SetRenderTarget(mNormalsRenderTarget, 2);
-	//		state->SetDepthRenderTarget(mDepthRenderTarget);
-	//		state->Clear(ClearType::COLOR | ClearType::DEPTH);
-
-	//		// Set camera properties
-	//		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-	//		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-
-	//		IUniform* modelMatrix = state->FindUniform("ModelMatrix");
-	//		IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
-	//		IUniform* diffuseColor = state->FindUniform("DiffuseColor");
-
-	//		RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
-	//		RenderBlockResultSet::Type block;
-	//		while (block = it.Next()) {
-	//			diffuseTexture->SetTexture(block->diffuseTexture);
-	//			diffuseColor->SetColorRGB(block->diffuseColor);
-	//			modelMatrix->SetMatrix(block->modelMatrix);
-	//			state->Render(block->vertexBuffer, block->indexBuffer);
-	//		}
-	//		return true;
-	//	});
-	//	fut.get();
-	//}
-
 	if (scene.Find(query, &mRenderBlockResultSet)) {
-		RenderState* state = RenderContext::Activate(mDeferredEffect);
-		state->SetRenderTarget(mDiffuseRenderTarget, 0);
-		state->SetRenderTarget(mPositionsRenderTarget, 1);
-		state->SetRenderTarget(mNormalsRenderTarget, 2);
-		state->SetDepthRenderTarget(mDepthRenderTarget);
-		state->Clear(ClearType::COLOR | ClearType::DEPTH);
+		auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
+			RenderState* state = RenderContext::Activate(mDeferredEffect);
+			state->SetRenderTarget(mDiffuseRenderTarget, 0);
+			state->SetRenderTarget(mPositionsRenderTarget, 1);
+			state->SetRenderTarget(mNormalsRenderTarget, 2);
+			state->SetDepthRenderTarget(mDepthRenderTarget);
+			state->Clear(ClearType::COLOR | ClearType::DEPTH);
 
-		// Set camera properties
-		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+			// Set camera properties
+			state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+			state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
 
-		IUniform* modelMatrix = state->FindUniform("ModelMatrix");
-		IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
-		IUniform* diffuseColor = state->FindUniform("DiffuseColor");
+			IUniform* modelMatrix = state->FindUniform("ModelMatrix");
+			IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
+			IUniform* diffuseColor = state->FindUniform("DiffuseColor");
 
-		RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
-		RenderBlockResultSet::Type block;
-		while (block = it.Next()) {
-			diffuseTexture->SetTexture(block->diffuseTexture);
-			diffuseColor->SetColorRGB(block->diffuseColor);
-			modelMatrix->SetMatrix(block->modelMatrix);
-			state->Render(block->vertexBuffer, block->indexBuffer);
-		}
+			RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
+			RenderBlockResultSet::Type block;
+			while (block = it.Next()) {
+				diffuseTexture->SetTexture(block->diffuseTexture);
+				diffuseColor->SetColorRGB(block->diffuseColor);
+				modelMatrix->SetMatrix(block->modelMatrix);
+				state->Render(block->vertexBuffer, block->indexBuffer);
+			}
+			return true;
+		});
+		fut.get();
 	}
+
+	//if (scene.Find(query, &mRenderBlockResultSet)) {
+	//	RenderState* state = RenderContext::Activate(mDeferredEffect);
+	//	state->SetRenderTarget(mDiffuseRenderTarget, 0);
+	//	state->SetRenderTarget(mPositionsRenderTarget, 1);
+	//	state->SetRenderTarget(mNormalsRenderTarget, 2);
+	//	state->SetDepthRenderTarget(mDepthRenderTarget);
+	//	state->Clear(ClearType::COLOR | ClearType::DEPTH);
+
+	//	// Set camera properties
+	//	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+	//	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+
+	//	IUniform* modelMatrix = state->FindUniform("ModelMatrix");
+	//	IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
+	//	IUniform* diffuseColor = state->FindUniform("DiffuseColor");
+
+	//	RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
+	//	RenderBlockResultSet::Type block;
+	//	while (block = it.Next()) {
+	//		diffuseTexture->SetTexture(block->diffuseTexture);
+	//		diffuseColor->SetColorRGB(block->diffuseColor);
+	//		modelMatrix->SetMatrix(block->modelMatrix);
+	//		state->Render(block->vertexBuffer, block->indexBuffer);
+	//	}
+	//}
 
 	DrawLighting(scene, camera);
 	DrawFinalResultToScreen(scene, camera);
@@ -168,7 +169,7 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 			quadraticAttenuation->SetFloat(block->quadricAttenuation);
 			lightRadius->SetFloat(block->radius);
 
-			state->Render(mUniformBuffer.get());
+			state->Render(mFullscreenQuad.get());
 		}
 	}
 }
@@ -198,5 +199,5 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 	state->Clear(ClearType::COLOR | ClearType::DEPTH);
 	state->FindUniform("AmbientColor")->SetColorRGB(scene.GetAmbientLight());
 	state->FindUniform("ProjectionMatrix")->SetMatrix(Camera::GetOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f));
-	state->Render(mUniformBuffer.get());
+	state->Render(mFullscreenQuad.get());
 }

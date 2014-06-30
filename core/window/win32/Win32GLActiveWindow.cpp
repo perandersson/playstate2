@@ -1,7 +1,7 @@
 #include "../../Memory.h"
 #include "Win32GLActiveWindow.h"
 #include "../../rendering/exception/RenderingException.h"
-
+#include "../../rendering/WGLEWMX.h"
 using namespace core;
 
 Win32GLActiveWindow::Win32GLActiveWindow()
@@ -52,9 +52,21 @@ void Win32GLActiveWindow::InitializeDrivers(HWND windowHandle, const Size& size)
 
 	wglMakeCurrent(mDeviceContext, tempContext);
 
+	GLEWContext* glewContext = new GLEWContext; memset(glewContext, 0, sizeof(GLEWContext));
+	WGLEWContext* wglewContext = new WGLEWContext; memset(wglewContext, 0, sizeof(WGLEWContext));
+
+	SetGLEWContext(glewContext);
+	SetWGLEWContext(wglewContext);
+
+	glewExperimental = GL_TRUE;
 	GLenum result = glewInit();
 	if (result != GLEW_OK) {
 		THROW_EXCEPTION(RenderingException, "Could not initialize GLEW");
+	}
+
+	result = wglewInit();
+	if (result != GLEW_OK) {
+		THROW_EXCEPTION(RenderingException, "Could not initialize WGLEW");
 	}
 
 	if (wglewIsSupported("WGL_ARB_create_context") != 1) {
@@ -73,7 +85,8 @@ void Win32GLActiveWindow::InitializeDrivers(HWND windowHandle, const Size& size)
 		THROW_EXCEPTION(RenderingException, "You'r graphics card does not support OpenGL 3.3");
 	}
 
-	mRenderContext = new Win32RenderContext(mDeviceContext, windowsRenderContext);
+	mRenderContext = new Win32RenderContext(mDeviceContext, windowsRenderContext, glewContext, wglewContext);
+	Win32RenderContext::SetThreadLocal(mRenderContext);
 	mRenderContext->Bind();
 	wglDeleteContext(tempContext);
 }

@@ -1,29 +1,58 @@
 #include "../../Memory.h"
 #include "Win32RenderContext.h"
 #include "../exception/RenderingException.h"
+#include "../WGLEWMX.h"
 using namespace core;
 
 template<> IRenderContext* ThreadLocal<IRenderContext*>::gThreadLocal = nullptr;
 
-Win32RenderContext::Win32RenderContext(HDC deviceContext, HGLRC renderContext)
-: mDeviceContext(deviceContext), mRenderContext(renderContext)
+Win32RenderContext::Win32RenderContext(HDC deviceContext, HGLRC renderContext, GLEWContext* glewContext, WGLEWContext* wglewContext)
+: OpenGLRenderContext(glewContext), mDeviceContext(deviceContext), mRenderContext(renderContext), mWGLEWContext(wglewContext)
 {
+	if (mWGLEWContext == nullptr) {
+		mWGLEWContext = new WGLEWContext;
+		memset(mWGLEWContext, 0, sizeof(WGLEWContext));
+	}
 }
 
 Win32RenderContext::~Win32RenderContext()
 {
-	mRenderContexts.clear();
+	mRenderContextsCreatedByContext.clear();
 
 	if (mRenderContext != nullptr) {
 		wglDeleteContext(mRenderContext);
 		mRenderContext = nullptr;
+	}
+
+	if (mWGLEWContext != nullptr) {
+		delete mWGLEWContext;
+		mWGLEWContext = nullptr;
 	}
 }
 
 void Win32RenderContext::Bind()
 {
 	wglMakeCurrent(mDeviceContext, mRenderContext);
-	//SetThreadLocal(this);
+
+	// If GLEW is not initialized for this thread then register it
+	if (GetGLEWContext() == nullptr) {
+		SetGLEWContext(mGLEWContext);
+		SetWGLEWContext(mWGLEWContext);
+
+		glewExperimental = GL_TRUE;
+		GLenum result = glewInit();
+		if (result != GLEW_OK) {
+			THROW_EXCEPTION(RenderingException, "Could not initialize GLEW");
+		}
+
+		result = wglewInit();
+		if (result != GLEW_OK) {
+			THROW_EXCEPTION(RenderingException, "Could not initialize WGLEW");
+		}
+
+		GLenum err = glGetError();
+		// Ignore. http://gamedev.stackexchange.com/questions/29990/opengl-glgeterror-returns-invalid-enum-after-call-to-glewinit
+	}
 
 	// For a render state to be initialized in this thread (if it doesnt exist)
 	GetRenderState();
@@ -32,11 +61,10 @@ void Win32RenderContext::Bind()
 void Win32RenderContext::Unbind()
 {
 	glFlush();
-	//SetThreadLocal(nullptr);
 	wglMakeCurrent(NULL, NULL);
 }
 
-IRenderContext* Win32RenderContext::CreateRenderContext()
+OpenGLRenderContext* Win32RenderContext::CreateRenderContext()
 {
 	int attribs[] = {
 		WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
@@ -49,7 +77,7 @@ IRenderContext* Win32RenderContext::CreateRenderContext()
 	if (!windowsRenderContext) {
 		THROW_EXCEPTION(RenderingException, "You'r graphics card does not support OpenGL 3.3");
 	}
-	std::shared_ptr<IRenderContext> renderContext(new Win32RenderContext(mDeviceContext, windowsRenderContext));
-	mRenderContexts.push_back(renderContext);
+	std::shared_ptr<OpenGLRenderContext> renderContext(new Win32RenderContext(mDeviceContext, windowsRenderContext, nullptr, nullptr));
+	mRenderContextsCreatedByContext.push_back(renderContext);
 	return renderContext.get();
 }

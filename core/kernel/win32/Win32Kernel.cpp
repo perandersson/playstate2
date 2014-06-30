@@ -14,7 +14,6 @@ mActiveWindow(nullptr), mThreadPool(nullptr)
 
 Win32Kernel::~Win32Kernel()
 {
-
 }
 
 bool Win32Kernel::Initialize()
@@ -38,6 +37,11 @@ bool Win32Kernel::Initialize()
 	mResourceManager = new ThreadSafeResourceManager(mFileSystem);
 	mThreadPool = new ThreadPool();
 	mThreadPool->Initialize(4);
+
+	// Initialize a free render contexts that will, later on, be used by the different rendering threads
+	for (uint32 i = 0; i < 6; ++i) {
+		mFreeRenderContexts.push_back(mActiveWindow->GetRenderContext()->CreateRenderContext());
+	}
 
 	//
 	// Register kernel specific resource loaders
@@ -116,7 +120,7 @@ IRenderContext* Win32Kernel::GetRenderContext()
 {
 	IRenderContext* renderContext = Win32RenderContext::GetThreadLocal();
 	if (renderContext == nullptr) {
-		renderContext = mActiveWindow->GetRenderContext()->CreateRenderContext();
+		renderContext = GetFreeRenderContext();
 		Win32RenderContext::SetThreadLocal(renderContext);
 	}
 	return renderContext;
@@ -149,6 +153,15 @@ bool Win32Kernel::ProcessEvents()
 	mScriptManager->GC();
 	mFileSystem->ProcessEvents();
 	return mActiveWindow->ProcessEvents();
+}
+
+OpenGLRenderContext* Win32Kernel::GetFreeRenderContext()
+{
+	std::lock_guard<std::mutex> lock(mFreeRenderContextsMutex);
+	assert(mFreeRenderContexts.size() > 0);
+	OpenGLRenderContext* renderContext = mFreeRenderContexts.front();
+	mFreeRenderContexts.pop_front();
+	return renderContext;
 }
 
 IKernel* core::CreateKernel(void* params)

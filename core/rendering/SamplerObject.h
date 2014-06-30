@@ -3,7 +3,7 @@
 #include "MinFilter.h"
 #include "MagFilter.h"
 #include "TextureWrap.h"
-#include <gl/glew.h>
+#include "GLEWMX.h"
 
 namespace core
 {

@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "effect/Effect.h"
 #include "exception/RenderingException.h"
+#include "../window/ActiveWindow.h"
 using namespace core;
 
 template<> RenderState* ThreadLocal<RenderState*>::gThreadLocal = nullptr;
@@ -107,9 +108,6 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render vertices on the screen");
 #endif
-	//
-	// Set this render state's properties based on the supplied effect
-	//
 
 	SetDepthTest(effect->GetDepthTest());
 	SetDepthFunc(effect->GetDepthFunc());
@@ -125,13 +123,7 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	const RenderTarget2D* const* renderTargets = effect->GetRenderTargets();
 	for (uint32 i = 0; i < MAX_RENDER_TARGETS; ++i)
 		SetRenderTarget(renderTargets[i], i);
-
 	SetDepthRenderTarget(effect->GetDepthRenderTarget());
-	ApplyRenderTargets();
-
-	// Apply the effects various uniform variables
-	//mEffectState->ApplyUniforms();
-	//mEffectApplied = true;
 
 	return mEffectState;
 }
@@ -519,6 +511,9 @@ void RenderState::ApplyRenderTargets()
 #endif
 		}
 
+		const Size& windowSize = ActiveWindow::GetSize();
+		Rect screenViewportSize = { 0, 0, windowSize.width, windowSize.height };
+		SetViewport(screenViewportSize);
 		return;
 	}
 

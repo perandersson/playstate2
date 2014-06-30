@@ -1,7 +1,7 @@
 #pragma once
 #include "../typedefs.h"
 #include "VertexType.h"
-#include <gl/glew.h>
+#include "GLEWMX.h"
 
 namespace core
 {

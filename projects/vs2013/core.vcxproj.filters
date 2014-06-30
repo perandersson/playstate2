@@ -728,6 +728,12 @@
     <ClInclude Include="..\..\core\kernel\ThreadPool.h">
       <Filter>Source Files\kernel</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\GLEWMX.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\WGLEWMX.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1158,6 +1164,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\kernel\ThreadPool.cpp">
       <Filter>Source Files\kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\GLEWMX.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\WGLEWMX.cpp">
+      <Filter>Source Files\rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #pragma once
 #include "DefaultUniform.h"
 #include "../SamplerObject.h"
-#include <gl/glew.h>
+#include "../GLEWMX.h"
 
 namespace core
 {

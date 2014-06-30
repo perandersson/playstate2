@@ -108,6 +108,7 @@
     <ClInclude Include="..\..\core\rendering\effect\UniformProperty.h" />
     <ClInclude Include="..\..\core\rendering\exception\RenderingException.h" />
     <ClInclude Include="..\..\core\rendering\GeometryBuilder.h" />
+    <ClInclude Include="..\..\core\rendering\GLEWMX.h" />
     <ClInclude Include="..\..\core\rendering\GraphicsCapabilities.h" />
     <ClInclude Include="..\..\core\rendering\IndexBuffer.h" />
     <ClInclude Include="..\..\core\rendering\IRenderContext.h" />
@@ -130,6 +131,7 @@
     <ClInclude Include="..\..\core\rendering\VertexBuffer.h" />
     <ClInclude Include="..\..\core\rendering\VertexType.h" />
     <ClInclude Include="..\..\core\rendering\VertexTypes.h" />
+    <ClInclude Include="..\..\core\rendering\WGLEWMX.h" />
     <ClInclude Include="..\..\core\rendering\win32\Win32RenderContext.h" />
     <ClInclude Include="..\..\core\resource\exception\LoadResourceException.h" />
     <ClInclude Include="..\..\core\resource\exception\ResourceException.h" />
@@ -287,6 +289,7 @@
     <ClCompile Include="..\..\core\rendering\effect\SamplerStateXmlVisitor.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\UniformNotFound.cpp" />
     <ClCompile Include="..\..\core\rendering\exception\RenderingException.cpp" />
+    <ClCompile Include="..\..\core\rendering\GLEWMX.cpp" />
     <ClCompile Include="..\..\core\rendering\IndexBuffer.cpp" />
     <ClCompile Include="..\..\core\rendering\MagFilter.cpp" />
     <ClCompile Include="..\..\core\rendering\MinFilter.cpp" />
@@ -303,6 +306,7 @@
     <ClCompile Include="..\..\core\rendering\TextureWrap.cpp" />
     <ClCompile Include="..\..\core\rendering\VertexBuffer.cpp" />
     <ClCompile Include="..\..\core\rendering\VertexType.cpp" />
+    <ClCompile Include="..\..\core\rendering\WGLEWMX.cpp" />
     <ClCompile Include="..\..\core\rendering\win32\Win32RenderContext.cpp" />
     <ClCompile Include="..\..\core\resource\exception\LoadResourceException.cpp" />
     <ClCompile Include="..\..\core\resource\exception\ResourceException.cpp" />
@@ -406,8 +410,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../3rdparty/tinyxml2/include;../../3rdparty/glew-1.9.0/include;../../3rdparty/FreeImage/include;../../3rdparty/openal-soft/include;../../3rdparty/libvorbis/include;../../3rdparty/libogg/include;../../3rdparty/lua-5.2.3/include;../../3rdparty/freetype-2.4.11/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;GLEW_STATIC;GLEW_MX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../3rdparty/tinyxml2/include;../../3rdparty/glew-1.10.0/include;../../3rdparty/FreeImage/include;../../3rdparty/openal-soft/include;../../3rdparty/libvorbis/include;../../3rdparty/libogg/include;../../3rdparty/lua-5.2.3/include;../../3rdparty/freetype-2.4.11/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -440,8 +444,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../3rdparty/tinyxml2/include;../../3rdparty/glew-1.9.0/include;../../3rdparty/FreeImage/include;../../3rdparty/openal-soft/include;../../3rdparty/libvorbis/include;../../3rdparty/libogg/include;../../3rdparty/lua-5.2.3/include;../../3rdparty/freetype-2.4.11/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;GLEW_STATIC;GLEW_MX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../3rdparty/tinyxml2/include;../../3rdparty/glew-1.10.0/include;../../3rdparty/FreeImage/include;../../3rdparty/openal-soft/include;../../3rdparty/libvorbis/include;../../3rdparty/libogg/include;../../3rdparty/lua-5.2.3/include;../../3rdparty/freetype-2.4.11/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
