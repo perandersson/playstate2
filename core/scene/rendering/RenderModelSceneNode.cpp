@@ -10,20 +10,6 @@ RenderModelSceneNode::RenderModelSceneNode()
 RenderModelSceneNode::~RenderModelSceneNode()
 {
 }
-//
-//Updatable* RenderModelComponent::GetUpdatable()
-//{
-//	return mModel->GetNumFrames() > 0 ? this : nullptr;
-//}
-//
-//Renderable* RenderModelComponent::GetRenderable()
-//{
-//	return this;
-//}
-//
-//void RenderModelSceneNode::Update()
-//{
-//}
 
 void RenderModelSceneNode::SetModel(Resource<Model> model)
 {
@@ -37,7 +23,9 @@ void RenderModelSceneNode::PreRender(const FindQuery& state, RenderBlockResultSe
 	const ModelMesh* meshes = mModel->GetMeshes();
 	for (uint32 i = 0; i < size; ++i) {
 		const ModelMesh& mesh = meshes[i];
-		RenderBlock* block = resultSet->Create(0);
+		// TODO Calculate a much better ID instead of just using the vertex buffer id
+		uint32 id = mesh.vertexBuffer->GetUID();
+		RenderBlock* block = resultSet->Create(id);
 		block->modelMatrix = GetModelMatrix();
 		if (BIT_ISSET(state.filter, RenderableFilter::GEOMETRY)) {
 			block->vertexBuffer = mesh.vertexBuffer;

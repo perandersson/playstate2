@@ -13,17 +13,14 @@ namespace core
 		virtual ~AnimationChangedEvent() {}
 	};
 
-	class RenderModelSceneNode : public Renderable/*, public Updatable*/
+	class RenderModelSceneNode : public Renderable
 	{
 		DECLARE_SCRIPT_OBJECT(RenderModelSceneNode);
 
 	public:
 		RenderModelSceneNode();
 		virtual ~RenderModelSceneNode();
-
-		//virtual Updatable* GetUpdatable();
-		//virtual Renderable* GetRenderable();
-
+		
 		/*!
 			\brief Set the model to be drawn by this node
 
@@ -35,9 +32,6 @@ namespace core
 		//
 		// Perform's a pre-render stage
 		virtual void PreRender(const FindQuery& state, RenderBlockResultSet* resultSet);
-
-	//public:
-		//virtual void Update();
 
 	private:
 		Resource<Model> mModel;
