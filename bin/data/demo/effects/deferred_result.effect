@@ -19,6 +19,12 @@
 		}
 	]]>
 	</VertexShader>
+	<SamplerState Id="PositionsTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
 	<SamplerState Id="DiffuseTexture">
 		<MinFilter>LINEAR</MinFilter>
 		<MagFilter>LINEAR</MagFilter>
@@ -26,6 +32,12 @@
 		<WrapT>CLAMP_TO_EDGE</WrapT>
 	</SamplerState>
 	<SamplerState Id="NormalsTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<SamplerState Id="LightTexture">
 		<MinFilter>LINEAR</MinFilter>
 		<MagFilter>LINEAR</MagFilter>
 		<WrapS>CLAMP_TO_EDGE</WrapS>

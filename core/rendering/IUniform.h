@@ -7,6 +7,9 @@
 #include "../math/Matrix4x4.h"
 #include "../math/Vector3.h"
 #include "../math/Vector2.h"
+#include "MinFilter.h"
+#include "MagFilter.h"
+#include "TextureWrap.h"
 
 namespace core
 {
@@ -28,6 +31,8 @@ namespace core
 		virtual void SetTexture(const Texture2D* texture) = 0;
 		virtual void SetTexture(Resource<Texture2D>& texture) = 0;
 		virtual void SetTexture(const RenderTarget2D* texture) = 0;
+
+		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt) = 0;
 
 		virtual void SetColorRGBA(const Color& color) = 0;
 		virtual void SetColorRGB(const Color& color) = 0;

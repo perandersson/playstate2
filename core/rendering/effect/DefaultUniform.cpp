@@ -74,6 +74,11 @@ void DefaultUniform::SetTexture(const RenderTarget2D* texture)
 	assert(false && "Invalid component type");
 }
 
+void DefaultUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)
+{
+	assert(false && "Invalid component type");
+}
+
 void DefaultUniform::SetMatrix(const Matrix4x4& matrix)
 {
 	assert(false && "Invalid component type");

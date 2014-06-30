@@ -65,6 +65,11 @@ void UniformNotFound::SetTexture(const RenderTarget2D* texture)
 
 }
 
+void UniformNotFound::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)
+{
+
+}
+
 void UniformNotFound::SetColorRGBA(const Color& color)
 {
 

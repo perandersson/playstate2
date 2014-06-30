@@ -41,9 +41,26 @@ mNextTextureIndex(0), mMaxTextureIndexes(0), mApplyEffectState(true)
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Coult not initialize this thread's rendering states");
+		THROW_EXCEPTION(RenderingException, "Coult not initialize this thread's rendering states. Reason: %d", error);
+	
+	// TODO: Ask OpenGL about this
+	mMaxTextureIndexes = MAX_ACTIVE_TEXTURES; 
+	
+	//
+	// Create the vertex array used to draw the upcomming triangles onto the screen
+	//
 
-	mMaxTextureIndexes = MAX_ACTIVE_TEXTURES; // TODO: Ask OpenGL about this
+	glGenVertexArrays(1, &mVertexArrayID);
+	glBindVertexArray(mVertexArrayID);
+
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not create or bind the vertex array. Reason: %d", error);
+
+	glGenFramebuffers(1, &mFrameBufferID);
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not create frame buffer object. Reason: %d", error);
 }
 
 RenderState::~RenderState()
@@ -55,6 +72,7 @@ RenderState::~RenderState()
 	}
 
 	if (mVertexArrayID != 0) {
+		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &mVertexArrayID);
 		mVertexArrayID = 0;
 	}
@@ -92,13 +110,13 @@ void RenderState::Clear(uint32 clearBits)
 EffectState* RenderState::BindEffect(const Effect* effect)
 {
 	assert_not_null(effect);
+	mApplyEffectState = true;
 	const uint32 uid = effect->GetUID();
 	if (uid == mEffectUID)
 		return mEffectState;
 
 	// Find the appropriate effect state
 	mEffectState = GetEffectState(effect);
-	mApplyEffectState = true;
 
 	glUseProgram(effect->GetProgramID());
 	mEffectUID = uid;
@@ -131,16 +149,12 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 void RenderState::Render(const VertexBuffer* buffer)
 {
 	assert_not_null(buffer);
-
-	ApplyBuffers(buffer, nullptr);
 	Render(buffer, nullptr, 0);
 }
 
 void RenderState::Render(const VertexBuffer* buffer, const IndexBuffer* indexBuffer)
 {
 	assert_not_null(buffer);
-
-	ApplyBuffers(buffer, indexBuffer);
 	Render(buffer, indexBuffer, 0);
 }
 
@@ -173,6 +187,12 @@ void RenderState::Render(const VertexBuffer* buffer, const IndexBuffer* indexBuf
 		buffer->Render(indexBuffer, startIndex, numVertices);
 	else
 		buffer->Render(startIndex, numVertices);
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not render index and vertex buffers");
+#endif
 }
 
 void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
@@ -181,15 +201,6 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 	const uint32 uid = vertexBuffer->GetUID();
 	if (mVertexBufferUID == uid)
 		return;
-
-	if (mVertexArrayID == 0) {
-		glGenVertexArrays(1, &mVertexArrayID);
-		glBindVertexArray(mVertexArrayID);
-
-		GLenum err = glGetError();
-		if (err != GL_NO_ERROR)
-			THROW_EXCEPTION(RenderingException, "Could not bind the newly vertex array");
-	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->GetBufferID());
 
@@ -231,8 +242,10 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 	uint32 offset = 0;
 	for (uint32 i = 0; i < 8; ++i) {
 		const VertexElementDesc& elemDesc = desc.elements[i];
-		if (elemDesc.fieldSize == 0)
+		if (elemDesc.fieldSize == 0) {
+			//glDisableVertexAttribArray(i);
 			break;
+		}
 
 		glEnableVertexAttribArray(elemDesc.location);
 		if (HandleAsIntegerType(elemDesc)) {
@@ -516,15 +529,7 @@ void RenderState::ApplyRenderTargets()
 		SetViewport(screenViewportSize);
 		return;
 	}
-
-	// Create frame buffer if exists
-	if (mFrameBufferID == 0) {
-		glGenFramebuffers(1, &mFrameBufferID);
-		GLenum err = glGetError();
-		if (err != GL_NO_ERROR)
-			THROW_EXCEPTION(RenderingException, "Could not create frame buffer object. Reason: %d", err);
-	}
-
+	
 	// Bind frame buffer if it's not already bound to this render context
 	if (!mFrameBufferApplied) {
 		glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferID);
@@ -548,18 +553,21 @@ void RenderState::ApplyRenderTargets()
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, mDepthRenderTarget->GetTextureID(), 0);
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
 				THROW_EXCEPTION(RenderingException, "Could not attach depth render target to frame buffer. Reason: %d", err);
-
+#endif
 			mDepthRenderTargetType = attachmentType;
 		}
 		else {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, mDepthRenderTargetType, GL_TEXTURE_2D, 0, 0);
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
 				THROW_EXCEPTION(RenderingException, "Could not detach depth render target from the frame buffer. Reason: %d", err);
+#endif
 		}
 		mDepthRenderTargetUID = depthUID;
 	}
@@ -583,16 +591,20 @@ void RenderState::ApplyRenderTargets()
 			drawBuffers[numDrawBuffers++] = GL_COLOR_ATTACHMENT0 + i;
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, rt->GetTextureID(), 0);
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
 				THROW_EXCEPTION(RenderingException, "Could not attach render target to frame buffer. Reason: %d", err);
+#endif
 		}
 		else {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
 				THROW_EXCEPTION(RenderingException, "Could not detach render target from the frame buffer. Reason: %d", err);
+#endif
 		}
 		mRenderTargetUID[i] = uid;
 	}

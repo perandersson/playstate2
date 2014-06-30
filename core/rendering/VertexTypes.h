@@ -32,7 +32,8 @@ namespace core
 			{ POSITION_ATTRIB_LOCATION, sizeof(Vector3), 3, VertexElementType::FLOAT, false },
 			{ TEXCOORD_ATTRIB_LOCATION, sizeof(Vector2), 2, VertexElementType::FLOAT, false },
 			0
-		}
+		},
+		PrimitiveType::TRIANGLE
 	};
 
 	/////////////////////////////////////////////////////////////////////
@@ -40,8 +41,8 @@ namespace core
 	struct PositionTextureNormalVertexType
 	{
 		Vector3 pos;
-		Vector2 texCoord;
 		Vector3 normal;
+		Vector2 texCoord;
 
 		PositionTextureNormalVertexType()
 		{
@@ -58,8 +59,8 @@ namespace core
 	static const VertexDesc PositionTextureNormalVertexTypeDeclaration = {
 		{
 			{ POSITION_ATTRIB_LOCATION, sizeof(Vector3), 3, VertexElementType::FLOAT, false },
-			{ TEXCOORD_ATTRIB_LOCATION, sizeof(Vector2), 2, VertexElementType::FLOAT, false },
 			{ NORMAL_ATTRIB_LOCATION, sizeof(Vector3), 3, VertexElementType::FLOAT, true },
+			{ TEXCOORD_ATTRIB_LOCATION, sizeof(Vector2), 2, VertexElementType::FLOAT, false },
 			0
 		},
 		PrimitiveType::TRIANGLE

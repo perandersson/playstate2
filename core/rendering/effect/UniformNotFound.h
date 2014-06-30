@@ -24,6 +24,8 @@ namespace core
 		virtual void SetTexture(Resource<Texture2D>& texture);
 		virtual void SetTexture(const RenderTarget2D* texture);
 
+		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt);
+
 		virtual void SetColorRGBA(const Color& color);
 		virtual void SetColorRGB(const Color& color);
 		virtual void SetMatrix(const Matrix4x4& matrix);
