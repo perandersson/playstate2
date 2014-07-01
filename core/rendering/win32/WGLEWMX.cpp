@@ -1,5 +1,5 @@
 #include "WGLEWMX.h"
-#include "../ThreadLocal.h"
+#include "../../ThreadLocal.h"
 
 THREAD_LOCAL WGLEWContext* gWGLEWContext = nullptr;
 

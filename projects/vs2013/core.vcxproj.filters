@@ -731,8 +731,8 @@
     <ClInclude Include="..\..\core\rendering\GLEWMX.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\rendering\WGLEWMX.h">
-      <Filter>Source Files\rendering</Filter>
+    <ClInclude Include="..\..\core\rendering\win32\WGLEWMX.h">
+      <Filter>Source Files\rendering\win32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1168,8 +1168,8 @@
     <ClCompile Include="..\..\core\rendering\GLEWMX.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core\rendering\WGLEWMX.cpp">
-      <Filter>Source Files\rendering</Filter>
+    <ClCompile Include="..\..\core\rendering\win32\WGLEWMX.cpp">
+      <Filter>Source Files\rendering\win32</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

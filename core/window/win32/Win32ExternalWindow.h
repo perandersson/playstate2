@@ -7,7 +7,7 @@ namespace core
 	class Win32ExternalWindow : public Win32GLActiveWindow
 	{
 	public:
-		Win32ExternalWindow();
+		Win32ExternalWindow(IConfiguration* configuration);
 		virtual ~Win32ExternalWindow();
 
 	public:

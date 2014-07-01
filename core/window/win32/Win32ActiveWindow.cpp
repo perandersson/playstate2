@@ -15,7 +15,7 @@ namespace {
 static const char* PLAYSTATE_CLASS_NAME = "playstate";
 
 Win32ActiveWindow::Win32ActiveWindow(HINSTANCE applicationHandle, IConfiguration* configuration, Win32InputDevices* inputDevices)
-: Win32GLActiveWindow(), mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL), mResizingWindow(false)
+: Win32GLActiveWindow(configuration), mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL), mResizingWindow(false)
 {
 	_window = this;
 	memset(&mMessageQueue, 0, sizeof(MSG));

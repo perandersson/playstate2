@@ -1,11 +1,11 @@
 #include "../../Memory.h"
 #include "Win32GLActiveWindow.h"
 #include "../../rendering/exception/RenderingException.h"
-#include "../../rendering/WGLEWMX.h"
+#include "../../rendering/win32/WGLEWMX.h"
 using namespace core;
 
-Win32GLActiveWindow::Win32GLActiveWindow()
-: mRenderContext(nullptr), mWindowHandle(NULL)
+Win32GLActiveWindow::Win32GLActiveWindow(IConfiguration* configuration)
+: mConfiguration(configuration), mRenderContext(nullptr), mWindowHandle(NULL)
 {
 
 }
@@ -24,7 +24,7 @@ void Win32GLActiveWindow::InitializeDrivers(HWND windowHandle, const Size& size)
 	pfd.nVersion = 1;
 	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 	pfd.iPixelType = PFD_TYPE_RGBA;
-	pfd.cColorBits = 32;
+	pfd.cColorBits = mConfiguration->ToInt32("window.bpp", 32);
 	pfd.cDepthBits = 16;
 	pfd.iLayerType = PFD_MAIN_PLANE;
 

@@ -1,7 +1,6 @@
 #include "../../Memory.h"
 #include "Win32RenderContext.h"
 #include "../exception/RenderingException.h"
-#include "../WGLEWMX.h"
 using namespace core;
 
 template<> IRenderContext* ThreadLocal<IRenderContext*>::gThreadLocal = nullptr;

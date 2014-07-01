@@ -3,7 +3,7 @@
 #include "../../ThreadLocal.h"
 
 #include <Windows.h>
-#include "../WGLEWMX.h"
+#include "WGLEWMX.h"
 
 namespace core
 {

@@ -2,8 +2,8 @@
 #include "Win32ExternalWindow.h"
 using namespace core;
 
-Win32ExternalWindow::Win32ExternalWindow()
-: Win32GLActiveWindow()
+Win32ExternalWindow::Win32ExternalWindow(IConfiguration* configuration)
+: Win32GLActiveWindow(configuration)
 {
 
 }

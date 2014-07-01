@@ -1,5 +1,6 @@
 #pragma once
 #include "../IActiveWindow.h"
+#include "../../configuration/IConfiguration.h"
 #include "../../rendering/win32/Win32RenderContext.h"
 
 #include <Windows.h>
@@ -10,7 +11,7 @@ namespace core
 	class Win32GLActiveWindow : public IActiveWindow
 	{
 	protected:
-		Win32GLActiveWindow();
+		Win32GLActiveWindow(IConfiguration* configuration);
 
 		//
 		// Initialize the graphics drivers
@@ -42,6 +43,7 @@ namespace core
 		}
 
 	private:
+		IConfiguration* mConfiguration;
 		HDC mDeviceContext;
 		Win32RenderContext* mRenderContext;
 		HWND mWindowHandle;

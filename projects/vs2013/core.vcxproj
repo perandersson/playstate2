@@ -131,7 +131,7 @@
     <ClInclude Include="..\..\core\rendering\VertexBuffer.h" />
     <ClInclude Include="..\..\core\rendering\VertexType.h" />
     <ClInclude Include="..\..\core\rendering\VertexTypes.h" />
-    <ClInclude Include="..\..\core\rendering\WGLEWMX.h" />
+    <ClInclude Include="..\..\core\rendering\win32\WGLEWMX.h" />
     <ClInclude Include="..\..\core\rendering\win32\Win32RenderContext.h" />
     <ClInclude Include="..\..\core\resource\exception\LoadResourceException.h" />
     <ClInclude Include="..\..\core\resource\exception\ResourceException.h" />
@@ -306,7 +306,7 @@
     <ClCompile Include="..\..\core\rendering\TextureWrap.cpp" />
     <ClCompile Include="..\..\core\rendering\VertexBuffer.cpp" />
     <ClCompile Include="..\..\core\rendering\VertexType.cpp" />
-    <ClCompile Include="..\..\core\rendering\WGLEWMX.cpp" />
+    <ClCompile Include="..\..\core\rendering\win32\WGLEWMX.cpp" />
     <ClCompile Include="..\..\core\rendering\win32\Win32RenderContext.cpp" />
     <ClCompile Include="..\..\core\resource\exception\LoadResourceException.cpp" />
     <ClCompile Include="..\..\core\resource\exception\ResourceException.cpp" />
