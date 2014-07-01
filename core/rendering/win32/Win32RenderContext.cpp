@@ -67,7 +67,11 @@ OpenGLRenderContext* Win32RenderContext::CreateRenderContext()
 	int attribs[] = {
 		WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
 		WGL_CONTEXT_MINOR_VERSION_ARB, 3,
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
+#else
 		WGL_CONTEXT_FLAGS_ARB, 0,
+#endif
 		0
 	};
 
