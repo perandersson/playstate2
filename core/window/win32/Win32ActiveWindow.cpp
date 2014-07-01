@@ -15,7 +15,8 @@ namespace {
 static const char* PLAYSTATE_CLASS_NAME = "playstate";
 
 Win32ActiveWindow::Win32ActiveWindow(HINSTANCE applicationHandle, IConfiguration* configuration, Win32InputDevices* inputDevices)
-: Win32GLActiveWindow(configuration), mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL), mResizingWindow(false)
+: Win32GLActiveWindow(configuration), mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL), mResizingWindow(false),
+mFullscreen(false)
 {
 	_window = this;
 	memset(&mMessageQueue, 0, sizeof(MSG));
@@ -28,6 +29,12 @@ Win32ActiveWindow::~Win32ActiveWindow()
 	mWindowClosedListeners.clear();
 
 	Win32GLActiveWindow::ReleaseDrivers();
+
+	if (mFullscreen) {
+		ChangeDisplaySettings(NULL, 0);
+		//ShowCursor(TRUE);
+		mFullscreen = false;
+	}
 
 	if (mWindowHandle != NULL) {
 		CloseWindow(mWindowHandle);
@@ -53,22 +60,51 @@ void Win32ActiveWindow::Initialize()
 	windowProperties.hCursor = (HCURSOR)LoadImage(NULL, MAKEINTRESOURCE(IDC_ARROW), IMAGE_CURSOR, 0, 0, LR_SHARED);
 	RegisterClassEx(&windowProperties);
 
-	mExStyle = WS_EX_CLIENTEDGE;
-	mStyle = WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_OVERLAPPEDWINDOW;
+	mFullscreen = mConfiguration->ToBool("window.fullscreen", true);
+	if (mFullscreen) {
+		DEVMODE dmScreenSettings;
+		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+		dmScreenSettings.dmPelsWidth = mSize.width;
+		dmScreenSettings.dmPelsHeight = mSize.height;
+		dmScreenSettings.dmBitsPerPel = mConfiguration->ToInt32("window.bpp", 32);
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
+			mFullscreen = false;
+			assert_not_implemented();
+		}
+		else {
+			// Invoke all the listener classes. 
+		}
+	}
+
+	if (mFullscreen) {
+		mExStyle = WS_EX_APPWINDOW;
+		mStyle = WS_POPUP;
+		//ShowCursor(FALSE);
+	}
+	else {
+		mExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+		mStyle = WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_OVERLAPPEDWINDOW;
+	}
 
 	RECT windowSize = { 0, 0, (LONG)mSize.x, (LONG)mSize.y };
 	AdjustWindowRectEx(&windowSize, mStyle, false, mExStyle);
 
-	mWindowHandle = CreateWindowEx(mExStyle, PLAYSTATE_CLASS_NAME, mTitle.c_str(), mStyle, CW_USEDEFAULT, CW_USEDEFAULT,
+	mWindowHandle = CreateWindowEx(mExStyle, PLAYSTATE_CLASS_NAME, mTitle.c_str(), mStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, 0,
 		windowSize.right - windowSize.left, windowSize.bottom - windowSize.top,
 		NULL, NULL, mApplicationHandle, NULL);
 
 	if (mWindowHandle != NULL) {
 		ShowWindow(mWindowHandle, SW_SHOW);
+		SetForegroundWindow(mWindowHandle);
+		SetFocus(mWindowHandle);
 		UpdateWindow(mWindowHandle);
 	}
 
 	Win32GLActiveWindow::InitializeDrivers(mWindowHandle, mSize);
+
 	SetSize(mSize);
 }
 
@@ -85,6 +121,25 @@ void Win32ActiveWindow::SetSize(const Size& size)
 
 	// Refresh the DX render targets with the new size
 	mSize = Size(width, height);
+
+	// Resize the fullscreen
+	if (mFullscreen) {
+		DEVMODE dmScreenSettings;
+		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+		dmScreenSettings.dmPelsWidth = mSize.width;
+		dmScreenSettings.dmPelsHeight = mSize.height;
+		dmScreenSettings.dmBitsPerPel = mConfiguration->ToInt32("window.bpp", 32);
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
+			mFullscreen = false;
+			assert_not_implemented();
+		}
+		else {
+			// Invoke all the listener classes. 
+		}
+	}
 
 	// Make sure that the size of the window takes the actual window borders into account
 	RECT windowRect = { 0, 0, (LONG)mSize.x, (LONG)mSize.y };
@@ -128,6 +183,17 @@ LRESULT CALLBACK Win32ActiveWindow::ProcessEvent(HWND hwnd, UINT message, WPARAM
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+	//case WM_SYSCOMMAND:
+	//{
+	//	// Prevent screen-saver
+	//	switch (wparam) 
+	//	{
+	//	case SC_SCREENSAVE:
+	//	case SC_MONITORPOWER:
+	//		return 0;
+	//	}
+	//	break;
+	//}
 	case WM_ENTERSIZEMOVE:
 		mResizingWindow = true;
 		break;
@@ -211,6 +277,17 @@ void Win32ActiveWindow::RemoveWindowClosedListener(IWindowClosedListener* listen
 	WindowClosedListeners::iterator it = std::find(mWindowClosedListeners.begin(), mWindowClosedListeners.end(), listener);
 	if (it != mWindowClosedListeners.end())
 		mWindowClosedListeners.erase(it);
+}
+
+void Win32ActiveWindow::SetFullscreen(bool fullscreen)
+{
+	assert_not_implemented();
+	if (mFullscreen == fullscreen)
+		return;
+
+	// TODO: Change fullscreen property
+
+	mFullscreen = fullscreen;
 }
 
 void Win32ActiveWindow::Alert(const std::string& title, const std::string& text, AlertType::Enum type)

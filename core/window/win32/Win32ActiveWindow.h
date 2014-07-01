@@ -39,6 +39,7 @@ namespace core
 		virtual void RemoveWindowClosedListener(IWindowClosedListener* listener);
 		virtual void AddWindowResizedListener(IWindowResizedListener* listener);
 		virtual void RemoveWindowResizedListener(IWindowResizedListener* listener);
+		virtual void SetFullscreen(bool fullscreen);
 		virtual void Alert(const std::string& title, const std::string& text, AlertType::Enum type);
 		virtual void Alert(const std::string& title, const Exception& e, AlertType::Enum type);
 
@@ -62,5 +63,6 @@ namespace core
 		Size mPrevSize;
 
 		bool mResizingWindow;
+		bool mFullscreen;
 	};
 }

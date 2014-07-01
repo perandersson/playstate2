@@ -15,6 +15,7 @@ namespace core
 		static void RemoveWindowClosedListener(IWindowClosedListener* listener);
 		static void AddWindowResizedListener(IWindowResizedListener* listener);
 		static void RemoveWindowResizedListener(IWindowResizedListener* listener);
+		static void SetFullscreen(bool fullscreen);
 		static void Alert(const std::string& title, const std::string& text, AlertType::Enum type);
 		static void Alert(const std::string& title, const Exception& e, AlertType::Enum type);
 	};

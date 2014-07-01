@@ -64,6 +64,10 @@ void Win32ExternalWindow::RemoveWindowResizedListener(IWindowResizedListener* li
 
 }
 
+void Win32ExternalWindow::SetFullscreen(bool fullscreen)
+{
+}
+
 void Win32ExternalWindow::Alert(const std::string& title, const std::string& text, AlertType::Enum type)
 {
 

@@ -48,6 +48,11 @@ void ActiveWindow::RemoveWindowResizedListener(IWindowResizedListener* listener)
 	Kernel::GetActiveWindow()->RemoveWindowResizedListener(listener);
 }
 
+void ActiveWindow::SetFullscreen(bool fullscreen)
+{
+	Kernel::GetActiveWindow()->SetFullscreen(fullscreen);
+}
+
 void ActiveWindow::Alert(const std::string& title, const std::string& text, AlertType::Enum type)
 {
 	Kernel::GetActiveWindow()->Alert(title, text, type);
