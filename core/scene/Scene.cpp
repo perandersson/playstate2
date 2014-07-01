@@ -104,7 +104,8 @@ bool Scene::Find(const FindQuery& query, IRenderBlockSorter* sorter, RenderBlock
 			found = true;
 		group = next;
 	}
-	_out_resultSet->Sort(sorter);
+	if (found)
+		_out_resultSet->Sort(sorter);
 	return found;
 }
 

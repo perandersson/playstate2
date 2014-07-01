@@ -12,6 +12,8 @@ DefaultRenderBlockResultSetSorter::~DefaultRenderBlockResultSetSorter()
 
 void DefaultRenderBlockResultSetSorter::Sort(RenderBlock** renderBlocks, uint32 count)
 {
+	assert_not_null(renderBlocks);
+
 	if (count <= 2)
 		return;
 

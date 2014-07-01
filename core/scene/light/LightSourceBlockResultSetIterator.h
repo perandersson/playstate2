@@ -21,7 +21,6 @@ namespace core
 		LightSourceBlock* Next();
 
 	private:
-		LightSourceResultSet* mResultSet;
 		uint32 mNumResults;
 		uint32 mCurrentResultIndex;
 		LightSourceBlock* mLightSourceBlocks;

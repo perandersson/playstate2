@@ -12,6 +12,8 @@
 #include "rendering/effect/Effect.h"
 #include "rendering/effect/EffectState.h"
 
+#include "logging/Logger.h"
+
 #include "input/InputDevices.h"
 
 #include "resource/ResourceManager.h"

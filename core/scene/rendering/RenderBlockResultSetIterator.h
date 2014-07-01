@@ -21,7 +21,6 @@ namespace core
 		RenderBlock* Next();
 
 	private:
-		RenderBlockResultSet* mResultSet;
 		uint32 mNumResults;
 		uint32 mCurrentResultIndex;
 		RenderBlock** mRenderBlocks;

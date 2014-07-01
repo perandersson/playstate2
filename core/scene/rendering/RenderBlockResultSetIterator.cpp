@@ -3,7 +3,7 @@
 using namespace core;
 
 RenderBlockResultSetIterator::RenderBlockResultSetIterator(RenderBlockResultSet* resultSet)
-: mResultSet(resultSet), mCurrentResultIndex(0)
+: mCurrentResultIndex(0)
 {
 	assert_not_null(resultSet);
 	mNumResults = resultSet->GetSize();

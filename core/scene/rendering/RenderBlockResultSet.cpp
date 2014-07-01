@@ -3,14 +3,16 @@
 using namespace core;
 
 RenderBlockResultSet::RenderBlockResultSet()
-: mMemoryPool(InitialRenderBlocksCount, RenderBlocksResizeCount), mSortedRenderBlocks(nullptr), mNumElements(0)
+: mMemoryPool(InitialRenderBlocksCount, RenderBlocksResizeCount), mSortedRenderBlocks(nullptr), mSortedRenderBlocksSize(0)
 {
 }
 
 RenderBlockResultSet::~RenderBlockResultSet()
 {
-	free(mSortedRenderBlocks);
-	mSortedRenderBlocks = nullptr;
+	if (mSortedRenderBlocks != nullptr) {
+		free(mSortedRenderBlocks);
+		mSortedRenderBlocks = nullptr;
+	}
 }
 
 RenderBlock* RenderBlockResultSet::Create(uint32 id)
@@ -24,20 +26,19 @@ void RenderBlockResultSet::Sort(IRenderBlockSorter* sorter)
 {
 	// Resize the sorted items container if the amount of elements has been increased
 	const uint32 size = mMemoryPool.GetSize();
-	if (mNumElements < size) {
-		mSortedRenderBlocks = (RenderBlock**)realloc(mSortedRenderBlocks, size * sizeof(RenderBlock**));
-		mNumElements = size;
+	if (size > mSortedRenderBlocksSize) {
+		const size_t memorySize = size * sizeof(RenderBlock**);
+		mSortedRenderBlocks = (RenderBlock**)realloc(mSortedRenderBlocks, memorySize);
+		mSortedRenderBlocksSize = size;
 	}
 
-	// If the pointer located to the memory has been changed then make sure to
-	// re-initialize the pointers used to sort the renderblocks
 	RenderBlock* data = mMemoryPool.GetFirstElement();
 	for (uint32 i = 0; i < size; ++i) {
 		mSortedRenderBlocks[i] = &data[i];
 	}
 
 	if (mSortedRenderBlocks != nullptr)
-		sorter->Sort(mSortedRenderBlocks, mMemoryPool.GetSize());
+		sorter->Sort(mSortedRenderBlocks, size);
 }
 
 uint32 RenderBlockResultSet::GetSize() const

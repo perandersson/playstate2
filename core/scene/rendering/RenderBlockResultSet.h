@@ -72,6 +72,6 @@ namespace core
 	private:
 		MemoryPool<RenderBlock> mMemoryPool;
 		RenderBlock** mSortedRenderBlocks;
-		uint32 mNumElements;
+		uint32 mSortedRenderBlocksSize;
 	};
 }
