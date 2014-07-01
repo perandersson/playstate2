@@ -151,7 +151,7 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 			nameData[actualLength] = 0;
 
 			const std::string name = nameData;
-			const GLint componentID = glGetUniformLocation(program, name.c_str());
+			//const GLint componentID = glGetUniformLocation(program, name.c_str());
 
 			std::shared_ptr<UniformProperty> p;
 			UniformProperties::iterator it = mProperties.find(name);
@@ -164,7 +164,7 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 				mProperties.insert(std::make_pair(name, p));
 			}
 
-			p->componentID = componentID;
+			//p->componentID = componentID;
 			p->uniformType = type;
 			mEffect->AddUniformProperty(p);
 		}

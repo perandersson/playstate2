@@ -20,20 +20,24 @@ EffectState::EffectState(const Effect* effect, RenderState* renderState)
 	for (; it != end; ++it) {
 		DefaultUniform* uniform = nullptr;
 		auto* prpt = it->second.get();
+
+		const GLuint program = effect->GetProgramID();
+		const GLint componentID = glGetUniformLocation(program, prpt->name.c_str());
+
 		if (prpt->uniformType == GL_FLOAT || prpt->uniformType == GL_FLOAT_VEC2 || prpt->uniformType == GL_FLOAT_VEC3 || prpt->uniformType == GL_FLOAT_VEC4) {
-			uniform = new FloatUniform(effect, renderState, prpt->componentID);
+			uniform = new FloatUniform(effect, renderState, componentID);
 		}
 		else if (prpt->uniformType == GL_INT || prpt->uniformType == GL_INT_VEC2 || prpt->uniformType == GL_INT_VEC3 || prpt->uniformType == GL_INT_VEC4) {
-			uniform = new IntUniform(effect, renderState, prpt->componentID);
+			uniform = new IntUniform(effect, renderState, componentID);
 		}
 		else if (prpt->uniformType == GL_UNSIGNED_INT || prpt->uniformType == GL_UNSIGNED_INT_VEC2 || prpt->uniformType == GL_UNSIGNED_INT_VEC3 || prpt->uniformType == GL_UNSIGNED_INT_VEC4) {
-			uniform = new IntUniform(effect, renderState, prpt->componentID);
+			uniform = new IntUniform(effect, renderState, componentID);
 		}
 		else if (prpt->uniformType == GL_FLOAT_MAT4) {
-			uniform = new MatrixUniform(effect, renderState, prpt->componentID);
+			uniform = new MatrixUniform(effect, renderState, componentID);
 		}
 		else if (prpt->uniformType == GL_SAMPLER_2D) {
-			uniform = new Sampler2DUniform(effect, renderState, prpt->componentID, renderState->GetNextTextureIndex(), GenSamplerObject(it->second));
+			uniform = new Sampler2DUniform(effect, renderState, componentID, renderState->GetNextTextureIndex(), GenSamplerObject(it->second));
 		}
 
 		if (uniform == nullptr)
