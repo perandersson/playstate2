@@ -158,7 +158,7 @@ bool Win32Kernel::ProcessEvents()
 OpenGLRenderContext* Win32Kernel::GetFreeRenderContext()
 {
 	std::lock_guard<std::mutex> lock(mFreeRenderContextsMutex);
-	assert(mFreeRenderContexts.size() > 0);
+	assert(mFreeRenderContexts.size() > 0 && "You don't have any more render contexts. Increase the number of render context in the kernels init phase to get more.");
 	OpenGLRenderContext* renderContext = mFreeRenderContexts.front();
 	mFreeRenderContexts.pop_front();
 	return renderContext;
