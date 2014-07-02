@@ -7,7 +7,6 @@
 #include "ClearType.h"
 #include "BlendFunc.h"
 #include "CullFace.h"
-#include "GraphicsCapabilities.h"
 #include "effect/EffectState.h"
 #include "IUniform.h"
 #include "GLEWMX.h"
@@ -345,17 +344,17 @@ namespace core
 		// Bound textures
 		//
 
-		uint32* mTextureUID;
-		GLenum* mTextureTarget;
-		uint32* mSamplerObjectUID;
+		std::vector<uint32> mTextureUID;
+		std::vector<GLenum> mTextureTarget;
+		std::vector<uint32> mSamplerObjectUID;
 		uint32 mActiveTextureIndex;
 
 		//
 		// Bound render targets
 		//
 
-		uint32 mRenderTargetUID[MAX_RENDER_TARGETS];
-		const RenderTarget2D* mRenderTargets[MAX_RENDER_TARGETS];
+		std::vector<uint32> mRenderTargetUID;
+		std::vector<const RenderTarget2D*> mRenderTargets;
 		const RenderTarget2D* mDepthRenderTarget;
 		GLenum mDepthRenderTargetType;
 		uint32 mDepthRenderTargetUID;
@@ -374,7 +373,9 @@ namespace core
 		//
 		// Resource limit
 		//
-		GLuint mMaxActiveTextures;
+
+		uint32 mMaxDrawBuffers;
+		uint32 mMaxActiveTextures;
 		uint32 mNextTextureIndex;
 		
 	};

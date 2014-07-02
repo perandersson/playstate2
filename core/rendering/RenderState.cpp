@@ -19,9 +19,9 @@ mDepthTest(false), mDepthFunc(DepthFunc::DEFAULT),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }),
 mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
-mTextureUID(nullptr), mTextureTarget(nullptr), mSamplerObjectUID(nullptr), mActiveTextureIndex(0),
+mActiveTextureIndex(0),
 mDepthRenderTarget(nullptr), mDepthRenderTargetType(GL_DEPTH_ATTACHMENT), mDepthRenderTargetUID(0), mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
-mApplyEffectState(true), mNextTextureIndex(0), mMaxActiveTextures(0)
+mApplyEffectState(true), mMaxDrawBuffers(0), mMaxActiveTextures(0), mNextTextureIndex(0)
 {
 	glClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
 	glClearDepth(mClearDepth);
@@ -38,12 +38,13 @@ mApplyEffectState(true), mNextTextureIndex(0), mMaxActiveTextures(0)
 		THROW_EXCEPTION(RenderingException, "Coult not initialize this thread's rendering states. Reason: %d", error);
 
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&mMaxActiveTextures);
-	mTextureUID = new uint32[mMaxActiveTextures]; memset(mTextureUID, 0, sizeof(uint32)* mMaxActiveTextures);
-	mTextureTarget = new GLenum[mMaxActiveTextures]; memset(mTextureTarget, 0, sizeof(GLenum)* mMaxActiveTextures);
-	mSamplerObjectUID = new uint32[mMaxActiveTextures]; memset(mSamplerObjectUID, 0, sizeof(uint32)* mMaxActiveTextures);
+	mTextureUID.resize(mMaxActiveTextures, 0);
+	mTextureTarget.resize(mMaxActiveTextures, 0);
+	mSamplerObjectUID.resize(mMaxActiveTextures, 0);
 
-	memset(mRenderTargetUID, 0, sizeof(mRenderTargetUID));
-	memset(mRenderTargets, 0, sizeof(mRenderTargets));
+	glGetIntegerv(GL_MAX_DRAW_BUFFERS, (GLint*)&mMaxDrawBuffers);
+	mRenderTargetUID.resize(mMaxDrawBuffers, 0);
+	mRenderTargets.resize(mMaxDrawBuffers, nullptr);
 
 	//
 	// Create the vertex array used to draw the upcomming triangles onto the screen
@@ -74,21 +75,6 @@ RenderState::~RenderState()
 		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &mVertexArrayID);
 		mVertexArrayID = 0;
-	}
-
-	if (mTextureUID != nullptr) {
-		delete[] mTextureUID; 
-		mTextureUID = nullptr;
-	}
-
-	if (mTextureTarget != nullptr) {
-		delete[] mTextureTarget;
-		mTextureTarget = nullptr;
-	}
-
-	if (mSamplerObjectUID != nullptr) {
-		delete[] mSamplerObjectUID;
-		mSamplerObjectUID = nullptr;
 	}
 }
 
@@ -125,18 +111,23 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 {
 	assert_not_null(effect);
 	mApplyEffectState = true;
+	mApplyRenderTarget = true;
+	mRenderTargets.assign(mMaxDrawBuffers, nullptr);
+	mRenderTargetUID.assign(mMaxDrawBuffers, 0);
+	mDepthRenderTarget = nullptr;
+	mDepthRenderTargetUID = 0;
 	const uint32 uid = effect->GetUID();
 	if (uid != mEffectUID) {
 		glUseProgram(effect->GetProgramID());
 		mEffectState = GetEffectState(effect);
 		mEffectUID = uid;
-	}
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
-	GLenum err = glGetError();
-	if (err != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render vertices on the screen");
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+			THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render vertices on the screen");
 #endif
+	}
 
 	SetDepthTest(effect->GetDepthTest());
 	SetDepthFunc(effect->GetDepthFunc());
@@ -148,11 +139,6 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	SetCullFace(effect->GetCullFace());
 	SetClearColor(effect->GetClearColor());
 	SetClearDepth(effect->GetClearDepth());
-
-	const RenderTarget2D* const* renderTargets = effect->GetRenderTargets();
-	for (uint32 i = 0; i < MAX_RENDER_TARGETS; ++i)
-		SetRenderTarget(renderTargets[i], i);
-	SetDepthRenderTarget(effect->GetDepthRenderTarget());
 
 	return mEffectState;
 }
@@ -464,7 +450,7 @@ void RenderState::BindSampler(SamplerObject* samplerObject, uint32 index)
 
 void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, GLenum index)
 {
-	assert(index < MAX_RENDER_TARGETS && "You are not allowed to bind that many render targets");
+	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
 	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
 	if (mRenderTargetUID[index] == uid)
 		return;
@@ -500,7 +486,7 @@ bool RenderState::IsRenderTargetsEnabled() const
 	if (mDepthRenderTarget != nullptr)
 		return true;
 
-	for (int i = 0; i < MAX_RENDER_TARGETS; ++i)
+	for (uint32 i = 0; i < mMaxDrawBuffers; ++i)
 		if (mRenderTargets[i] != nullptr)
 			return true;
 
@@ -514,9 +500,8 @@ void RenderState::ApplyRenderTargets()
 		if (mFrameBufferApplied) {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			mFrameBufferApplied = false;
-
-			memset(mRenderTargetUID, 0, sizeof(mRenderTargetUID));
-			memset(mRenderTargets, 0, sizeof(mRenderTargets));
+			mRenderTargetUID.assign(mMaxDrawBuffers, 0);
+			mRenderTargets.assign(mMaxDrawBuffers, 0);
 			mDepthRenderTarget = 0;
 			mDepthRenderTargetUID = 0;
 
@@ -575,10 +560,9 @@ void RenderState::ApplyRenderTargets()
 		mDepthRenderTargetUID = depthUID;
 	}
 
-
-	GLenum drawBuffers[MAX_RENDER_TARGETS] = { 0 };
+	std::vector<GLenum> drawBuffers(mMaxDrawBuffers, 0);
 	uint32 numDrawBuffers = 0;
-	for (int i = 0; i < MAX_RENDER_TARGETS; ++i) {
+	for (uint32 i = 0; i < mMaxDrawBuffers; ++i) {
 		const RenderTarget2D* rt = mRenderTargets[i];
 		const uint32 uid = rt != nullptr ? rt->GetUID() : 0;
 		if (uid == mRenderTargetUID[i]) {
@@ -611,7 +595,7 @@ void RenderState::ApplyRenderTargets()
 		}
 		mRenderTargetUID[i] = uid;
 	}
-	glDrawBuffers(numDrawBuffers, drawBuffers);
+	glDrawBuffers(numDrawBuffers, &drawBuffers[0]);
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	// Check for any GL errors
@@ -679,8 +663,8 @@ void RenderState::ApplyBuffers(const VertexBuffer* buffer, const IndexBuffer* in
 		ApplyRenderTargets();
 	}
 
-	BindVertexBuffer(buffer);
 	BindIndexBuffer(indexBuffer);
+	BindVertexBuffer(buffer);
 }
 
 EffectState* RenderState::GetEffectState(const Effect* effect)

@@ -7,7 +7,6 @@
 #include "TextureWrap.h"
 #include "TextureFormat.h"
 #include "../math/Point.h"
-#include "GraphicsCapabilities.h"
 #include "exception/RenderingException.h"
 #include "../resource/Resource.h"
 #include "GLEWMX.h"

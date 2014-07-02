@@ -109,7 +109,6 @@
     <ClInclude Include="..\..\core\rendering\exception\RenderingException.h" />
     <ClInclude Include="..\..\core\rendering\GeometryBuilder.h" />
     <ClInclude Include="..\..\core\rendering\GLEWMX.h" />
-    <ClInclude Include="..\..\core\rendering\GraphicsCapabilities.h" />
     <ClInclude Include="..\..\core\rendering\IndexBuffer.h" />
     <ClInclude Include="..\..\core\rendering\IRenderContext.h" />
     <ClInclude Include="..\..\core\rendering\MagFilter.h" />

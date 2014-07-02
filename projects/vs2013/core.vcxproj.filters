@@ -323,9 +323,6 @@
     <ClInclude Include="..\..\core\rendering\IRenderPipeline.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\rendering\GraphicsCapabilities.h">
-      <Filter>Source Files\rendering</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\rendering\DepthFunc.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>

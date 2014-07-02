@@ -7,7 +7,6 @@
 #include "../SamplerObject.h"
 #include "../../math/Color.h"
 #include "UniformProperty.h"
-#include "../GraphicsCapabilities.h"
 #include "../exception/RenderingException.h"
 
 namespace core
@@ -102,18 +101,6 @@ namespace core
 			return mClearDepth;
 		}
 
-		void SetRenderTarget(RenderTarget2D* renderTarget, GLenum index);
-
-		inline const RenderTarget2D* const* GetRenderTargets() const {
-			return mRenderTargets;
-		}
-
-		void SetDepthRenderTarget(RenderTarget2D* renderTarget);
-
-		inline const RenderTarget2D* GetDepthRenderTarget() const {
-			return mDepthRenderTarget;
-		}
-
 	private:
 		bool IsActive() const;
 
@@ -129,9 +116,6 @@ namespace core
 		CullFace::Enum mCullFace;
 		Color mClearColor;
 		float32 mClearDepth;
-
-		RenderTarget2D* mRenderTargets[MAX_RENDER_TARGETS];
-		RenderTarget2D* mDepthRenderTarget;
 		bool mApplyRenderTarget;
 	};
 }
