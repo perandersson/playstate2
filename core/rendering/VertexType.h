@@ -44,8 +44,8 @@ namespace core
 		// that this field should be VertexElementType::FLOAT
 		VertexElementType::Enum type;
 
-		// Is the supplied value normalized or not?
-		bool normalized;
+		// Should the value be normalized on access?
+		bool normalize;
 	};
 
 	//
@@ -68,13 +68,10 @@ namespace core
 	//		PrimitiveType::TRIANGLE
 	//	};
 	// }
+	static const uint32 MAX_VERTEX_ELEMENT_DESC = 8;
 	struct VertexDesc
 	{
-		VertexElementDesc elements[8];
+		VertexElementDesc elements[MAX_VERTEX_ELEMENT_DESC];
 		PrimitiveType::Enum primitiveType;
 	};
-
-	//
-	// Check if the supplied element descriptor should be handled as an integer type
-	extern bool HandleAsIntegerType(const VertexElementDesc& elemDesc);
 }

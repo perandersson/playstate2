@@ -26,8 +26,3 @@ GLenum VertexElementType::Parse(Enum e)
 
 	return enums[(uint32)e];
 }
-
-bool core::HandleAsIntegerType(const VertexElementDesc& elemDesc)
-{
-	return IsIntegerType(elemDesc) && !elemDesc.normalized;
-}

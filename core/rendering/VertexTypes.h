@@ -59,7 +59,7 @@ namespace core
 	static const VertexDesc PositionTextureNormalVertexTypeDeclaration = {
 		{
 			{ POSITION_ATTRIB_LOCATION, sizeof(Vector3), 3, VertexElementType::FLOAT, false },
-			{ NORMAL_ATTRIB_LOCATION, sizeof(Vector3), 3, VertexElementType::FLOAT, true },
+			{ NORMAL_ATTRIB_LOCATION, sizeof(Vector3), 3, VertexElementType::FLOAT, false },
 			{ TEXCOORD_ATTRIB_LOCATION, sizeof(Vector2), 2, VertexElementType::FLOAT, false },
 			0
 		},

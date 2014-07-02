@@ -224,26 +224,58 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 	//
 	// Set the vertex attributes
 	//
-
+	
+	bool boundAttribLocations[MAX_VERTEX_ELEMENT_DESC];
 	uint32 offset = 0;
 	for (uint32 i = 0; i < 8; ++i) {
 		const VertexElementDesc& elemDesc = desc.elements[i];
 		if (elemDesc.fieldSize == 0) {
-			//glDisableVertexAttribArray(i);
 			break;
 		}
 
 		glEnableVertexAttribArray(elemDesc.location);
-		if (HandleAsIntegerType(elemDesc)) {
-			glVertexAttribIPointer(elemDesc.location, elemDesc.numElementsInField, 
-				VertexElementType::Parse(elemDesc.type), stride, OFFSET(offset));
+		boundAttribLocations[elemDesc.location] = true;
+		const VertexElementType::Enum type = elemDesc.type;
+		switch (type) {
+		case VertexElementType::BYTE:
+		case VertexElementType::UNSIGNED_BYTE:
+		case VertexElementType::SHORT:
+		case VertexElementType::UNSIGNED_SHORT:
+		case VertexElementType::INT:
+		case VertexElementType::UNSIGNED_INT:
+			glVertexAttribIPointer(elemDesc.location, 
+				elemDesc.numElementsInField,
+				VertexElementType::Parse(elemDesc.type), 
+				stride, 
+				OFFSET(offset));
+			break;
+		case VertexElementType::FLOAT:
+			glVertexAttribPointer(elemDesc.location, 
+				elemDesc.numElementsInField,
+				VertexElementType::Parse(elemDesc.type), 
+				elemDesc.normalize ? GL_TRUE : GL_FALSE,
+				stride, 
+				OFFSET(offset));
+			break;
+		case VertexElementType::DOUBLE:
+			glVertexAttribLPointer(elemDesc.location,
+				elemDesc.numElementsInField,
+				VertexElementType::Parse(elemDesc.type),
+				stride,
+				OFFSET(offset));
+			break;
 		}
-		else {
-			GLboolean normalized = elemDesc.normalized ? GL_TRUE : GL_FALSE;
-			glVertexAttribPointer(elemDesc.location, elemDesc.numElementsInField, 
-				VertexElementType::Parse(elemDesc.type), normalized, stride, OFFSET(offset));
-		}
+
 		offset += elemDesc.fieldSize;
+	}
+
+	//
+	// Unbind unused attrib locations
+	//
+
+	for (uint32 i = 0; i < MAX_VERTEX_ELEMENT_DESC; ++i) {
+		if (!boundAttribLocations[i])
+			glDisableVertexAttribArray(i);
 	}
 
 	mVertexBufferUID = uid;
