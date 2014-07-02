@@ -22,7 +22,7 @@ EffectState::EffectState(const Effect* effect, RenderState* renderState)
 		auto* prpt = it->second.get();
 
 		const GLuint program = effect->GetProgramID();
-		const GLint componentID = glGetUniformLocation(program, prpt->name.c_str());
+		const GLint componentID = prpt->componentID; // glGetUniformLocation(program, prpt->name.c_str());
 
 		if (prpt->uniformType == GL_FLOAT || prpt->uniformType == GL_FLOAT_VEC2 || prpt->uniformType == GL_FLOAT_VEC3 || prpt->uniformType == GL_FLOAT_VEC4) {
 			uniform = new FloatUniform(effect, renderState, componentID);
