@@ -54,13 +54,13 @@ mNextTextureIndex(0), mMaxTextureIndexes(0), mApplyEffectState(true)
 	glBindVertexArray(mVertexArrayID);
 
 	error = glGetError();
-	if (error != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Could not create or bind the vertex array. Reason: %d", error);
+	if (mVertexArrayID == 0 || error != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not create or bind the vertex array for this thread's rendering state. Reason: %d", error);
 
 	glGenFramebuffers(1, &mFrameBufferID);
 	error = glGetError();
-	if (error != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Could not create frame buffer object. Reason: %d", error);
+	if (mFrameBufferID == 0 || error != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not create frame buffer object for this thread's rendering state. Reason: %d", error);
 }
 
 RenderState::~RenderState()
@@ -112,14 +112,15 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	assert_not_null(effect);
 	mApplyEffectState = true;
 	const uint32 uid = effect->GetUID();
-	if (uid == mEffectUID)
-		return mEffectState;
+	if (uid != mEffectUID) {
+		glUseProgram(effect->GetProgramID());
+		mEffectState = GetEffectState(effect);
+		mEffectUID = uid;
+		//return mEffectState;
+	}
 
 	// Find the appropriate effect state
-	mEffectState = GetEffectState(effect);
 
-	glUseProgram(effect->GetProgramID());
-	mEffectUID = uid;
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
