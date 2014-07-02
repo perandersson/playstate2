@@ -66,7 +66,7 @@ IndexBuffer* OpenGLRenderContext::CreateStaticBuffer(const uint32* indices, uint
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(uint32), indices, GL_STATIC_DRAW);
 	glFlush();
 
-	GetRenderState()->InvalidateIndexBuffer();
+	GetRenderState()->UnbindIndexBuffer();
 
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {
@@ -98,7 +98,7 @@ VertexBuffer* OpenGLRenderContext::CreateStaticBuffer(const void* vertices, uint
 	glBufferData(GL_ARRAY_BUFFER, numVertices * sizeOfOneVertex, vertices, GL_STATIC_DRAW);
 	glFlush();
 
-	GetRenderState()->InvalidateVertexBuffer();
+	GetRenderState()->UnbindVertexBuffer();
 
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {
@@ -140,7 +140,7 @@ RenderTarget2D* OpenGLRenderContext::CreateRenderTarget2D(const Size& size, Text
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap);
 	glFlush();
 
-	GetRenderState()->InvalidateTexture();
+	GetRenderState()->UnbindTexture();
 	
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {
@@ -172,7 +172,7 @@ Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat:
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap);
 	glFlush();
 
-	GetRenderState()->InvalidateTexture();
+	GetRenderState()->UnbindTexture();
 
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {

@@ -19,7 +19,25 @@
 		}
 	]]>
 	</VertexShader>
+	<SamplerState Id="PositionsTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
 	<SamplerState Id="DiffuseTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<SamplerState Id="NormalsTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<SamplerState Id="LightTexture">
 		<MinFilter>LINEAR</MinFilter>
 		<MagFilter>LINEAR</MagFilter>
 		<WrapS>CLAMP_TO_EDGE</WrapS>
@@ -51,7 +69,6 @@
 			gl_FragColor = (image + vec4(AmbientColor, 1.0)) * (light + vec4(AmbientColor, 1.0));
 			//gl_FragColor = image;
 			//gl_FragColor = vec4(normal, 1.0);
-			//gl_FragColor = vec4(position, 1.0);
 		}
 	]]>
 	</FragmentShader>

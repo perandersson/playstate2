@@ -116,8 +116,12 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 		glUseProgram(effect->GetProgramID());
 		mEffectState = GetEffectState(effect);
 		mEffectUID = uid;
+		//return mEffectState;
 	}
-	
+
+	// Find the appropriate effect state
+
+
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
@@ -498,7 +502,13 @@ void RenderState::ApplyRenderTargets()
 	// Disable frame buffer if neccessary
 	if (!IsRenderTargetsEnabled()) {
 		if (mFrameBufferApplied) {
-			UnbindFrameBufferObject();
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			mFrameBufferApplied = false;
+
+			memset(mRenderTargetUID, 0, sizeof(mRenderTargetUID));
+			memset(mRenderTargets, 0, sizeof(mRenderTargets));
+			mDepthRenderTarget = 0;
+			mDepthRenderTargetUID = 0;
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
@@ -746,35 +756,24 @@ GLenum RenderState::GetCullFaceAsEnum(CullFace::Enum cullFace)
 	return enums[(int)cullFace];
 }
 
-void RenderState::InvalidateIndexBuffer()
+void RenderState::UnbindIndexBuffer()
 {
 	mIndexBufferUID = 0;
 }
 
-void RenderState::InvalidateVertexBuffer()
+void RenderState::UnbindVertexBuffer()
 {
 	mVertexBufferUID = 0;
 }
 
-void RenderState::InvalidateTexture()
+void RenderState::UnbindTexture()
 {
 	mTextureUID[mActiveTextureIndex] = mSamplerObjectUID[mActiveTextureIndex] = 0;
 }
 
-void RenderState::InvalidateEffect()
+void RenderState::UnbindEffect()
 {
 	mEffectUID = 0;
-}
-
-void RenderState::UnbindFrameBufferObject()
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	mFrameBufferApplied = false;
-
-	memset(mRenderTargetUID, 0, sizeof(mRenderTargetUID));
-	memset(mRenderTargets, 0, sizeof(mRenderTargets));
-	mDepthRenderTarget = 0;
-	mDepthRenderTargetUID = 0;
 }
 
 bool RenderState::IsEffectActive(const Effect* effect) const

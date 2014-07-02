@@ -233,11 +233,6 @@ namespace core
 			\brief
 		*/
 		uint32 GetNextTextureIndex();
-		
-		/*!
-			\brief Unbinds the current frame buffer object
-		*/
-		void UnbindFrameBufferObject();
 
 	private:
 		bool IsRenderTargetsEnabled() const;
@@ -260,7 +255,7 @@ namespace core
 			This method is useful after the render context has created a new index buffer (which unintentionally binds it to the render state)
 			forcing the next index buffer to be bound
 		*/
-		void InvalidateIndexBuffer();
+		void UnbindIndexBuffer();
 		
 		/*!
 			\brief Unbinds the currently bound vertex buffer
@@ -268,7 +263,7 @@ namespace core
 			This method is useful after the render context has created a new vertex buffer (which unintentionally binds it to the render state)
 			forcing the next vertex buffer to be bound
 		*/
-		void InvalidateVertexBuffer();
+		void UnbindVertexBuffer();
 		
 		/*!
 			\brief Unbinds the currently bound texture
@@ -276,7 +271,7 @@ namespace core
 			This method is useful after the render context has created a new texture (which unintentionally binds it to the render state)
 			forcing the next texture to be bound
 		*/
-		void InvalidateTexture();
+		void UnbindTexture();
 		
 		/*!
 			\brief Unbinds the currently bound effect
@@ -284,7 +279,7 @@ namespace core
 			This method is useful after the render context has created a new effect (which unintentionally binds it to the render state)
 			forcing the next texture to be bound
 		*/
-		void InvalidateEffect();
+		void UnbindEffect();
 
 	friend class Effect;
 	protected:
