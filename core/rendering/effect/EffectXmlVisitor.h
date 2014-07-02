@@ -34,6 +34,7 @@ namespace core
 		Effect* mEffect;
 		GLuint mVertexShaderID;
 		GLuint mFragmentShaderID;
+		GLuint mGeometryShaderID;
 		UniformProperties mProperties;
 
 		bool mBlend;

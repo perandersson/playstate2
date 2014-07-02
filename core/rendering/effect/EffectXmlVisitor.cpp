@@ -12,14 +12,19 @@ using namespace core;
 
 EffectXmlVisitor::EffectXmlVisitor(IRenderContext* renderContext)
 : XMLDefaultVisitor(), 
-mRenderContext(renderContext), mEffect(nullptr), mVertexShaderID(0), mFragmentShaderID(0), mBlend(false), mDepthTest(true), mCullFace(CullFace::DEFAULT),
-mDepthFunc(DepthFunc::DEFAULT), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT)
+mRenderContext(renderContext), mEffect(nullptr), mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0), mBlend(false), mDepthTest(true), 
+mCullFace(CullFace::DEFAULT), mDepthFunc(DepthFunc::DEFAULT), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT)
 {
 
 }
 
 EffectXmlVisitor::~EffectXmlVisitor()
 {
+	if (mGeometryShaderID != 0) {
+		glDeleteShader(mGeometryShaderID);
+		mGeometryShaderID = 0;
+	}
+
 	if (mVertexShaderID != 0) {
 		glDeleteShader(mVertexShaderID);
 		mVertexShaderID = 0;
@@ -65,6 +70,20 @@ bool EffectXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tin
 		mProperties.insert(std::make_pair(id, visitor.GetSamplerState()));
 		return false;
 	}
+	else if (name == TAG_GEOMETRY_SHADER) {
+		const char* text = element.GetText();
+		mGeometryShaderID = glCreateShader(GL_GEOMETRY_SHADER);
+		glShaderSource(mGeometryShaderID, 1, &text, NULL);
+		glCompileShader(mGeometryShaderID);
+
+		GLint status = 0;
+		glGetShaderiv(mVertexShaderID, GL_COMPILE_STATUS, &status);
+		if (!status) {
+			GLchar infoLogg[2048];
+			glGetShaderInfoLog(mVertexShaderID, 2048, NULL, infoLogg);
+			THROW_EXCEPTION(LoadResourceException, "Could not compile geometry shader: '%s'", infoLogg);
+		}
+	}
 	else if (name == TAG_VERTEX_SHADER) {
 		const char* text = element.GetText();
 		mVertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -103,8 +122,8 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 	if (name == TAG_EFFECT) {
 		const GLuint program = glCreateProgram();
 
-		//if (gs != 0)
-		//	glAttachShader(program, gs);
+		if (mGeometryShaderID != 0)
+			glAttachShader(program, mGeometryShaderID);
 		glAttachShader(program, mVertexShaderID);
 		glAttachShader(program, mFragmentShaderID);
 		glLinkProgram(program);
@@ -112,11 +131,15 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 		// Detach the shaders when done
 		// @see http://www.opengl.org/wiki/GLSL_Object
 		glDetachShader(program, mFragmentShaderID);
+		glDeleteShader(mFragmentShaderID);
+		mFragmentShaderID = 0;
 		glDetachShader(program, mVertexShaderID);
-		//if (gs != 0) {
-		//	glDetachShader(program, gs);
-		//	glDeleteShader(gs);
-		//}
+		glDeleteShader(mVertexShaderID);
+		mVertexShaderID = 0;		
+		if (mGeometryShaderID != 0) {
+			glDetachShader(program, mGeometryShaderID);
+			glDeleteShader(mGeometryShaderID);
+		}
 
 		GLint status = 0;
 		glGetProgramiv(program, GL_LINK_STATUS, &status);
