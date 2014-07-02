@@ -1,5 +1,6 @@
 #include "../../Memory.h"
 #include "Win32RenderContext.h"
+#include "../RenderState.h"
 #include "../exception/RenderingException.h"
 using namespace core;
 
@@ -57,6 +58,7 @@ void Win32RenderContext::Bind()
 
 void Win32RenderContext::Unbind()
 {
+	GetRenderState()->UnbindFrameBufferObject();
 	glFlush();
 	wglMakeCurrent(NULL, NULL);
 }
