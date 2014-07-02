@@ -269,6 +269,12 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 		offset += elemDesc.fieldSize;
 	}
 
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not set vertex attrib location for the vertex array object");
+#endif
+
 	//
 	// Unbind unused attrib locations
 	//
@@ -277,6 +283,18 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 		if (!boundAttribLocations[i])
 			glDisableVertexAttribArray(i);
 	}
+
+	//
+	// Unbind the vertex buffer when VAO is setup
+	//
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not disable vertex attrib locations for the vertex array object");
+#endif
 
 	mVertexBufferUID = uid;
 }
