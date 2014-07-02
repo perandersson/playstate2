@@ -160,8 +160,6 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 		// Prepare the uniform properties
 		//
 
-		//glUseProgram(program);
-
 		GLint numUniforms = 0;
 		glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numUniforms);
 		GLchar nameData[256] = { 0 };

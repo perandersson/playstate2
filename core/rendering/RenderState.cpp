@@ -19,16 +19,10 @@ mDepthTest(false), mDepthFunc(DepthFunc::DEFAULT),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }),
 mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
-mActiveTextureIndex(0),
+mTextureUID(nullptr), mTextureTarget(nullptr), mSamplerObjectUID(nullptr), mActiveTextureIndex(0),
 mDepthRenderTarget(nullptr), mDepthRenderTargetType(GL_DEPTH_ATTACHMENT), mDepthRenderTargetUID(0), mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
-mNextTextureIndex(0), mMaxTextureIndexes(0), mApplyEffectState(true)
+mApplyEffectState(true), mNextTextureIndex(0), mMaxActiveTextures(0)
 {
-	memset(mTextureUID, 0, sizeof(mTextureUID));
-	memset(mTextureTarget, 0, sizeof(mTextureTarget));
-	memset(mRenderTargetUID, 0, sizeof(mRenderTargetUID));
-	memset(mSamplerObjectUID, 0, sizeof(mSamplerObjectUID));
-	memset(mRenderTargets, 0, sizeof(mRenderTargets));
-
 	glClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
 	glClearDepth(mClearDepth);
 	glEnable(GL_DEPTH_TEST);
@@ -42,10 +36,15 @@ mNextTextureIndex(0), mMaxTextureIndexes(0), mApplyEffectState(true)
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Coult not initialize this thread's rendering states. Reason: %d", error);
-	
-	// TODO: Ask OpenGL about this
-	mMaxTextureIndexes = MAX_ACTIVE_TEXTURES; 
-	
+
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&mMaxActiveTextures);
+	mTextureUID = new uint32[mMaxActiveTextures]; memset(mTextureUID, 0, sizeof(uint32)* mMaxActiveTextures);
+	mTextureTarget = new GLenum[mMaxActiveTextures]; memset(mTextureTarget, 0, sizeof(GLenum)* mMaxActiveTextures);
+	mSamplerObjectUID = new uint32[mMaxActiveTextures]; memset(mSamplerObjectUID, 0, sizeof(uint32)* mMaxActiveTextures);
+
+	memset(mRenderTargetUID, 0, sizeof(mRenderTargetUID));
+	memset(mRenderTargets, 0, sizeof(mRenderTargets));
+
 	//
 	// Create the vertex array used to draw the upcomming triangles onto the screen
 	//
@@ -75,6 +74,21 @@ RenderState::~RenderState()
 		glBindVertexArray(0);
 		glDeleteVertexArrays(1, &mVertexArrayID);
 		mVertexArrayID = 0;
+	}
+
+	if (mTextureUID != nullptr) {
+		delete[] mTextureUID; 
+		mTextureUID = nullptr;
+	}
+
+	if (mTextureTarget != nullptr) {
+		delete[] mTextureTarget;
+		mTextureTarget = nullptr;
+	}
+
+	if (mSamplerObjectUID != nullptr) {
+		delete[] mSamplerObjectUID;
+		mSamplerObjectUID = nullptr;
 	}
 }
 
@@ -116,11 +130,7 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 		glUseProgram(effect->GetProgramID());
 		mEffectState = GetEffectState(effect);
 		mEffectUID = uid;
-		//return mEffectState;
 	}
-
-	// Find the appropriate effect state
-
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
@@ -405,7 +415,7 @@ void RenderState::SetClearDepth(float32 depth)
 
 void RenderState::BindTexture(const Texture* texture, uint32 index)
 {
-	assert(index < MAX_ACTIVE_TEXTURES && "You are not allowed to bind that many textures");
+	assert(index < mMaxActiveTextures && "You are not allowed to bind that many textures");
 	if (mActiveTextureIndex != index) {
 		glActiveTexture(GL_TEXTURE0 + index);
 		mActiveTextureIndex = index;
@@ -786,7 +796,7 @@ bool RenderState::IsEffectActive(const Effect* effect) const
 uint32 RenderState::GetNextTextureIndex()
 {
 	const uint32 textureIndex = mNextTextureIndex++;
-	if (mNextTextureIndex >= mMaxTextureIndexes)
+	if (mNextTextureIndex >= mMaxActiveTextures)
 		mNextTextureIndex = 0;
 	return textureIndex;
 }

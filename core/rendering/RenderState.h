@@ -223,10 +223,17 @@ namespace core
 		IUniform* FindUniform(const std::string& name);
 
 		/*!
-			\brief
+			\brief Check to see if the supplied effect UID is the one bound to the current rendering state
 		*/
 		inline bool IsActive(uint32 effectUID) const {
 			return effectUID == mEffectUID;
+		}
+
+		/*!
+			\brief
+		*/
+		inline uint32 GetMaxActiveTextures() const {
+			return mMaxActiveTextures;
 		}
 
 		/*!
@@ -338,10 +345,10 @@ namespace core
 		// Bound textures
 		//
 
-		uint32 mTextureUID[MAX_ACTIVE_TEXTURES];
-		GLenum mTextureTarget[MAX_ACTIVE_TEXTURES];
+		uint32* mTextureUID;
+		GLenum* mTextureTarget;
+		uint32* mSamplerObjectUID;
 		uint32 mActiveTextureIndex;
-		uint32 mSamplerObjectUID[MAX_ACTIVE_TEXTURES];
 
 		//
 		// Bound render targets
@@ -362,8 +369,13 @@ namespace core
 
 		EffectState* mEffectState;
 		EffectStates mEffectStates;
-		uint32 mNextTextureIndex;
-		GLuint mMaxTextureIndexes;
 		bool mApplyEffectState;
+
+		//
+		// Resource limit
+		//
+		GLuint mMaxActiveTextures;
+		uint32 mNextTextureIndex;
+		
 	};
 }

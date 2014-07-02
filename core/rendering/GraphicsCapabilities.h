@@ -9,6 +9,6 @@ namespace core
 
 	// The maximum amount of bound textures at the same time
 	// TODO: Make this dynamic
-	static const uint32 MAX_ACTIVE_TEXTURES = 16U;
+	//static const uint32 MAX_ACTIVE_TEXTURES = 16U;
 
 }
