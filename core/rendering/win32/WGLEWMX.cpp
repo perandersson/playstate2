@@ -1,3 +1,4 @@
+#include "../../Memory.h"
 #include "WGLEWMX.h"
 #include "../../ThreadLocal.h"
 

@@ -1,3 +1,4 @@
+#include "../Memory.h"
 #include "ThreadPool.h"
 using namespace core;
 
