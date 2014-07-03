@@ -4,8 +4,8 @@
 using namespace core;
 
 namespace {
+	static std::atomic<uint32> uid(0);
 	uint32 GenUID() {
-		static std::atomic<uint32> uid(0);
 		return ++uid;
 	}
 }

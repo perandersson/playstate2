@@ -5,8 +5,8 @@
 using namespace core;
 
 namespace {
+	static std::atomic<uint32> ids(0);
 	uint32 GenBufferUID() {
-		static std::atomic<uint32> ids(0);
 		return ++ids;
 	}
 }

@@ -94,9 +94,6 @@ void RenderState::Clear(uint32 clearBits)
 		clear |= GL_DEPTH_BUFFER_BIT;
 	}
 
-	SetClearDepth(mClearDepth);
-	SetClearColor(mClearColor);
-
 	if (clear != 0)
 		glClear(clear);
 
