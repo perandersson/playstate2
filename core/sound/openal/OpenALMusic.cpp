@@ -16,6 +16,11 @@ OpenALMusic::~OpenALMusic()
 		alDeleteBuffers(mBuffers.size(), &mBuffers[0]);
 		mBuffers.clear();
 	}
+
+	if (mStream != nullptr) {
+		delete mStream;
+		mStream = nullptr;
+	}
 }
 
 void OpenALMusic::AttachToSource(ALuint source, bool looping)
