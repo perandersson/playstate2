@@ -22,6 +22,8 @@ namespace core
 		static VertexBuffer* CreateStaticBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices);
 		static RenderTarget2D* CreateRenderTarget2D(const Size& size, TextureFormat::Enum format);
 		static Texture2D* CreateTexture2D(const Size& size, TextureFormat::Enum format, const byte* bytes);
+		static TextureCube* CreateTextureCube(const Size& size, TextureFormat::Enum format, const byte* positiveX, const byte* negativeX,
+			const byte* positiveY, const byte* negativeY, const byte* positiveZ, const byte* negativeZ);
 		
 		/*!
 			\brief Call the supplied function in a separate thread.

@@ -153,8 +153,8 @@ RenderTarget2D* OpenGLRenderContext::CreateRenderTarget2D(const Size& size, Text
 Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat::Enum format, const byte* bytes)
 {
 	assert_not_null(bytes);
-	assert(size.x > 0.0f && "You cannot create a render target with 0 width");
-	assert(size.y > 0.0f && "You cannot create a render target with 0 height");
+	assert(size.x > 0.0f && "You cannot create a texture with 0 width");
+	assert(size.y > 0.0f && "You cannot create a texture with 0 height");
 
 	const GLenum _format = GetTextureFormatAsEnum(format);
 	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
@@ -180,6 +180,64 @@ Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat:
 	}
 
 	return new Texture2D(textureID, size, format);
+}
+
+TextureCube* OpenGLRenderContext::CreateTextureCube(const Size& size, TextureFormat::Enum format, const byte* positiveX, const byte* negativeX,
+	const byte* positiveY, const byte* negativeY, const byte* positiveZ, const byte* negativeZ)
+{
+	assert_not_null(positiveX);
+	assert_not_null(negativeX);
+	assert_not_null(positiveY);
+	assert_not_null(negativeY);
+	assert_not_null(positiveZ);
+	assert_not_null(negativeZ);
+	assert(size.x > 0.0f && "You cannot create a texture with 0 width");
+	assert(size.y > 0.0f && "You cannot create a texture with 0 height");
+
+	const GLenum _format = GetTextureFormatAsEnum(format);
+	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
+	const GLenum minFilter = GetMinFilterAsEnum(MinFilter::DEFAULT);
+	const GLenum magFilter = GetMagFilterAsEnum(MagFilter::DEFAULT);
+	const GLenum textureWrap = GetTextureWrapAsEnum(TextureWrap::DEFAULT);
+
+	const GLuint textureID = GenTextureID();
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	const byte* bytes[6] = {
+		positiveX,
+		negativeX,
+		positiveY,
+		negativeY,
+		positiveZ,
+		negativeZ
+	};
+
+	const GLenum types[6] = {
+		GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+		GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+		GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+		GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+		GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+		GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+	};
+
+	for (uint32 i = 0; i < 6; ++i) {
+		glTexImage2D(types[i], 0, _internalFormat, size.width, size.height, 0, _format, GL_UNSIGNED_BYTE, bytes[i]);
+	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap);
+
+	GetRenderState()->UnbindTexture();
+
+	GLenum status = glGetError();
+	if (status != GL_NO_ERROR) {
+		THROW_EXCEPTION(RenderingException, "Could not create 2D texture. Reason: %d", status);
+	}
+
+	return new TextureCube(textureID, size, format);
 }
 
 GLenum OpenGLRenderContext::GetTextureFormatAsEnum(TextureFormat::Enum format)

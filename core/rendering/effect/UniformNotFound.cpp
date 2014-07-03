@@ -60,6 +60,16 @@ void UniformNotFound::SetTexture(Resource<Texture2D>& texture)
 
 }
 
+void UniformNotFound::SetTexture(const TextureCube* texture)
+{
+
+}
+
+void UniformNotFound::SetTexture(Resource<TextureCube>& texture)
+{
+
+}
+
 void UniformNotFound::SetTexture(const RenderTarget2D* texture)
 {
 

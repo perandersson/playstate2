@@ -69,6 +69,16 @@ void DefaultUniform::SetTexture(Resource<Texture2D>& texture)
 	SetTexture(texture.Get());
 }
 
+void DefaultUniform::SetTexture(const TextureCube* texture)
+{
+	assert(false && "Invalid component type");
+}
+
+void DefaultUniform::SetTexture(Resource<TextureCube>& texture)
+{
+	SetTexture(texture.Get());
+}
+
 void DefaultUniform::SetTexture(const RenderTarget2D* texture)
 {
 	assert(false && "Invalid component type");

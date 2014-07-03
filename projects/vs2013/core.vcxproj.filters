@@ -731,6 +731,12 @@
     <ClInclude Include="..\..\core\rendering\win32\WGLEWMX.h">
       <Filter>Source Files\rendering\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\TextureCube.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\SamplerCubeUniform.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1167,6 +1173,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\win32\WGLEWMX.cpp">
       <Filter>Source Files\rendering\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\TextureCube.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\SamplerCubeUniform.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

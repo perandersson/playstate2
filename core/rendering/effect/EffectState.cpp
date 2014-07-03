@@ -8,6 +8,7 @@
 #include "IntUniform.h"
 #include "MatrixUniform.h"
 #include "Sampler2DUniform.h"
+#include "SamplerCubeUniform.h"
 #include "../exception/RenderingException.h"
 using namespace core;
 
@@ -38,6 +39,9 @@ EffectState::EffectState(const Effect* effect, RenderState* renderState)
 		}
 		else if (prpt->uniformType == GL_SAMPLER_2D) {
 			uniform = new Sampler2DUniform(effect, renderState, componentID, renderState->GetNextTextureIndex(), GenSamplerObject(it->second));
+		}
+		else if (prpt->uniformType == GL_SAMPLER_CUBE) {
+			uniform = new SamplerCubeUniform(effect, renderState, componentID, renderState->GetNextTextureIndex(), GenSamplerObject(it->second));
 		}
 
 		if (uniform == nullptr)

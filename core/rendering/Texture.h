@@ -6,6 +6,9 @@
 
 namespace core
 {
+	/*!
+		\brief Base class for all textures used by the rendering engine
+	*/
 	class Texture : public ResourceObject
 	{
 	public:

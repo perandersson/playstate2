@@ -1,6 +1,7 @@
 #pragma once
 #include "../typedefs.h"
 #include "Texture2D.h"
+#include "TextureCube.h"
 #include "RenderTarget2D.h"
 #include "../resource/Resource.h"
 #include "../math/Color.h"
@@ -30,6 +31,8 @@ namespace core
 
 		virtual void SetTexture(const Texture2D* texture) = 0;
 		virtual void SetTexture(Resource<Texture2D>& texture) = 0;
+		virtual void SetTexture(const TextureCube* texture) = 0;
+		virtual void SetTexture(Resource<TextureCube>& texture) = 0;
 		virtual void SetTexture(const RenderTarget2D* texture) = 0;
 
 		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt) = 0;

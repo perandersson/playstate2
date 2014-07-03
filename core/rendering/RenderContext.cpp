@@ -57,3 +57,9 @@ Texture2D* RenderContext::CreateTexture2D(const Size& size, TextureFormat::Enum 
 {
 	return Kernel::GetRenderContext()->CreateTexture2D(size, format, bytes);
 }
+
+TextureCube* RenderContext::CreateTextureCube(const Size& size, TextureFormat::Enum format, const byte* positiveX, const byte* negativeX,
+	const byte* positiveY, const byte* negativeY, const byte* positiveZ, const byte* negativeZ)
+{
+	return Kernel::GetRenderContext()->CreateTextureCube(size, format, positiveX, negativeX, positiveY, negativeY, positiveZ, negativeZ);
+}

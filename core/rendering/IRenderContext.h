@@ -5,6 +5,7 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 #include "RenderTarget2D.h"
+#include "TextureCube.h"
 #include "../resource/Resource.h"
 
 namespace core
@@ -85,9 +86,24 @@ namespace core
 						The size of the texture
 			\param format
 						The texture's format of
+			\param bytes
+						The bytes of the texture
 			\return The texture if the supplied size and format is valid.
 			\throws RenderingException if the supplied size or format is invalid
 		*/
 		virtual Texture2D* CreateTexture2D(const Size& size, TextureFormat::Enum format, const byte* bytes) = 0;
+		
+		/*!
+			\brief Creates a texture with six sides.
+			
+			\param size
+						The size of a side of the cube texture
+			\param format
+						The texture's format of
+			\return The texture if the supplied size and format is valid.
+			\throws RenderingException if the supplied size or format is invalid
+		*/
+		virtual TextureCube* CreateTextureCube(const Size& size, TextureFormat::Enum format, const byte* positiveX, const byte* negativeX,
+			const byte* positiveY, const byte* negativeY, const byte* positiveZ, const byte* negativeZ) = 0;
 	};
 }

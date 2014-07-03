@@ -103,6 +103,7 @@
     <ClInclude Include="..\..\core\rendering\effect\IntUniform.h" />
     <ClInclude Include="..\..\core\rendering\effect\MatrixUniform.h" />
     <ClInclude Include="..\..\core\rendering\effect\Sampler2DUniform.h" />
+    <ClInclude Include="..\..\core\rendering\effect\SamplerCubeUniform.h" />
     <ClInclude Include="..\..\core\rendering\effect\SamplerStateXmlVisitor.h" />
     <ClInclude Include="..\..\core\rendering\effect\UniformNotFound.h" />
     <ClInclude Include="..\..\core\rendering\effect\UniformProperty.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\..\core\rendering\SamplerObject.h" />
     <ClInclude Include="..\..\core\rendering\Texture.h" />
     <ClInclude Include="..\..\core\rendering\Texture2D.h" />
+    <ClInclude Include="..\..\core\rendering\TextureCube.h" />
     <ClInclude Include="..\..\core\rendering\TextureFormat.h" />
     <ClInclude Include="..\..\core\rendering\TextureResourceLoader.h" />
     <ClInclude Include="..\..\core\rendering\TextureWrap.h" />
@@ -285,6 +287,7 @@
     <ClCompile Include="..\..\core\rendering\effect\IntUniform.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\MatrixUniform.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\Sampler2DUniform.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\SamplerCubeUniform.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\SamplerStateXmlVisitor.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\UniformNotFound.cpp" />
     <ClCompile Include="..\..\core\rendering\exception\RenderingException.cpp" />
@@ -301,6 +304,7 @@
     <ClCompile Include="..\..\core\rendering\SamplerObject.cpp" />
     <ClCompile Include="..\..\core\rendering\Texture.cpp" />
     <ClCompile Include="..\..\core\rendering\Texture2D.cpp" />
+    <ClCompile Include="..\..\core\rendering\TextureCube.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureResourceLoader.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureWrap.cpp" />
     <ClCompile Include="..\..\core\rendering\VertexBuffer.cpp" />
