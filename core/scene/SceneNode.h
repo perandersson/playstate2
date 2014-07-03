@@ -70,17 +70,22 @@ namespace core
 			return mSceneGroup;
 		}
 
-		//
-		// Find a scene node with the supplied id
-		//
-		// @param id
-		// @return The scene node if found; NULL otherwise
+		/*!
+			\brief Find a scene node with the supplied id
+
+			\param id
+					The scene node's ID
+			\return The scene node if found; nullptr otherwise.
+		*/
 		SceneNode* FindSceneNode(const std::string& id);
 
-		//
-		// Find the first component matching the supplied type mask
-		//
-		// @return The first scene node; NULL if no node is found with the given type mask
+		/*!
+			\brief Find the first component matching the supplied type mask
+
+			\param typeMask
+					A type mask that the scene node we are looking for have.
+			\return The scene node if found; nullptr otherwise.
+		*/
 		SceneNode* FindFirstSceneNode(typemask typeMask);
 
 		/*!
@@ -91,11 +96,12 @@ namespace core
 		*/
 		void AddComponent(Component* component);
 
-		//
-		// Remove the supplied component from this node
-		//
-		// @param component
-		//			The component we want to remove
+		/*!
+			\brief Remove the supplied component from this node
+
+			\param component
+					The component we want to remove
+		*/
 		void RemoveComponent(Component* component);
 
 		//

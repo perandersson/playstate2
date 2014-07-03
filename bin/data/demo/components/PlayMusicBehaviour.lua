@@ -13,12 +13,10 @@ function PlayMusicBehaviour:SetMusic(music)
 end
 
 function PlayMusicBehaviour:OnAttachedToScene()
-	print("OnAttachedToScene")
 	Music.Play(self.music)
 end
 
 function PlayMusicBehaviour:OnDetachedFromScene()
-	print("OnDetachedFromScene")
 	Music.Stop(self.music)
 end
 

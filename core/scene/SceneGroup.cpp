@@ -110,6 +110,13 @@ void SceneGroup::AttachedToScene()
 {
 	this->OnAttachedToScene();
 
+	auto component = mComponents.First();
+	while (component != nullptr) {
+		auto next = component->ComponentLink.Tail;
+		component->AttachedToScene();
+		component = next;
+	}
+
 	auto node = mChildren.First();
 	while (node != nullptr) {
 		auto next = node->SceneNodeLink.Tail;
@@ -125,6 +132,13 @@ void SceneGroup::DetachedFromScene()
 		auto next = node->SceneNodeLink.Tail;
 		node->DetachedFromScene();
 		node = next;
+	}
+
+	auto component = mComponents.First();
+	while (component != nullptr) {
+		auto next = component->ComponentLink.Tail;
+		component->DetachedFromScene();
+		component = next;
 	}
 
 	this->OnDetachedFromScene();

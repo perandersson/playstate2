@@ -1,6 +1,5 @@
 local MovePlayerBehaviour = require "demo.components.MovePlayerBehaviour"
 local FollowCameraBehaviour = require "demo.components.FollowCameraBehaviour"
-local PlayMusicBehaviour = require "demo.components.PlayMusicBehaviour"
 local SinusLightBehaviour = require "demo.components.SinusLightBehaviour"
 
 local level1 = QuadTreeSceneGroup()

@@ -28,4 +28,8 @@ player:AddChildNode(player_PointLight)
 playerGroup:AddSceneNode(player)
 -- /player
 
+local bgmusic = PlayMusicBehaviour()
+bgmusic:SetMusic(Resource.Load("/demo/sound/music/Epoq-Lepidoptera.ogg"))
+playerGroup:AddComponent(bgmusic)
+
 return playerGroup
