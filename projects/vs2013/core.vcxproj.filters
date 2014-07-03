@@ -737,6 +737,9 @@
     <ClInclude Include="..\..\core\rendering\effect\SamplerCubeUniform.h">
       <Filter>Source Files\rendering\effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\RenderTargetCube.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1179,6 +1182,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\effect\SamplerCubeUniform.cpp">
       <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\RenderTargetCube.cpp">
+      <Filter>Source Files\rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

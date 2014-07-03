@@ -121,6 +121,7 @@
     <ClInclude Include="..\..\core\rendering\IRenderPipeline.h" />
     <ClInclude Include="..\..\core\rendering\RenderState.h" />
     <ClInclude Include="..\..\core\rendering\RenderTarget2D.h" />
+    <ClInclude Include="..\..\core\rendering\RenderTargetCube.h" />
     <ClInclude Include="..\..\core\rendering\SamplerObject.h" />
     <ClInclude Include="..\..\core\rendering\Texture.h" />
     <ClInclude Include="..\..\core\rendering\Texture2D.h" />
@@ -301,6 +302,7 @@
     <ClCompile Include="..\..\core\rendering\RenderContextResourceLoader.cpp" />
     <ClCompile Include="..\..\core\rendering\RenderState.cpp" />
     <ClCompile Include="..\..\core\rendering\RenderTarget2D.cpp" />
+    <ClCompile Include="..\..\core\rendering\RenderTargetCube.cpp" />
     <ClCompile Include="..\..\core\rendering\SamplerObject.cpp" />
     <ClCompile Include="..\..\core\rendering\Texture.cpp" />
     <ClCompile Include="..\..\core\rendering\Texture2D.cpp" />

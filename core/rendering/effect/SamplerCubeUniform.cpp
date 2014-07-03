@@ -28,7 +28,7 @@ void SamplerCubeUniform::Apply()
 	glUniform1i(GetComponentID(), mTextureIndex);
 }
 
-void SamplerCubeUniform::SetTexture(const Texture2D* texture)
+void SamplerCubeUniform::SetTexture(const TextureCube* texture)
 {
 	const uint32 uid = texture != nullptr ? texture->GetUID() : 0;
 	if (mTextureUID == uid)
@@ -41,9 +41,9 @@ void SamplerCubeUniform::SetTexture(const Texture2D* texture)
 		SamplerCubeUniform::Apply();
 }
 
-void SamplerCubeUniform::SetTexture(const RenderTarget2D* texture)
+void SamplerCubeUniform::SetTexture(const RenderTargetCube* texture)
 {
-	SetTexture((Texture2D*)texture);
+	SetTexture((TextureCube*)texture);
 }
 
 void SamplerCubeUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)

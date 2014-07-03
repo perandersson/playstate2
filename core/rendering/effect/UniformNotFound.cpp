@@ -75,6 +75,11 @@ void UniformNotFound::SetTexture(const RenderTarget2D* texture)
 
 }
 
+void UniformNotFound::SetTexture(const RenderTargetCube* texture)
+{
+
+}
+
 void UniformNotFound::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)
 {
 

@@ -182,6 +182,61 @@ Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat:
 	return new Texture2D(textureID, size, format);
 }
 
+RenderTargetCube* OpenGLRenderContext::CreateRenderTargetCube(const Size& size, TextureFormat::Enum format)
+{
+	assert(size.x > 0.0f && "You cannot create a render target texture with 0 width");
+	assert(size.y > 0.0f && "You cannot create a render target texture with 0 height");
+
+	GLenum _minMag = GL_LINEAR;
+	const GLenum _format = GetTextureFormatAsEnum(format);
+	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
+	const GLenum minFilter = GetMinFilterAsEnum(MinFilter::DEFAULT);
+	const GLenum magFilter = GetMagFilterAsEnum(MagFilter::DEFAULT);
+	const GLenum textureWrap = GetTextureWrapAsEnum(TextureWrap::DEFAULT);
+
+	switch (format)
+	{
+	case TextureFormat::DEPTH24:
+		_minMag = GL_NEAREST;
+		break;
+	case TextureFormat::DEPTH24_STENCIL8:
+		_minMag = GL_NEAREST;
+		break;
+	}
+
+	const GLuint textureID = GenTextureID();
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	const GLenum types[6] = {
+		GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+		GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+		GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+		GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+		GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+		GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+	};
+
+	for (uint32 i = 0; i < 6; ++i) {
+		glTexImage2D(types[i], 0, _internalFormat, size.width, size.height, 0, _format, GL_FLOAT, NULL);
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minFilter);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, magFilter);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, textureWrap);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, textureWrap);
+
+	GetRenderState()->UnbindTexture();
+
+	glFlush();
+
+	GLenum status = glGetError();
+	if (status != GL_NO_ERROR) {
+		THROW_EXCEPTION(RenderingException, "Could not create 2D render target. Reason: %d", status);
+	}
+
+	return new RenderTargetCube(textureID, size, format);
+}
+
 TextureCube* OpenGLRenderContext::CreateTextureCube(const Size& size, TextureFormat::Enum format, const byte* positiveX, const byte* negativeX,
 	const byte* positiveY, const byte* negativeY, const byte* positiveZ, const byte* negativeZ)
 {
@@ -225,12 +280,14 @@ TextureCube* OpenGLRenderContext::CreateTextureCube(const Size& size, TextureFor
 		glTexImage2D(types[i], 0, _internalFormat, size.width, size.height, 0, _format, GL_UNSIGNED_BYTE, bytes[i]);
 	}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrap);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrap);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minFilter);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, magFilter);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, textureWrap);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, textureWrap);
 
 	GetRenderState()->UnbindTexture();
+
+	glFlush();
 
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {

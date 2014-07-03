@@ -3,6 +3,7 @@
 #include "Texture2D.h"
 #include "TextureCube.h"
 #include "RenderTarget2D.h"
+#include "RenderTargetCube.h"
 #include "../resource/Resource.h"
 #include "../math/Color.h"
 #include "../math/Matrix4x4.h"
@@ -34,6 +35,7 @@ namespace core
 		virtual void SetTexture(const TextureCube* texture) = 0;
 		virtual void SetTexture(Resource<TextureCube>& texture) = 0;
 		virtual void SetTexture(const RenderTarget2D* texture) = 0;
+		virtual void SetTexture(const RenderTargetCube* texture) = 0;
 
 		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt) = 0;
 
