@@ -17,7 +17,10 @@ namespace core
 
 	// Component
 	public:
-		virtual void OnComponentAdded();
+		virtual void OnComponentAddedToNode();
+		virtual void OnComponentRemovedFromNode();
+		virtual void OnComponentAddedToGroup();
+		virtual void OnComponentRemovedFromGroup();
 		virtual Updatable* GetUpdatable();
 		virtual Tickable* GetTickable();
 		virtual void OnAttachedToScene();
@@ -36,6 +39,11 @@ namespace core
 		virtual void Tick();
 
 	private:
+		std::shared_ptr<ScriptMethod> mOnComponentAddedToNodeMethodPtr;
+		std::shared_ptr<ScriptMethod> mOnComponentRemovedFromNodeMethodPtr;
+		std::shared_ptr<ScriptMethod> mOnComponentAddedToGroupMethodPtr;
+		std::shared_ptr<ScriptMethod> mOnComponentRemovedFromGroupMethodPtr;
+
 		std::shared_ptr<ScriptMethod> mUpdateMethodPtr;
 		std::shared_ptr<ScriptMethod> mTickMethodPtr;
 

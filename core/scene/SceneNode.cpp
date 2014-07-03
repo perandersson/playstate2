@@ -138,7 +138,8 @@ bool SceneNode::IsAttachedToScene() const {
 void SceneNode::AddComponent(Component* component)
 {
 	assert_not_null(component);
-	assert(component->GetSceneNode() == nullptr && "You are not allowed to add a component on multiple scene nodes");
+	assert(component->GetSceneNode() == nullptr && "This component is already added to a scene node");
+	assert(component->GetSceneGroup() == nullptr && "This component is already added to a scene group");
 
 	//
 	// Add the component to it's internal list
@@ -161,11 +162,6 @@ void SceneNode::AddComponent(Component* component)
 		AddTickable(tickable);
 	}
 
-	//auto renderable = component->GetRenderable();
-	//if (renderable != nullptr) {
-	//	AddRenderable(renderable);
-	//}
-
 	if (IsAttachedToScene())
 		component->AttachedToScene();
 }
@@ -184,11 +180,6 @@ void SceneNode::RemoveComponent(Component* component)
 	if (tickable != nullptr) {
 		RemoveTickable(tickable);
 	}
-
-	//auto renderable = component->GetRenderable();
-	//if (renderable != nullptr) {
-	//	RemoveRenderable(renderable);
-	//}
 
 	mComponents.Remove(component);
 
@@ -243,12 +234,7 @@ void SceneNode::AddedToSceneGroup(SceneGroup* group)
 		if (tickable != nullptr) {
 			AddTickable(tickable);
 		}
-
-		//auto renderable = component->GetRenderable();
-		//if (renderable != nullptr) {
-		//	AddRenderable(renderable);
-		//}
-		//
+		
 		component = next;
 	}
 
@@ -280,11 +266,6 @@ void SceneNode::RemovedFromSceneGroup(SceneGroup* group)
 		if (tickable != nullptr) {
 			RemoveTickable(tickable);
 		}
-
-		//auto renderable = component->GetRenderable();
-		//if (renderable != nullptr) {
-		//	RemoveRenderable(renderable);
-		//}
 
 		component = next;
 	}

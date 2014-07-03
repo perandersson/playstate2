@@ -34,10 +34,22 @@ namespace core
 			return mComponentID;
 		}
 
-		//
-		// @return The owner scene node for this component
+		/*!
+			\brief Retrieves the owner scene node for this component
+
+			\return The scene node; nullptr if not attached to a scene node
+		*/
 		inline SceneNode* GetSceneNode() const {
 			return mSceneNode;
+		}
+
+		/*!
+			\brief Retrieves the owner scene group for this component
+
+			\return The scene group; nullptr if not attached to a scene group
+		*/
+		inline SceneGroup* GetSceneGroup() const {
+			return mSceneGroup;
 		}
 
 		//
@@ -73,22 +85,46 @@ namespace core
 		// @return A pointer to the renderable instance that this component implements
 		virtual Renderable* GetRenderable() { return nullptr; }
 
-		//
-		// Method invoked whenever this component is added to the supplied node
+		/*!
+			\brief Method invoked whenever this component is added to the supplied node
+		*/
 		void ComponentAddedToNode(SceneNode* node);
 
-		//
-		// Method invoked whenever this component is removed from the supplied node
+		/*!
+			\brief Method invoked whenever this node is added to the supplied group
+		*/
+		void ComponentAddedToGroup(SceneGroup* group);
+
+		/*!
+			\brief Method invoked whenever this component is removed from the supplied node
+		*/
 		void ComponentRemovedFromNode(SceneNode* node);
 
-	protected:
-		//
-		// Method called whenever this component is added to the supplied node
-		virtual void OnComponentAddedToNode(SceneNode* node);
+		/*!
+			\brief Method invoked whenever this component is removed from the supplied group
+		*/
+		void ComponentRemovedFromGroup(SceneGroup* group);
 
-		//
-		// Method called when this component is removed from the supplied node
-		virtual void OnComponentRemovedFromNode(SceneNode* node);
+	protected:
+		/*!
+			\brief Method called whenever this component is added to a scene node. 
+		*/
+		virtual void OnComponentAddedToNode();
+
+		/*!
+			\brief Method called whenever this component is removed from the scene node it's attached to
+		*/
+		virtual void OnComponentRemovedFromNode();
+		
+		/*!
+			\brief Method called whenever this component is added to a scene group. 
+		*/
+		virtual void OnComponentAddedToGroup();
+
+		/*!
+			\brief Method called whenever this component is removed from the scene group it's attached to
+		*/
+		virtual void OnComponentRemovedFromGroup();
 
 	public:
 		//
@@ -154,6 +190,7 @@ namespace core
 		std::string mComponentID;
 		typemask mTypeMask;
 		SceneNode* mSceneNode;
+		SceneGroup* mSceneGroup;
 		AABB mBoundingBox;
 	};
 }

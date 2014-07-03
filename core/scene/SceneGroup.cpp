@@ -41,17 +41,68 @@ void SceneGroup::RemoveSceneNode(SceneNode* node)
 
 void SceneGroup::AddComponent(Component* component)
 {
-	assert_not_implemented();
+	assert_not_null(component);
+	assert(component->GetSceneNode() == nullptr && "This component is already added to a scene node");
+	assert(component->GetSceneGroup() == nullptr && "This component is already added to a scene group");
+
+	//
+	// Add the component to it's internal list
+	//
+
+	mComponents.AddLast(component);
+	component->ComponentAddedToGroup(this);
+
+	//
+	// Add the components internal objects as well
+	// 
+
+	auto updatable = component->GetUpdatable();
+	if (updatable != nullptr) {
+		AddUpdatable(updatable);
+	}
+
+	auto tickable = component->GetTickable();
+	if (tickable != nullptr) {
+		AddTickable(tickable);
+	}
+
+	if (IsAttachedToScene())
+		component->AttachedToScene();
 }
 
 void SceneGroup::RemoveComponent(Component* component)
 {
-	assert_not_implemented();
+	assert_not_null(component);
+	assert(component->GetSceneNode() == nullptr && "You are not allowed to remove a component on that isn't attached this group");
+	assert(component->GetSceneGroup() == this && "You are not allowed to remove a component on that isn't attached this group");
+
+	auto updatable = component->GetUpdatable();
+	if (updatable != nullptr) {
+		RemoveUpdatable(updatable);
+	}
+
+	auto tickable = component->GetTickable();
+	if (tickable != nullptr) {
+		RemoveTickable(tickable);
+	}
+
+	mComponents.Remove(component);
+
+	if (IsAttachedToScene())
+		component->DetachedFromScene();
+
+	component->ComponentRemovedFromGroup(this);
 }
 
 Component* SceneGroup::GetFirstComponent(typemask typeMask)
 {
-	assert_not_implemented();
+	auto component = mComponents.First();
+	while (component != nullptr) {
+		if (BIT_ISSET(component->GetTypeMask(), typeMask))
+			return component;
+		component = component->ComponentLink.Tail;
+	}
+
 	return nullptr;
 }
 

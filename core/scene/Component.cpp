@@ -6,7 +6,7 @@
 using namespace core;
 
 Component::Component()
-: ScriptObject(), mSceneNode(nullptr), mTypeMask(0), mBoundingBox(AABB::UNIT)
+: ScriptObject(), mSceneNode(nullptr), mSceneGroup(nullptr), mTypeMask(0), mBoundingBox(AABB::UNIT)
 {
 }
 
@@ -26,22 +26,61 @@ void Component::SetTypeMask(typemask typeMask)
 
 void Component::ComponentAddedToNode(SceneNode* node)
 {
+	assert_not_null(node);
+	assert_null(mSceneNode);
+	assert_null(mSceneGroup);
+
 	mSceneNode = node;
-	this->OnComponentAddedToNode(node);
+	mSceneGroup = node->GetSceneGroup();
+
+	this->OnComponentAddedToNode();
 }
 
 void Component::ComponentRemovedFromNode(SceneNode* node)
 {
+	assert_not_null(node);
 	assert(node == mSceneNode);
+
+	this->OnComponentRemovedFromNode();
+
 	mSceneNode = nullptr;
-	this->OnComponentRemovedFromNode(node);
+	mSceneGroup = nullptr;
 }
 
-void Component::OnComponentAddedToNode(SceneNode* node)
+void Component::ComponentAddedToGroup(SceneGroup* group)
+{
+	assert_not_null(group);
+	assert_null(mSceneNode);
+	assert_null(mSceneGroup);
+
+	mSceneGroup = group;
+
+	this->OnComponentAddedToGroup();
+}
+
+void Component::ComponentRemovedFromGroup(SceneGroup* group)
+{
+	assert_not_null(group);
+	assert(group == mSceneGroup);
+
+	this->OnComponentRemovedFromGroup();
+
+	mSceneGroup = nullptr;
+}
+
+void Component::OnComponentAddedToNode()
 {
 }
 
-void Component::OnComponentRemovedFromNode(SceneNode* node)
+void Component::OnComponentRemovedFromNode()
+{
+}
+
+void Component::OnComponentAddedToGroup()
+{
+}
+
+void Component::OnComponentRemovedFromGroup()
 {
 }
 

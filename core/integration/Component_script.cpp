@@ -14,8 +14,24 @@ ScriptableComponent::~ScriptableComponent()
 
 }
 
-void ScriptableComponent::OnComponentAdded()
+void ScriptableComponent::OnComponentAddedToNode()
 {
+
+}
+
+void ScriptableComponent::OnComponentRemovedFromNode()
+{
+
+}
+
+void ScriptableComponent::OnComponentAddedToGroup()
+{
+
+}
+
+void ScriptableComponent::OnComponentRemovedFromGroup()
+{
+
 }
 
 Updatable* ScriptableComponent::GetUpdatable()
@@ -30,6 +46,10 @@ Tickable* ScriptableComponent::GetTickable()
 
 bool ScriptableComponent::OnRegisterObject()
 {
+	mOnComponentAddedToNodeMethodPtr = GetMethodPtr("OnComponentAddedToNode");
+	mOnComponentRemovedFromNodeMethodPtr = GetMethodPtr("OnComponentRemovedFromNode");
+	mOnComponentAddedToGroupMethodPtr = GetMethodPtr("OnComponentAddedToGroup");
+	mOnComponentRemovedFromGroupMethodPtr = GetMethodPtr("OnComponentRemovedFromGroup");
 	mUpdateMethodPtr = GetMethodPtr("Update");
 	mTickMethodPtr = GetMethodPtr("Tick");
 	mOnAttachedToSceneMethodPtr = GetMethodPtr("OnAttachedToScene");
@@ -91,9 +111,7 @@ int Component_GetSceneGroup(struct lua_State* L)
 	Component* self = ScriptUtils::ToObject<Component>(L);
 	SceneGroup* group = nullptr;
 	if (self != nullptr) {
-		auto node = self->GetSceneNode();
-		if (node != nullptr)
-			group = node->GetSceneGroup();
+		group = self->GetSceneGroup();
 	}
 	else
 		ScriptUtils::LogError(L, "Expected: Component.GetSceneGroup(self)");
