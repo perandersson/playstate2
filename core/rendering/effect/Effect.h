@@ -31,49 +31,75 @@ namespace core
 		}
 
 		/*!
-			\brief Add a new uniform property
-
-			\param p
-		*/
-		void AddUniformProperty(std::shared_ptr<UniformProperty> p);
-
-		/*!
 			\brief Retrieves this effects uniform properties
 		*/
 		inline const std::hash_map<std::string, std::shared_ptr<UniformProperty>>& GetUniformProperties() const {
 			return mProperties;
 		}
 
-		inline void SetDepthTest(bool enable) {
-			mDepthTest = enable;
-		}
-
 		inline bool GetDepthTest() const {
 			return mDepthTest;
-		}
-
-		inline void SetDepthFunc(DepthFunc::Enum func) {
-			mDepthFunc = func;
 		}
 
 		inline DepthFunc::Enum GetDepthFunc() const {
 			return mDepthFunc;
 		}
 
-		inline void SetStencilTest(bool enable) {
-			mStencilTest = enable;
-		}
-
 		inline bool GetStencilTest() const {
 			return mStencilTest;
 		}
 
-		inline void SetBlend(bool enable) {
-			mBlend = enable;
+		inline uint32 GetStencilMask() const {
+			return mStencilMask;
 		}
 
 		inline bool GetBlend() const {
 			return mBlend;
+		}
+
+		inline const BlendFunc& GetBlendFunc() const {
+			return mBlendFunc;
+		}
+
+		inline CullFace::Enum GetCullFace() const {
+			return mCullFace;
+		}
+
+		inline const Color& GetClearColor() const {
+			return mClearColor;
+		}
+
+		inline float32 GetClearDepth() const {
+			return mClearDepth;
+		}
+
+	friend class EffectXmlVisitor;
+	private:
+		/*!
+			\brief Add a new uniform property used by this effect
+
+			\param p
+		*/
+		void AddUniformProperty(std::shared_ptr<UniformProperty> p);
+
+		inline void SetDepthTest(bool enable) {
+			mDepthTest = enable;
+		}
+
+		inline void SetDepthFunc(DepthFunc::Enum func) {
+			mDepthFunc = func;
+		}
+
+		inline void SetStencilTest(bool enable) {
+			mStencilTest = enable;
+		}
+
+		inline void SetStencilMask(uint32 mask) {
+			mStencilMask = mask;
+		}
+
+		inline void SetBlend(bool enable) {
+			mBlend = enable;
 		}
 
 		inline void SetBlendFunc(SrcFactor::Enum sfactor, DestFactor::Enum dfactor) {
@@ -81,32 +107,16 @@ namespace core
 			mBlendFunc.dfactor = dfactor;
 		}
 
-		inline const BlendFunc& GetBlendFunc() const {
-			return mBlendFunc;
-		}
-
 		inline void SetCullFace(CullFace::Enum cullFace) {
 			mCullFace = cullFace;
-		}
-
-		inline CullFace::Enum GetCullFace() const {
-			return mCullFace;
 		}
 
 		inline void SetClearColor(const Color& color) {
 			mClearColor = color;
 		}
 
-		inline const Color& GetClearColor() const {
-			return mClearColor;
-		}
-
 		inline void SetClearDepth(float32 depth) {
 			mClearDepth = depth;
-		}
-
-		inline float32 GetClearDepth() const {
-			return mClearDepth;
 		}
 
 	private:
@@ -116,15 +126,18 @@ namespace core
 		GLuint mProgramID;
 		UniformProperties mProperties;
 
-
 		bool mDepthTest;
 		DepthFunc::Enum mDepthFunc;
+		
 		bool mStencilTest;
+		uint32 mStencilMask;
+
 		bool mBlend;
 		BlendFunc mBlendFunc;
+
 		CullFace::Enum mCullFace;
+
 		Color mClearColor;
 		float32 mClearDepth;
-		bool mApplyRenderTarget;
 	};
 }

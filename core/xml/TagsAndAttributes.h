@@ -7,6 +7,7 @@ namespace core
 	static const std::string TAG_BLEND("blend");
 	static const std::string TAG_DEPTH_TEST("depthtest");
 	static const std::string TAG_STENCIL_TEST("stenciltest");
+	static const std::string TAG_STENCIL_MASK("stencilmask");
 	static const std::string TAG_CULL_FACE("cullface");
 	static const std::string TAG_DEPTH_FUNC("depthfunc");
 	static const std::string TAG_SRC_FACTOR("srcfactor");

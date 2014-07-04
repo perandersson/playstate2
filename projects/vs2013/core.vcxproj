@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\core\BitUtils.h" />
     <ClInclude Include="..\..\core\camera\Camera.h" />
     <ClInclude Include="..\..\core\camera\Frustum.h" />
     <ClInclude Include="..\..\core\camera\FrustumPlanes.h" />

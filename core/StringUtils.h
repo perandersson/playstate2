@@ -23,9 +23,14 @@ namespace core
 			return val;
 		}
 
-		static uint32 ToInt32(const std::string& str) {
-			uint32 val = atoi(str.c_str());
-			return val;
+		static int32 ToInt32(const std::string& str) {
+			int64 val = std::strtol(str.c_str(), NULL, 10);
+			return (int32)val;
+		}
+
+		static uint32 ToUInt32(const std::string& str) {
+			uint64 val = std::strtoul(str.c_str(), NULL, 10);
+			return (uint32)val;
 		}
 
 		static std::vector<std::string> Split(const std::string& str, const char delim) {

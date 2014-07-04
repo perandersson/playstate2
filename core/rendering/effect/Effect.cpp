@@ -9,7 +9,7 @@ using namespace core;
 Effect::Effect(GLuint programID)
 : ResourceObject(), mProgramID(programID),
 mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT),
-mStencilTest(false),
+mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }), mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f)
 {

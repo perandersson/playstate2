@@ -125,6 +125,13 @@ namespace core
 		void SetStencilTest(bool enable);
 
 		/*!
+			\brief Set the stencil mask
+
+			\param mask
+		*/
+		void SetStencilMask(uint32 mask);
+
+		/*!
 			\brief Set how the depth is calculated for each vertice
 
 			\param func
@@ -371,6 +378,7 @@ namespace core
 		//
 		
 		bool mStencilTest;
+		uint32 mStencilMask;
 
 		//
 		// Blending

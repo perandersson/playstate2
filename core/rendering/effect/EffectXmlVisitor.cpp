@@ -1,6 +1,7 @@
 #include "../../Memory.h"
 #include "EffectXmlVisitor.h"
 #include "Effect.h"
+#include "../../BitUtils.h"
 #include "../../xml/TagsAndAttributes.h"
 #include "../../StringUtils.h"
 #include "../../resource/exception/LoadResourceException.h"
@@ -14,7 +15,7 @@ EffectXmlVisitor::EffectXmlVisitor(IRenderContext* renderContext)
 : XMLDefaultVisitor(), 
 mRenderContext(renderContext), mEffect(nullptr), mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0), 
 mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT),
-mStencilTest(false),
+mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT),
 mCullFace(CullFace::DEFAULT)
 {
@@ -55,6 +56,9 @@ bool EffectXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tin
 	}
 	else if (name == TAG_STENCIL_TEST) {
 		mStencilTest = StringUtils::ToBool(GetLowerCaseValue(element));
+	}
+	else if (name == TAG_STENCIL_MASK) {
+		mStencilMask = BitUtils::ToUInt32(GetLowerCaseValue(element));
 	}
 	else if (name == TAG_CULL_FACE) {
 		mCullFace = CullFace::Parse(element.GetText(), CullFace::DEFAULT);
@@ -201,11 +205,16 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 			mEffect->AddUniformProperty(p);
 		}
 		
-		mEffect->SetBlend(mBlend);
 		mEffect->SetDepthTest(mDepthTest);
-		mEffect->SetCullFace(mCullFace);
 		mEffect->SetDepthFunc(mDepthFunc);
+
+		mEffect->SetStencilTest(mStencilTest);
+		mEffect->SetStencilMask(mStencilMask);
+
+		mEffect->SetBlend(mBlend);
 		mEffect->SetBlendFunc(mSrcFactor, mDestFactor);
+
+		mEffect->SetCullFace(mCullFace);
 	}
 
 	return true;

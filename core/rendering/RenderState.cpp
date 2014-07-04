@@ -17,7 +17,7 @@ mEffectUID(0),
 mVertexBufferUID(0), mIndexBufferUID(0), mVertexArrayID(0),
 mDepthTest(false), mDepthFunc(DepthFunc::DEFAULT),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }),
-mStencilTest(false),
+mStencilTest(false), mStencilMask(BIT_ALL),
 mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
 mActiveTextureIndex(0),
@@ -28,6 +28,7 @@ mApplyEffectState(true), mMaxDrawBuffers(0), mMaxActiveTextures(0), mNextTexture
 	glClearDepth(mClearDepth);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
+	glStencilMask(BIT_ALL);
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ZERO);
@@ -122,6 +123,7 @@ EffectState* RenderState::ApplyEffect(const Effect* effect)
 	SetDepthFunc(effect->GetDepthFunc());
 
 	SetStencilTest(effect->GetStencilTest());
+	SetStencilMask(effect->GetStencilMask());
 
 	SetBlend(effect->GetBlend());
 
@@ -385,6 +387,21 @@ void RenderState::SetStencilTest(bool enable)
 	else
 		glDisable(GL_STENCIL_TEST);
 	mStencilTest = enable;
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not enable/disable stencil testing");
+#endif
+}
+
+void RenderState::SetStencilMask(uint32 mask)
+{
+	if (mStencilMask == mask)
+		return;
+
+	glStencilMask((GLuint)mask);
+	mStencilMask = mask;
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();

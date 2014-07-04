@@ -41,6 +41,7 @@ namespace core
 		DepthFunc::Enum mDepthFunc;
 
 		bool mStencilTest;
+		uint32 mStencilMask;
 
 		bool mBlend;
 		SrcFactor::Enum mSrcFactor;
