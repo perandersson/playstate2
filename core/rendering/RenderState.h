@@ -334,6 +334,8 @@ namespace core
 
 	friend class OpenGLRenderContext;
 	friend class XMLEffectType;
+	friend class VertexBuffer;
+	friend class IndexBuffer;
 	protected:
 		/*!
 			\brief Unbinds the currently bound index buffer

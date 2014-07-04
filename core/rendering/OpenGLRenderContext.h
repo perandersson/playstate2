@@ -26,10 +26,10 @@ namespace core
 		virtual RenderState* GetRenderState();
 		virtual RenderState* Activate(Effect* effect);
 		virtual RenderState* Activate(Resource<Effect> effect);
-		virtual IndexBuffer* CreateStaticBuffer(const uint32* indices, uint32 numIndices);
-		virtual VertexBuffer* CreateStaticBuffer(const PositionTextureVertexType* vertices, uint32 numVertices);
-		virtual VertexBuffer* CreateStaticBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices);
-		virtual VertexBuffer* CreateStaticBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices);
+		virtual IndexBuffer* CreateBuffer(const uint32* indices, uint32 numIndices, BufferUsage::Enum usage);
+		virtual VertexBuffer* CreateBuffer(const PositionTextureVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage);
+		virtual VertexBuffer* CreateBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage);
+		virtual VertexBuffer* CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices, BufferUsage::Enum usage);
 		virtual RenderTarget2D* CreateRenderTarget2D(const Size& size, TextureFormat::Enum format);
 		virtual Texture2D* CreateTexture2D(const Size& size, TextureFormat::Enum format, const byte* bytes);
 		virtual RenderTargetCube* CreateRenderTargetCube(const Size& size, TextureFormat::Enum format);
@@ -42,6 +42,7 @@ namespace core
 		static GLenum GetMinFilterAsEnum(MinFilter::Enum minFilter);
 		static GLenum GetMagFilterAsEnum(MagFilter::Enum magFilter);
 		static GLenum GetTextureWrapAsEnum(TextureWrap::Enum textureWrap);
+		static GLenum GetBufferUsageAsEnum(BufferUsage::Enum bufferUsage);
 
 		GLuint GenTextureID() const;
 		GLuint GenBufferID() const;

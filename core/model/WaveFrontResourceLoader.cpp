@@ -270,7 +270,7 @@ void WavefrontResourceLoader::LoadMesh(IRenderContext* renderContext, std::istri
 			if (currentMaterial.length() > 0) {
 				WavefrontMesh* mesh = new WavefrontMesh();
 				mesh->material = currentMaterial;
-				mesh->vertexBuffer = renderContext->CreateStaticBuffer(data, numVertices);
+				mesh->vertexBuffer = renderContext->CreateBuffer(data, numVertices, BufferUsage::STATIC);
 				meshes.push_back(mesh);
 
 				numVertices = 0;
@@ -320,7 +320,7 @@ void WavefrontResourceLoader::LoadMesh(IRenderContext* renderContext, std::istri
 	if (currentMaterial.length() > 0) {
 		WavefrontMesh* mesh = new WavefrontMesh();
 		mesh->material = currentMaterial;
-		mesh->vertexBuffer = renderContext->CreateStaticBuffer(data, numVertices);
+		mesh->vertexBuffer = renderContext->CreateBuffer(data, numVertices, BufferUsage::STATIC);
 		meshes.push_back(mesh);
 	}
 

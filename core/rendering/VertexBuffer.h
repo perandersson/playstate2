@@ -1,6 +1,7 @@
 #pragma once
 #include "../typedefs.h"
 #include "VertexType.h"
+#include "BufferUsage.h"
 #include "GLEWMX.h"
 
 namespace core
@@ -10,7 +11,7 @@ namespace core
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, uint32 numVertices, uint32 sizeOfOneVertex);
+		VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, uint32 numVertices, uint32 sizeOfOneVertex, BufferUsage::Enum bufferUsage);
 		~VertexBuffer();
 
 		inline uint32 GetUID() const {
@@ -37,6 +38,16 @@ namespace core
 		void Render(const IndexBuffer* indexBuffer, uint32 startIndex) const;
 		void Render(const IndexBuffer* indexBuffer, uint32 startIndex, uint32 count) const;
 
+		/*!
+			\brief Update this vertex buffer with new data
+
+			It's not possible to change how the actual vertex data is structured this way
+
+			\param vertices
+			\param numVertices
+		*/
+		void Update(const void* vertices, uint32 numVertices);
+
 		static GLenum GetPrimitiveTypeEnum(PrimitiveType::Enum primitiveType);
 
 	private:
@@ -45,5 +56,6 @@ namespace core
 		const VertexDesc& mVertexDesc;
 		uint32 mNumVertices;
 		uint32 mSizeOfOneVertex;
+		BufferUsage::Enum mBufferUsage;
 	};
 }

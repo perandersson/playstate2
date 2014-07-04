@@ -758,6 +758,9 @@
     <ClInclude Include="..\..\core\integration\SpotLight_script.h">
       <Filter>Source Files\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\BufferUsage.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1215,6 +1218,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\integration\SpotLight_script.cpp">
       <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\BufferUsage.cpp">
+      <Filter>Source Files\rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

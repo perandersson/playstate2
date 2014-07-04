@@ -28,24 +28,24 @@ RenderState* RenderContext::Activate(Resource<Effect> effect)
 	return Kernel::GetRenderContext()->Activate(effect);
 }
 
-IndexBuffer* RenderContext::CreateStaticBuffer(const uint32* indices, uint32 numIndices)
+IndexBuffer* RenderContext::CreateBuffer(const uint32* indices, uint32 numIndices, BufferUsage::Enum usage)
 {
-	return Kernel::GetRenderContext()->CreateStaticBuffer(indices, numIndices);
+	return Kernel::GetRenderContext()->CreateBuffer(indices, numIndices, usage);
 }
 
-VertexBuffer* RenderContext::CreateStaticBuffer(const PositionTextureVertexType* vertices, uint32 numVertices)
+VertexBuffer* RenderContext::CreateBuffer(const PositionTextureVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return Kernel::GetRenderContext()->CreateStaticBuffer(vertices, numVertices);
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, numVertices, usage);
 }
 
-VertexBuffer* RenderContext::CreateStaticBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices)
+VertexBuffer* RenderContext::CreateBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return Kernel::GetRenderContext()->CreateStaticBuffer(vertices, numVertices);
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, numVertices, usage);
 }
 
-VertexBuffer* RenderContext::CreateStaticBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices)
+VertexBuffer* RenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return Kernel::GetRenderContext()->CreateStaticBuffer(vertices, sizeOfOneVertex, vertexDesc, numVertices);
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, sizeOfOneVertex, vertexDesc, numVertices, usage);
 }
 
 RenderTarget2D* RenderContext::CreateRenderTarget2D(const Size& size, TextureFormat::Enum format)

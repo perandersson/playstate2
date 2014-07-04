@@ -6,6 +6,7 @@
 #include "VertexBuffer.h"
 #include "RenderTarget2D.h"
 #include "RenderTargetCube.h"
+#include "BufferUsage.h"
 #include "../resource/Resource.h"
 
 namespace core
@@ -56,16 +57,17 @@ namespace core
 		virtual RenderState* Activate(Resource<Effect> effect) = 0;
 
 		/*!
-			\brief Creates a static index buffer
+			\brief Creates an index buffer
 
 			\param indices
 			\param numIndices
+			\param usage
 		*/
-		virtual IndexBuffer* CreateStaticBuffer(const uint32* indices, uint32 numIndices) = 0;
+		virtual IndexBuffer* CreateBuffer(const uint32* indices, uint32 numIndices, BufferUsage::Enum usage) = 0;
 
-		virtual VertexBuffer* CreateStaticBuffer(const PositionTextureVertexType* vertices, uint32 numVertices) = 0;
-		virtual VertexBuffer* CreateStaticBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices) = 0;
-		virtual VertexBuffer* CreateStaticBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices) = 0;
+		virtual VertexBuffer* CreateBuffer(const PositionTextureVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage) = 0;
+		virtual VertexBuffer* CreateBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage) = 0;
+		virtual VertexBuffer* CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices, BufferUsage::Enum usage) = 0;
 
 		/*!
 			\brief Creates a two-dimensional render target

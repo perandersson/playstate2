@@ -37,7 +37,7 @@ mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr), mCubeShadowMap(nullptr
 	elements[4].texCoord = Vector2(1.0f, 1.0f);
 	elements[5].pos = Vector3(1.0f, -1.0f, 0.0f);
 	elements[5].texCoord = Vector2(1.0f, 0.0f);
-	mFullscreenQuad = std::shared_ptr<VertexBuffer>(RenderContext::CreateStaticBuffer(elements, 6));
+	mFullscreenQuad = std::shared_ptr<VertexBuffer>(RenderContext::CreateBuffer(elements, 6, BufferUsage::STATIC));
 }
 
 DeferredRenderPipeline::~DeferredRenderPipeline()

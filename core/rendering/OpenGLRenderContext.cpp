@@ -54,7 +54,7 @@ RenderState* OpenGLRenderContext::Activate(Resource<Effect> effect)
 	return Activate(effect.Get());
 }
 
-IndexBuffer* OpenGLRenderContext::CreateStaticBuffer(const uint32* indices, uint32 numIndices)
+IndexBuffer* OpenGLRenderContext::CreateBuffer(const uint32* indices, uint32 numIndices, BufferUsage::Enum usage)
 {
 	assert_not_null(indices);
 	assert(numIndices > 0 && "There is no point in creating a static buffer with 0 elements");
@@ -63,7 +63,7 @@ IndexBuffer* OpenGLRenderContext::CreateStaticBuffer(const uint32* indices, uint
 	const GLuint bufferID = GenBufferID();
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(uint32), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(uint32), indices, GetBufferUsageAsEnum(usage));
 	glFlush();
 
 	GetRenderState()->UnbindIndexBuffer();
@@ -73,20 +73,20 @@ IndexBuffer* OpenGLRenderContext::CreateStaticBuffer(const uint32* indices, uint
 		THROW_EXCEPTION(RenderingException, "Could not create vertex buffer. Reason: %d", status);
 	}
 
-	return new IndexBuffer(bufferID, numIndices);
+	return new IndexBuffer(bufferID, numIndices, usage);
 }
 
-VertexBuffer* OpenGLRenderContext::CreateStaticBuffer(const PositionTextureVertexType* vertices, uint32 numVertices)
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return CreateStaticBuffer(vertices, sizeof(PositionTextureVertexType), PositionTextureVertexTypeDeclaration, numVertices);
+	return CreateBuffer(vertices, sizeof(PositionTextureVertexType), PositionTextureVertexTypeDeclaration, numVertices, usage);
 }
 
-VertexBuffer* OpenGLRenderContext::CreateStaticBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices)
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return CreateStaticBuffer(vertices, sizeof(PositionTextureNormalVertexType), PositionTextureNormalVertexTypeDeclaration, numVertices);
+	return CreateBuffer(vertices, sizeof(PositionTextureNormalVertexType), PositionTextureNormalVertexTypeDeclaration, numVertices, usage);
 }
 
-VertexBuffer* OpenGLRenderContext::CreateStaticBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices)
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices, BufferUsage::Enum usage)
 {
 	assert_not_null(vertices);
 	assert(sizeOfOneVertex > 0 && "There is no point in creating a static buffer without any data");
@@ -95,7 +95,7 @@ VertexBuffer* OpenGLRenderContext::CreateStaticBuffer(const void* vertices, uint
 	const GLuint bufferID = GenBufferID();
 
 	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
-	glBufferData(GL_ARRAY_BUFFER, numVertices * sizeOfOneVertex, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, numVertices * sizeOfOneVertex, vertices, GetBufferUsageAsEnum(usage));
 	glFlush();
 
 	GetRenderState()->UnbindVertexBuffer();
@@ -105,7 +105,7 @@ VertexBuffer* OpenGLRenderContext::CreateStaticBuffer(const void* vertices, uint
 		THROW_EXCEPTION(RenderingException, "Could not create vertex buffer. Reason: %d", status);
 	}
 
-	return new VertexBuffer(bufferID, vertexDesc, numVertices, sizeOfOneVertex);
+	return new VertexBuffer(bufferID, vertexDesc, numVertices, sizeOfOneVertex, usage);
 }
 
 RenderTarget2D* OpenGLRenderContext::CreateRenderTarget2D(const Size& size, TextureFormat::Enum format)
@@ -398,6 +398,11 @@ GLenum OpenGLRenderContext::GetMagFilterAsEnum(MagFilter::Enum magFilter)
 GLenum OpenGLRenderContext::GetTextureWrapAsEnum(TextureWrap::Enum textureWrap)
 {
 	return TextureWrap::Parse(textureWrap);
+}
+
+GLenum OpenGLRenderContext::GetBufferUsageAsEnum(BufferUsage::Enum bufferUsage)
+{
+	return BufferUsage::Parse(bufferUsage);
 }
 
 GLuint OpenGLRenderContext::GenTextureID() const

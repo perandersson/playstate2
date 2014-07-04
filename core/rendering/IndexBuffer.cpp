@@ -1,6 +1,8 @@
 #include "../Memory.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "RenderContext.h"
+#include "RenderState.h"
 #include <atomic>
 using namespace core;
 
@@ -11,8 +13,8 @@ namespace {
 	}
 }
 
-IndexBuffer::IndexBuffer(GLuint bufferID, uint32 numElements)
-: mUID(GenIndexBufferUID()), mBufferID(bufferID), mNumElements(numElements)
+IndexBuffer::IndexBuffer(GLuint bufferID, uint32 numElements, BufferUsage::Enum bufferUsage)
+: mUID(GenIndexBufferUID()), mBufferID(bufferID), mNumElements(numElements), mBufferUsage(bufferUsage)
 {
 }
 
@@ -38,4 +40,31 @@ void IndexBuffer::Render(VertexBuffer* buffer, uint32 firstElement, uint32 numEl
 {
 	assert(buffer != NULL && "You are not allowed to render an index buffer without a vertex buffer");
 	buffer->Render(this, firstElement, numElements);
+}
+
+void IndexBuffer::Update(const uint32* indices, uint32 numIndices)
+{
+	assert_not_null(indices);
+	assert(numIndices > 0 && "Why update 0 numIndices?");
+	assert(mBufferUsage == BufferUsage::DYNAMIC && "Updating a non-dynamic buffer has major performance penalties. Do not do this!");
+
+	//
+	// Get the current rendering state
+	//
+
+	RenderState* renderState = RenderContext::GetRenderState();
+	renderState->BindIndexBuffer(this);
+
+	//
+	// Update data
+	//
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(uint32), indices, GL_DYNAMIC_DRAW);
+	glFlush();
+
+	//
+	// Mark the current vertex buffer as dirty
+	//
+	
+	renderState->UnbindIndexBuffer();
 }

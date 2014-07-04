@@ -136,6 +136,7 @@
     <ClInclude Include="..\..\core\rendering\TextureWrap.h" />
     <ClInclude Include="..\..\core\rendering\IUniform.h" />
     <ClInclude Include="..\..\core\rendering\VertexBuffer.h" />
+    <ClInclude Include="..\..\core\rendering\BufferUsage.h" />
     <ClInclude Include="..\..\core\rendering\VertexType.h" />
     <ClInclude Include="..\..\core\rendering\VertexTypes.h" />
     <ClInclude Include="..\..\core\rendering\win32\WGLEWMX.h" />
@@ -284,6 +285,7 @@
     <ClCompile Include="..\..\core\model\PSMFResourceLoader.cpp" />
     <ClCompile Include="..\..\core\model\WaveFrontResourceLoader.cpp" />
     <ClCompile Include="..\..\core\rendering\BlendFunc.cpp" />
+    <ClCompile Include="..\..\core\rendering\BufferUsage.cpp" />
     <ClCompile Include="..\..\core\rendering\CullFace.cpp" />
     <ClCompile Include="..\..\core\rendering\FrontFace.cpp" />
     <ClCompile Include="..\..\core\rendering\DepthFunc.cpp" />

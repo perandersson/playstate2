@@ -1,6 +1,8 @@
 #include "../Memory.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "RenderContext.h"
+#include "RenderState.h"
 #include <atomic>
 using namespace core;
 
@@ -11,8 +13,8 @@ namespace {
 	}
 }
 
-VertexBuffer::VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, uint32 numVertices, uint32 sizeOfOneVertex)
-: mUID(GenBufferUID()), mBufferID(bufferID), mVertexDesc(vertexDesc), mNumVertices(numVertices), mSizeOfOneVertex(sizeOfOneVertex)
+VertexBuffer::VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, uint32 numVertices, uint32 sizeOfOneVertex, BufferUsage::Enum bufferUsage)
+: mUID(GenBufferUID()), mBufferID(bufferID), mVertexDesc(vertexDesc), mNumVertices(numVertices), mSizeOfOneVertex(sizeOfOneVertex), mBufferUsage(bufferUsage)
 {
 	assert(mNumVertices > 0 && "Why create a vertex buffer without any vertices in it?");
 	assert(mSizeOfOneVertex > 0 && "The size of one vertex cannot be 0");
@@ -64,6 +66,33 @@ void VertexBuffer::Render(const IndexBuffer* buffer, uint32 firstElement, uint32
 
 	// So far only the GL_UNSIGNED_INT indice type is usable
 	glDrawElements(GetPrimitiveTypeEnum(mVertexDesc.primitiveType), numElements, GL_UNSIGNED_INT, (void*)(firstElement * sizeof(uint32)));
+}
+
+void VertexBuffer::Update(const void* vertices, uint32 numVertices)
+{
+	assert_not_null(vertices);
+	assert(numVertices > 0 && "Why update 0 vertices?");
+	assert(mBufferUsage == BufferUsage::DYNAMIC && "Updating a non-dynamic buffer has major performance penalties. Do not do this!");
+
+	//
+	// Get the current rendering state
+	//
+
+	RenderState* renderState = RenderContext::GetRenderState();
+	renderState->BindVertexBuffer(this);
+
+	//
+	// Update data
+	//
+
+	glBufferData(GL_ARRAY_BUFFER, mNumVertices * mSizeOfOneVertex, vertices, GL_DYNAMIC_DRAW);
+	glFlush();
+
+	//
+	// Mark the current vertex buffer as dirty
+	//
+	
+	renderState->UnbindVertexBuffer();
 }
 
 GLenum VertexBuffer::GetPrimitiveTypeEnum(PrimitiveType::Enum primitiveType)
