@@ -191,8 +191,36 @@ namespace core
 						The texture index for the render target. Useful if you want to
 						render to multiple textures at once.
 		*/
-		void SetRenderTarget(const RenderTarget2D* renderTarget, GLenum index);
+		void SetRenderTarget(const RenderTarget2D* renderTarget, uint32 index);
 		
+		/*!
+			\brief Set the render target at the given index
+
+			\remark Note that the render targets are not bound until you perform some kind of
+					rendering-action, such as clearing the screen.
+
+			\param renderTarget
+						The texture we want to draw our result to
+			\param index
+						The texture index for the render target. Useful if you want to
+						render to multiple textures at once.
+		*/
+		void SetRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side, uint32 index);
+		
+		/*!
+			\brief Set the render target at the given index
+
+			\remark Note that the render targets are not bound until you perform some kind of
+					rendering-action, such as clearing the screen.
+
+			\param renderTarget
+						The texture we want to draw our result to
+			\param index
+						The texture index for the render target. Useful if you want to
+						render to multiple textures at once.
+		*/
+		void SetRenderTarget(const RenderTargetCube* renderTarget, uint32 index);
+
 		/*!
 			\brief Set the depth render target at the given index
 

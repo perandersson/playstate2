@@ -520,20 +520,44 @@ void RenderState::BindSampler(SamplerObject* samplerObject, uint32 index)
 #endif
 }
 
-void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, GLenum index)
+void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, uint32 index)
 {
 	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
 	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
-	if (mRenderTargetInfo[index].uid == uid)
+	RenderTargetInfo& info = mRenderTargetInfo[index];
+	if (info.uid == uid)
 		return;
 
-	mRenderTargetInfo[index].dirty = true;
-	mRenderTargetInfo[index].texture = renderTarget;
+	info.dirty = true;
+	info.texture = renderTarget;
 	if (renderTarget != nullptr) 
-		mRenderTargetInfo[index].textureTarget = renderTarget->GetTextureTarget();
-	mRenderTargetInfo[index].uid = uid;
+		info.textureTarget = renderTarget->GetTextureTarget();
+	info.uid = uid;
 
 	mApplyRenderTarget = true;
+}
+
+void RenderState::SetRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side, uint32 index)
+{
+	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
+	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
+	GLenum textureTarget = TextureCubeSide::Parse(side);
+	RenderTargetInfo& info = mRenderTargetInfo[index];
+	if (info.uid == uid && info.textureTarget == textureTarget)
+		return;
+
+	info.dirty = true;
+	info.texture = renderTarget;
+	if (renderTarget != nullptr)
+		info.textureTarget = textureTarget;
+	info.uid = uid;
+
+	mApplyRenderTarget = true;
+}
+
+void RenderState::SetRenderTarget(const RenderTargetCube* renderTarget, uint32 index)
+{
+	assert_not_implemented();
 }
 
 void RenderState::SetDepthRenderTarget(const RenderTarget2D* renderTarget)

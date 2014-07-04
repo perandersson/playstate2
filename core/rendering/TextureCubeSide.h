@@ -1,5 +1,6 @@
 #pragma once
 #include "../typedefs.h"
+#include "GLEWMX.h"
 
 namespace core
 {
@@ -18,8 +19,11 @@ namespace core
 			NEGATIVE_Z,
 
 			ALL,
+			NONE,
 
 			SIZE
 		};
+
+		static GLenum Parse(Enum e);
 	};
 }

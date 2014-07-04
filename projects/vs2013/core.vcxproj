@@ -309,6 +309,7 @@
     <ClCompile Include="..\..\core\rendering\Texture.cpp" />
     <ClCompile Include="..\..\core\rendering\Texture2D.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureCube.cpp" />
+    <ClCompile Include="..\..\core\rendering\TextureCubeSide.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureResourceLoader.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureWrap.cpp" />
     <ClCompile Include="..\..\core\rendering\VertexBuffer.cpp" />
