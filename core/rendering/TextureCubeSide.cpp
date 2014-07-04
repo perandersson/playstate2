@@ -14,3 +14,19 @@ GLenum TextureCubeSide::Parse(Enum e) {
 
 	return textureTargets[(uint32)e];
 }
+
+const Vector3& TextureCubeSide::GetDirection(Enum e)
+{
+	static Vector3 directions[SIZE] = {
+		Vector3(1.0f, 0.0f, 0.0f),
+		Vector3(-1.0f, 0.0f, 0.0f),
+		Vector3(0.0f, 1.0f, 0.0f),
+		Vector3(0.0f, -1.0f, 0.0f),
+		Vector3(0.0f, 0.0f, 1.0f),
+		Vector3(0.0f, 0.0f, -1.0f),
+		Vector3(),
+		Vector3()
+	};
+
+	return directions[(uint32)e];
+}

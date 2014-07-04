@@ -302,6 +302,13 @@ namespace core
 		/*!
 			\brief
 		*/
+		inline uint32 GetMaxDrawBuffers() const {
+			return mMaxDrawBuffers;
+		}
+
+		/*!
+			\brief
+		*/
 		uint32 GetNextTextureIndex();
 
 	private:

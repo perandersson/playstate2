@@ -43,6 +43,7 @@
 #include "../integration/KeyboardDevice_script.h"
 #include "../integration/RenderModelSceneNode_script.h"
 #include "../integration/PointLight_script.h"
+#include "../integration/SpotLight_script.h"
 #include "../integration/Resource_script.h"
 
 #include <chrono>
@@ -149,6 +150,7 @@ bool StandardGame::Initialize()
 	classLoader->GetType("RenderModelSceneNode").InheritFrom("Renderable").AddFunctions(RenderModelSceneNode_Methods).Build();
 	classLoader->GetType("LightSource").InheritFrom("SpatialSceneNode").Build();
 	classLoader->GetType("PointLight").InheritFrom("LightSource").AddFunctions(PointLight_Methods).Build();
+	classLoader->GetType("SpotLight").InheritFrom("LightSource").AddFunctions(SpotLight_Methods).Build();
 
 	classLoader->GetType("InputDevices").AddFunctions(InputDevices_Methods).Build();
 	classLoader->GetType("KeyboardDevice").AddFunctions(KeyboardDevice_Methods).Build();

@@ -66,6 +66,7 @@
     <ClInclude Include="..\..\core\integration\SoundEffect_script.h" />
     <ClInclude Include="..\..\core\integration\SoundEngine_script.h" />
     <ClInclude Include="..\..\core\integration\SoundReceiver_script.h" />
+    <ClInclude Include="..\..\core\integration\SpotLight_script.h" />
     <ClInclude Include="..\..\core\kernel\IKernel.h" />
     <ClInclude Include="..\..\core\kernel\Kernel.h" />
     <ClInclude Include="..\..\core\kernel\ThreadPool.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="..\..\core\scene\light\LightSourceResultSet.h" />
     <ClInclude Include="..\..\core\scene\light\LightSourceBlockResultSetIterator.h" />
     <ClInclude Include="..\..\core\scene\light\PointLight.h" />
+    <ClInclude Include="..\..\core\scene\light\SpotLight.h" />
     <ClInclude Include="..\..\core\scene\LinkedListSceneGroup.h" />
     <ClInclude Include="..\..\core\scene\QuadTreeSceneGroup.h" />
     <ClInclude Include="..\..\core\scene\rendering\DefaultRenderBlockResultSetSorter.h" />
@@ -263,6 +265,7 @@
     <ClCompile Include="..\..\core\integration\SoundEffect_script.cpp" />
     <ClCompile Include="..\..\core\integration\SoundEngine_script.cpp" />
     <ClCompile Include="..\..\core\integration\SoundReceiver_script.cpp" />
+    <ClCompile Include="..\..\core\integration\SpotLight_script.cpp" />
     <ClCompile Include="..\..\core\kernel\Kernel.cpp" />
     <ClCompile Include="..\..\core\kernel\ThreadPool.cpp" />
     <ClCompile Include="..\..\core\kernel\win32\Win32Kernel.cpp" />
@@ -329,6 +332,7 @@
     <ClCompile Include="..\..\core\scene\light\LightSourceResultSet.cpp" />
     <ClCompile Include="..\..\core\scene\light\LightSourceBlockResultSetIterator.cpp" />
     <ClCompile Include="..\..\core\scene\light\PointLight.cpp" />
+    <ClCompile Include="..\..\core\scene\light\SpotLight.cpp" />
     <ClCompile Include="..\..\core\scene\LinkedListSceneGroup.cpp" />
     <ClCompile Include="..\..\core\scene\QuadTreeSceneGroup.cpp" />
     <ClCompile Include="..\..\core\scene\rendering\DefaultRenderBlockResultSetSorter.cpp" />

@@ -752,6 +752,12 @@
     <ClInclude Include="..\..\core\rendering\CullFace.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\scene\light\SpotLight.h">
+      <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\SpotLight_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1203,6 +1209,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\CullFace.cpp">
       <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\scene\light\SpotLight.cpp">
+      <Filter>Source Files\scene\light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\SpotLight_script.cpp">
+      <Filter>Source Files\integration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
