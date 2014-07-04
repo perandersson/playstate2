@@ -17,7 +17,7 @@ mRenderContext(renderContext), mEffect(nullptr), mGeometryShaderID(0), mVertexSh
 mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT),
-mCullFace(CullFace::DEFAULT)
+mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT)
 {
 
 }
@@ -59,6 +59,9 @@ bool EffectXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tin
 	}
 	else if (name == TAG_STENCIL_MASK) {
 		mStencilMask = BitUtils::ToUInt32(GetLowerCaseValue(element));
+	}
+	else if (name == TAG_FRONT_FACE) {
+		mFrontFace = FrontFace::Parse(element.GetText(), FrontFace::DEFAULT);
 	}
 	else if (name == TAG_CULL_FACE) {
 		mCullFace = CullFace::Parse(element.GetText(), CullFace::DEFAULT);
@@ -214,6 +217,7 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 		mEffect->SetBlend(mBlend);
 		mEffect->SetBlendFunc(mSrcFactor, mDestFactor);
 
+		mEffect->SetFrontFace(mFrontFace);
 		mEffect->SetCullFace(mCullFace);
 	}
 

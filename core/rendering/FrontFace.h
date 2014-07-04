@@ -3,20 +3,18 @@
 
 namespace core
 {
-	class CullFace
+	class FrontFace
 	{
 	public:
 		enum Enum {
-			DISABLED = 0,
-			FRONT,
-			BACK,
-			FRONT_AND_BACK,
+			CW = 0,
+			CCW,
 
-			SIZE,
+			SIZE
 		};
 
-		static const Enum DEFAULT = DISABLED;
-		
+		static const Enum DEFAULT = CCW;
+
 		/*!
 			\brief Parse the supplied string and return the enum representing it
 

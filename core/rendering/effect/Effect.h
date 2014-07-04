@@ -4,6 +4,7 @@
 #include "../DepthFunc.h"
 #include "../BlendFunc.h"
 #include "../CullFace.h"
+#include "../FrontFace.h"
 #include "../SamplerObject.h"
 #include "../../math/Color.h"
 #include "UniformProperty.h"
@@ -61,6 +62,10 @@ namespace core
 			return mBlendFunc;
 		}
 
+		inline FrontFace::Enum GetFrontFace() const {
+			return mFrontFace;
+		}
+
 		inline CullFace::Enum GetCullFace() const {
 			return mCullFace;
 		}
@@ -107,6 +112,10 @@ namespace core
 			mBlendFunc.dfactor = dfactor;
 		}
 
+		inline void SetFrontFace(FrontFace::Enum frontFace) {
+			mFrontFace = frontFace;
+		}
+
 		inline void SetCullFace(CullFace::Enum cullFace) {
 			mCullFace = cullFace;
 		}
@@ -135,6 +144,7 @@ namespace core
 		bool mBlend;
 		BlendFunc mBlendFunc;
 
+		FrontFace::Enum mFrontFace;
 		CullFace::Enum mCullFace;
 
 		Color mClearColor;

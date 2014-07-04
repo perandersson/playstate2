@@ -9,6 +9,7 @@
 #include "../scene/Tickable.h"
 #include "../script/ScriptManager.h"
 #include "../script/IScriptEnum.h"
+#include "../rendering/FrontFace.h"
 #include "../rendering/CullFace.h"
 #include "../rendering/DepthFunc.h"
 #include "../rendering/BlendFunc.h"
@@ -159,6 +160,7 @@ bool StandardGame::Initialize()
 	// Register enums
 	//
 
+	classLoader->GetEnum("FrontFace").Enums(FrontFace::GetValues()).Build();
 	classLoader->GetEnum("CullFace").Enums(CullFace::GetValues()).Build();
 	classLoader->GetEnum("DepthFunc").Enums(DepthFunc::GetValues()).Build();
 	classLoader->GetEnum("DestFactor").Enums(DestFactor::GetValues()).Build();

@@ -326,9 +326,6 @@
     <ClInclude Include="..\..\core\rendering\DepthFunc.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\rendering\CullFace.h">
-      <Filter>Source Files\rendering</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\rendering\ClearType.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
@@ -749,6 +746,12 @@
     <ClInclude Include="..\..\core\BitUtils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\FrontFace.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\CullFace.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -881,9 +884,6 @@
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\DepthFunc.cpp">
-      <Filter>Source Files\rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\rendering\CullFace.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\BlendFunc.cpp">
@@ -1196,6 +1196,12 @@
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\TextureCubeSide.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\FrontFace.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\CullFace.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
   </ItemGroup>

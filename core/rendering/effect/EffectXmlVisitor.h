@@ -1,6 +1,7 @@
 #pragma once
 #include "../../xml/XMLDefaultVisitor.h"
 #include "../SamplerObject.h"
+#include "../FrontFace.h"
 #include "../CullFace.h"
 #include "../DepthFunc.h"
 #include "../BlendFunc.h"
@@ -47,6 +48,7 @@ namespace core
 		SrcFactor::Enum mSrcFactor;
 		DestFactor::Enum mDestFactor;
 
+		FrontFace::Enum mFrontFace;
 		CullFace::Enum mCullFace;
 	};
 }

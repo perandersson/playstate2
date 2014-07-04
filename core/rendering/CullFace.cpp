@@ -20,7 +20,8 @@ std::hash_map<std::string, int32> CullFace::GetValues()
 {
 	std::hash_map<std::string, int32> enums;
 	ENUM_STRING(enums, CullFace, DISABLED);
-	ENUM_STRING(enums, CullFace, CW);
-	ENUM_STRING(enums, CullFace, CCW);
+	ENUM_STRING(enums, CullFace, FRONT);
+	ENUM_STRING(enums, CullFace, BACK);
+	ENUM_STRING(enums, CullFace, FRONT_AND_BACK);
 	return enums;
 }

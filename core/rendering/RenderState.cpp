@@ -18,10 +18,10 @@ mVertexBufferUID(0), mIndexBufferUID(0), mVertexArrayID(0),
 mDepthTest(false), mDepthFunc(DepthFunc::DEFAULT),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }),
 mStencilTest(false), mStencilMask(BIT_ALL),
-mCullFace(CullFace::DEFAULT),
+mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
 mActiveTextureIndex(0),
-/*mDepthRenderTarget(nullptr), mDepthRenderTargetType(GL_DEPTH_ATTACHMENT), mDepthRenderTargetUID(0),*/ mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
+mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
 mApplyEffectState(true), mMaxDrawBuffers(0), mMaxActiveTextures(0), mNextTextureIndex(0)
 {
 	glClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
@@ -130,7 +130,9 @@ EffectState* RenderState::ApplyEffect(const Effect* effect)
 	auto blendFunc = effect->GetBlendFunc();
 	SetBlendFunc(blendFunc.sfactor, blendFunc.dfactor);
 
+	SetFrontFace(effect->GetFrontFace());
 	SetCullFace(effect->GetCullFace());
+
 	SetClearColor(effect->GetClearColor());
 	SetClearDepth(effect->GetClearDepth());
 
@@ -459,6 +461,21 @@ void RenderState::SetBlendFunc(SrcFactor::Enum sfactor, DestFactor::Enum dfactor
 #endif
 }
 
+void RenderState::SetFrontFace(FrontFace::Enum frontFace)
+{
+	if (mFrontFace == frontFace)
+		return;
+
+	glFrontFace(GetFrontFaceAsEnum(frontFace));
+	mFrontFace = frontFace;
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not change the front faces used when render faces on the screen");
+#endif
+}
+
 void RenderState::SetCullFace(CullFace::Enum cullFace)
 {
 	if (mCullFace == cullFace)
@@ -469,8 +486,7 @@ void RenderState::SetCullFace(CullFace::Enum cullFace)
 	else
 	{
 		glEnable(GL_CULL_FACE);
-		glFrontFace(GetCullFaceAsEnum(cullFace));
-		glCullFace(GL_BACK);
+		glCullFace(GetCullFaceAsEnum(cullFace));
 	}
 	mCullFace = cullFace;
 
@@ -880,7 +896,7 @@ GLenum RenderState::GetDepthFuncAsEnum(DepthFunc::Enum depthFunc)
 		GL_ALWAYS
 	};
 
-	return enums[(int)depthFunc];
+	return enums[(uint32)depthFunc];
 }
 
 GLenum RenderState::GetSrcFactorAsEnum(SrcFactor::Enum sfactor)
@@ -902,7 +918,7 @@ GLenum RenderState::GetSrcFactorAsEnum(SrcFactor::Enum sfactor)
 		GL_ONE_MINUS_CONSTANT_ALPHA
 	};
 
-	return enums[(int)sfactor];
+	return enums[(uint32)sfactor];
 }
 
 GLenum RenderState::GetDestFactorAsEnum(DestFactor::Enum dfactor)
@@ -924,18 +940,29 @@ GLenum RenderState::GetDestFactorAsEnum(DestFactor::Enum dfactor)
 		GL_ONE_MINUS_CONSTANT_ALPHA
 	};
 
-	return enums[(int)dfactor];
+	return enums[(uint32)dfactor];
+}
+
+GLenum RenderState::GetFrontFaceAsEnum(FrontFace::Enum frontFace)
+{
+	static const GLenum enums[FrontFace::SIZE] = {
+		GL_CW,
+		GL_CCW
+	};
+
+	return enums[(uint32)frontFace];
 }
 
 GLenum RenderState::GetCullFaceAsEnum(CullFace::Enum cullFace)
 {
 	static const GLenum enums[CullFace::SIZE] = {
 		0,
-		GL_CW,
-		GL_CCW
+		GL_FRONT,
+		GL_BACK,
+		GL_FRONT_AND_BACK,
 	};
 
-	return enums[(int)cullFace];
+	return enums[(uint32)cullFace];
 }
 
 void RenderState::UnbindIndexBuffer()

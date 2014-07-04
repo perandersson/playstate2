@@ -6,6 +6,7 @@
 #include "DepthFunc.h"
 #include "ClearType.h"
 #include "BlendFunc.h"
+#include "FrontFace.h"
 #include "CullFace.h"
 #include "effect/EffectState.h"
 #include "IUniform.h"
@@ -159,7 +160,14 @@ namespace core
 		/*!
 			\brief Set which vertices to cull when draw more complex primitives
 
-			\param cullFace
+			\param frontFace
+		*/
+		void SetFrontFace(FrontFace::Enum frontFace);
+		
+		/*!
+			\brief Set which vertices to cull when draw more complex primitives
+
+			\param frontFace
 		*/
 		void SetCullFace(CullFace::Enum cullFace);
 
@@ -313,6 +321,7 @@ namespace core
 		static GLenum GetDepthFuncAsEnum(DepthFunc::Enum depthFunc);
 		static GLenum GetSrcFactorAsEnum(SrcFactor::Enum sfactor);
 		static GLenum GetDestFactorAsEnum(DestFactor::Enum dfactor);
+		static GLenum GetFrontFaceAsEnum(FrontFace::Enum frontFace);
 		static GLenum GetCullFaceAsEnum(CullFace::Enum cullFace);
 
 
@@ -402,6 +411,7 @@ namespace core
 		// Vretex culling
 		//
 
+		FrontFace::Enum mFrontFace;
 		CullFace::Enum mCullFace;
 
 		//
