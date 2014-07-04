@@ -8,6 +8,9 @@
 #include "rendering/RenderTarget2D.h"
 #include "rendering/RenderContext.h"
 #include "rendering/RenderState.h"
+#include "rendering/VertexBuffer.h"
+#include "rendering/IndexBuffer.h"
+#include "rendering/VertexBufferUtils.h"
 
 #include "rendering/effect/Effect.h"
 #include "rendering/effect/EffectState.h"

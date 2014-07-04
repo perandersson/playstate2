@@ -761,6 +761,9 @@
     <ClInclude Include="..\..\core\rendering\BufferUsage.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\VertexBufferUtils.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">

@@ -24,20 +24,7 @@ mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr), mCubeShadowMap(nullptr
 
 	mPointLightTexture = ResourceManager::GetResource<Texture2D>("/demo/effects/light.png");
 
-	PositionTextureNormalVertexType elements[6];
-	elements[0].pos = Vector3(-1.0f, 1.0f, 0.0f);
-	elements[0].texCoord = Vector2(0.0f, 1.0f);
-	elements[1].pos = Vector3(1.0f, 1.0f, 0.0f);
-	elements[1].texCoord = Vector2(1.0f, 1.0f);
-	elements[2].pos = Vector3(-1.0f, -1.0f, 0.0f);
-	elements[2].texCoord = Vector2(0.0f, 0.0f);
-	elements[3].pos = Vector3(-1.0f, -1.0f, 0.0f);
-	elements[3].texCoord = Vector2(0.0f, 0.0f);
-	elements[4].pos = Vector3(1.0f, 1.0f, 0.0f);
-	elements[4].texCoord = Vector2(1.0f, 1.0f);
-	elements[5].pos = Vector3(1.0f, -1.0f, 0.0f);
-	elements[5].texCoord = Vector2(1.0f, 0.0f);
-	mFullscreenQuad = std::shared_ptr<VertexBuffer>(RenderContext::CreateBuffer(elements, 6, BufferUsage::STATIC));
+	mFullscreenQuad = std::shared_ptr<VertexBuffer>(VertexBufferUtils::CreateFullscreenQuad());
 }
 
 DeferredRenderPipeline::~DeferredRenderPipeline()

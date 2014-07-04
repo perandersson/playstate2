@@ -137,6 +137,7 @@
     <ClInclude Include="..\..\core\rendering\IUniform.h" />
     <ClInclude Include="..\..\core\rendering\VertexBuffer.h" />
     <ClInclude Include="..\..\core\rendering\BufferUsage.h" />
+    <ClInclude Include="..\..\core\rendering\VertexBufferUtils.h" />
     <ClInclude Include="..\..\core\rendering\VertexType.h" />
     <ClInclude Include="..\..\core\rendering\VertexTypes.h" />
     <ClInclude Include="..\..\core\rendering\win32\WGLEWMX.h" />

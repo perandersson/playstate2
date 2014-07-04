@@ -11,6 +11,8 @@ namespace core
 	static const uint32 TEXCOORD_ATTRIB_LOCATION = 2;
 	static const uint32 COLOR_ATTRIB_LOCATION = 3;
 
+	/////////////////////////////////////////////////////////////////////
+
 	struct PositionTextureVertexType
 	{
 		Vector3 pos;
