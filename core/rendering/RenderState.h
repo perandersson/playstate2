@@ -9,6 +9,7 @@
 #include "CullFace.h"
 #include "effect/EffectState.h"
 #include "IUniform.h"
+#include "RenderTargetInfo.h"
 #include "GLEWMX.h"
 #include <mutex>
 
@@ -45,8 +46,8 @@ namespace core
 
 			\param effect
 		*/
-		EffectState* BindEffect(const Effect* effect);
-
+		EffectState* ApplyEffect(const Effect* effect);
+		
 		/*!
 			\brief Draw the supplied buffer object using this graphics program.
 
@@ -245,6 +246,14 @@ namespace core
 		void ApplyRenderTargets();
 		void ApplyBuffers(const VertexBuffer* buffer, const IndexBuffer* indexBuffer);
 		EffectState* GetEffectState(const Effect* effect);
+		void InvalidateRenderTargets();
+		
+		/*!
+			\brief Bind the supplied effect to this rendering state
+
+			\param effect
+		*/
+		void BindEffect(const Effect* effect);
 
 		static GLenum GetDepthFuncAsEnum(DepthFunc::Enum depthFunc);
 		static GLenum GetSrcFactorAsEnum(SrcFactor::Enum sfactor);
@@ -352,12 +361,8 @@ namespace core
 		//
 		// Bound render targets
 		//
-
-		std::vector<uint32> mRenderTargetUID;
-		std::vector<const RenderTarget2D*> mRenderTargets;
-		const RenderTarget2D* mDepthRenderTarget;
-		GLenum mDepthRenderTargetType;
-		uint32 mDepthRenderTargetUID;
+		std::vector<RenderTargetInfo> mRenderTargetInfo;
+		RenderTargetInfo mDepthRenderTargetInfo;
 		GLuint mFrameBufferID;
 		bool mApplyRenderTarget;
 		bool mFrameBufferApplied;

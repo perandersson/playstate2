@@ -20,7 +20,7 @@ mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }),
 mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
 mActiveTextureIndex(0),
-mDepthRenderTarget(nullptr), mDepthRenderTargetType(GL_DEPTH_ATTACHMENT), mDepthRenderTargetUID(0), mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
+/*mDepthRenderTarget(nullptr), mDepthRenderTargetType(GL_DEPTH_ATTACHMENT), mDepthRenderTargetUID(0),*/ mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
 mApplyEffectState(true), mMaxDrawBuffers(0), mMaxActiveTextures(0), mNextTextureIndex(0)
 {
 	glClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
@@ -43,8 +43,11 @@ mApplyEffectState(true), mMaxDrawBuffers(0), mMaxActiveTextures(0), mNextTexture
 	mSamplerObjectUID.resize(mMaxActiveTextures, 0);
 
 	glGetIntegerv(GL_MAX_DRAW_BUFFERS, (GLint*)&mMaxDrawBuffers);
-	mRenderTargetUID.resize(mMaxDrawBuffers, 0);
-	mRenderTargets.resize(mMaxDrawBuffers, nullptr);
+	mRenderTargetInfo.resize(mMaxDrawBuffers, RenderTargetInfo());
+	for (uint32 i = 0; i < mMaxDrawBuffers; ++i) {
+		mRenderTargetInfo[i].attachmentType = GL_COLOR_ATTACHMENT0 + i;
+	}
+	mDepthRenderTargetInfo.attachmentType = GL_DEPTH_ATTACHMENT;
 
 	//
 	// Create the vertex array used to draw the upcomming triangles onto the screen
@@ -104,27 +107,14 @@ void RenderState::Clear(uint32 clearBits)
 #endif
 }
 
-EffectState* RenderState::BindEffect(const Effect* effect)
+EffectState* RenderState::ApplyEffect(const Effect* effect)
 {
 	assert_not_null(effect);
-	mApplyEffectState = true;
-	mApplyRenderTarget = true;
-	mRenderTargets.assign(mMaxDrawBuffers, nullptr);
-	mRenderTargetUID.assign(mMaxDrawBuffers, 0);
-	mDepthRenderTarget = nullptr;
-	mDepthRenderTargetUID = 0;
-	const uint32 uid = effect->GetUID();
-	if (uid != mEffectUID) {
-		glUseProgram(effect->GetProgramID());
-		mEffectState = GetEffectState(effect);
-		mEffectUID = uid;
 
-#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
-		GLenum err = glGetError();
-		if (err != GL_NO_ERROR)
-			THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render vertices on the screen");
-#endif
-	}
+	mApplyRenderTarget = true;
+	InvalidateRenderTargets();
+
+	BindEffect(effect);
 
 	SetDepthTest(effect->GetDepthTest());
 	SetDepthFunc(effect->GetDepthFunc());
@@ -138,6 +128,41 @@ EffectState* RenderState::BindEffect(const Effect* effect)
 	SetClearDepth(effect->GetClearDepth());
 
 	return mEffectState;
+}
+
+void RenderState::BindEffect(const Effect* effect)
+{
+	mApplyEffectState = true;
+	const uint32 uid = effect->GetUID();
+	if (uid != mEffectUID) {
+		glUseProgram(effect->GetProgramID());
+		mEffectState = GetEffectState(effect);
+		mEffectUID = uid;
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+			THROW_EXCEPTION(RenderingException, "Could not change which program to use whenever render vertices on the screen");
+#endif
+	}
+}
+
+void RenderState::InvalidateRenderTargets()
+{
+	for (uint32 i = 0; i < mMaxDrawBuffers; ++i) {
+		RenderTargetInfo& info = mRenderTargetInfo[i];
+		if (info.texture != nullptr) {
+			info.texture = nullptr;
+			info.uid = 0;
+			info.dirty = true;
+		}
+	}
+
+	if (mDepthRenderTargetInfo.texture != nullptr) {
+		mDepthRenderTargetInfo.dirty = true;
+		mDepthRenderTargetInfo.texture = nullptr;
+		mDepthRenderTargetInfo.uid = 0;
+	}
 }
 
 void RenderState::Render(const VertexBuffer* buffer)
@@ -499,20 +524,37 @@ void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, GLenum ind
 {
 	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
 	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
-	if (mRenderTargetUID[index] == uid)
+	if (mRenderTargetInfo[index].uid == uid)
 		return;
 
-	mRenderTargets[index] = renderTarget;
+	mRenderTargetInfo[index].dirty = true;
+	mRenderTargetInfo[index].texture = renderTarget;
+	if (renderTarget != nullptr) 
+		mRenderTargetInfo[index].textureTarget = renderTarget->GetTextureTarget();
+	mRenderTargetInfo[index].uid = uid;
+
 	mApplyRenderTarget = true;
 }
 
 void RenderState::SetDepthRenderTarget(const RenderTarget2D* renderTarget)
 {
 	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
-	if (mDepthRenderTargetUID == uid)
+	if (mDepthRenderTargetInfo.uid == uid)
 		return;
 
-	mDepthRenderTarget = renderTarget;
+	mDepthRenderTargetInfo.dirty = true;
+	mDepthRenderTargetInfo.texture = renderTarget;
+	mDepthRenderTargetInfo.uid = uid;
+
+	if (renderTarget != nullptr) {
+		GLenum attachmentType = GL_DEPTH_ATTACHMENT;
+		if (renderTarget->GetTextureFormat() == TextureFormat::DEPTH24_STENCIL8)
+			attachmentType = GL_DEPTH_STENCIL_ATTACHMENT;
+
+		mDepthRenderTargetInfo.attachmentType = attachmentType;
+		mDepthRenderTargetInfo.textureTarget = renderTarget->GetTextureTarget();
+	}
+
 	mApplyRenderTarget = true;
 }
 
@@ -530,11 +572,11 @@ IUniform* RenderState::FindUniform(const std::string& name)
 
 bool RenderState::IsRenderTargetsEnabled() const
 {
-	if (mDepthRenderTarget != nullptr)
+	if (mDepthRenderTargetInfo.texture != nullptr)
 		return true;
 
 	for (uint32 i = 0; i < mMaxDrawBuffers; ++i)
-		if (mRenderTargets[i] != nullptr)
+		if (mRenderTargetInfo[i].texture != nullptr)
 			return true;
 
 	return false;
@@ -547,10 +589,7 @@ void RenderState::ApplyRenderTargets()
 		if (mFrameBufferApplied) {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			mFrameBufferApplied = false;
-			mRenderTargetUID.assign(mMaxDrawBuffers, 0);
-			mRenderTargets.assign(mMaxDrawBuffers, 0);
-			mDepthRenderTarget = 0;
-			mDepthRenderTargetUID = 0;
+			InvalidateRenderTargets();
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
@@ -579,24 +618,27 @@ void RenderState::ApplyRenderTargets()
 	}
 	
 	Size size;
-	const uint32 depthUID = mDepthRenderTarget != nullptr ? mDepthRenderTarget->GetUID() : 0;
-	if (mDepthRenderTargetUID != depthUID) {
-		if (mDepthRenderTarget != nullptr) {
-			GLenum attachmentType = GL_DEPTH_ATTACHMENT;
-			if (mDepthRenderTarget->GetTextureFormat() == TextureFormat::DEPTH24_STENCIL8)
-				attachmentType = GL_DEPTH_STENCIL_ATTACHMENT;
-
-			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, mDepthRenderTarget->GetTextureID(), 0);
+	if (mDepthRenderTargetInfo.dirty) {
+		mDepthRenderTargetInfo.dirty = false;
+		if (mDepthRenderTargetInfo.texture != nullptr) {
+			glFramebufferTexture2D(GL_FRAMEBUFFER, 
+				mDepthRenderTargetInfo.attachmentType, 
+				mDepthRenderTargetInfo.textureTarget, 
+				mDepthRenderTargetInfo.texture->GetTextureID(), 
+				0);
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
 			if (err != GL_NO_ERROR)
 				THROW_EXCEPTION(RenderingException, "Could not attach depth render target to frame buffer. Reason: %d", err);
 #endif
-			mDepthRenderTargetType = attachmentType;
 		}
 		else {
-			glFramebufferTexture2D(GL_FRAMEBUFFER, mDepthRenderTargetType, GL_TEXTURE_2D, 0, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, 
+				mDepthRenderTargetInfo.attachmentType,
+				mDepthRenderTargetInfo.textureTarget, 
+				0, 
+				0);
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
@@ -604,43 +646,49 @@ void RenderState::ApplyRenderTargets()
 				THROW_EXCEPTION(RenderingException, "Could not detach depth render target from the frame buffer. Reason: %d", err);
 #endif
 		}
-		mDepthRenderTargetUID = depthUID;
 	}
 
 	std::vector<GLenum> drawBuffers(mMaxDrawBuffers, 0);
 	uint32 numDrawBuffers = 0;
 	for (uint32 i = 0; i < mMaxDrawBuffers; ++i) {
-		const RenderTarget2D* rt = mRenderTargets[i];
-		const uint32 uid = rt != nullptr ? rt->GetUID() : 0;
-		if (uid == mRenderTargetUID[i]) {
-			if (rt != nullptr) {
-				size = rt->GetSize();
-				drawBuffers[numDrawBuffers++] = GL_COLOR_ATTACHMENT0 + i;
-			}
-			continue;
-		}
-
-		if (rt != nullptr) {
-			size = rt->GetSize();
-			drawBuffers[numDrawBuffers++] = GL_COLOR_ATTACHMENT0 + i;
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, rt->GetTextureID(), 0);
+		RenderTargetInfo& rti = mRenderTargetInfo[i];
+		if (rti.dirty) {
+			rti.dirty = false;
+			if (rti.texture != nullptr) {
+				size = rti.texture->GetSize();
+				drawBuffers[numDrawBuffers++] = rti.attachmentType;
+				glFramebufferTexture2D(GL_FRAMEBUFFER, 
+					rti.attachmentType, 
+					rti.textureTarget, 
+					rti.texture->GetTextureID(), 
+					0);
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
-			GLenum err = glGetError();
-			if (err != GL_NO_ERROR)
-				THROW_EXCEPTION(RenderingException, "Could not attach render target to frame buffer. Reason: %d", err);
+				GLenum err = glGetError();
+				if (err != GL_NO_ERROR)
+					THROW_EXCEPTION(RenderingException, "Could not attach render target to frame buffer. Reason: %d", err);
 #endif
+			}
+			else {
+				glFramebufferTexture2D(GL_FRAMEBUFFER, 
+					rti.attachmentType, 
+					rti.textureTarget, 
+					0, 
+					0);
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+				GLenum err = glGetError();
+				if (err != GL_NO_ERROR)
+					THROW_EXCEPTION(RenderingException, "Could not detach render target from the frame buffer. Reason: %d", err);
+#endif
+			}
 		}
 		else {
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
-
-#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
-			GLenum err = glGetError();
-			if (err != GL_NO_ERROR)
-				THROW_EXCEPTION(RenderingException, "Could not detach render target from the frame buffer. Reason: %d", err);
-#endif
+			if (rti.texture != nullptr) {
+				size = rti.texture->GetSize();
+				drawBuffers[numDrawBuffers++] = rti.attachmentType;
+			}
 		}
-		mRenderTargetUID[i] = uid;
 	}
 	glDrawBuffers(numDrawBuffers, &drawBuffers[0]);
 

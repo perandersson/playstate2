@@ -122,6 +122,8 @@
     <ClInclude Include="..\..\core\rendering\RenderState.h" />
     <ClInclude Include="..\..\core\rendering\RenderTarget2D.h" />
     <ClInclude Include="..\..\core\rendering\RenderTargetCube.h" />
+    <ClInclude Include="..\..\core\rendering\RenderTargetInfo.h" />
+    <ClInclude Include="..\..\core\rendering\TextureCubeSide.h" />
     <ClInclude Include="..\..\core\rendering\SamplerObject.h" />
     <ClInclude Include="..\..\core\rendering\Texture.h" />
     <ClInclude Include="..\..\core\rendering\Texture2D.h" />

@@ -2,6 +2,7 @@
 #include "../typedefs.h"
 #include "Texture2D.h"
 #include "TextureCube.h"
+#include "TextureCubeSide.h"
 #include "RenderTarget2D.h"
 #include "RenderTargetCube.h"
 #include "../resource/Resource.h"

@@ -30,6 +30,8 @@ private:
 	RenderTarget2D* mDepthRenderTarget;
 	RenderTarget2D* mLightRenderTarget;
 
+	RenderTargetCube* mCubeShadowMap;
+
 	RenderBlockResultSet mRenderBlockResultSet;
 	LightSourceResultSet mLightSourceResultSet;
 };

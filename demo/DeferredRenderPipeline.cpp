@@ -2,6 +2,8 @@
 #include "DeferredRenderPipeline.h"
 
 DeferredRenderPipeline::DeferredRenderPipeline()
+: mDiffuseRenderTarget(nullptr), mPositionsRenderTarget(nullptr), mNormalsRenderTarget(nullptr),
+mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr), mCubeShadowMap(nullptr)
 {
 	ActiveWindow::AddWindowResizedListener(this);
 
@@ -12,6 +14,8 @@ DeferredRenderPipeline::DeferredRenderPipeline()
 	mNormalsRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGB10_A2);
 	mDepthRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::DEPTH24);
 	mLightRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA);
+
+	mCubeShadowMap = RenderContext::CreateRenderTargetCube(Size(256, 256), TextureFormat::DEPTH24);
 
 	mDeferredEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred.effect");
 	mPointLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred_point_light.effect");
@@ -49,6 +53,9 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 	mPositionsRenderTarget = nullptr;
 	mLightRenderTarget = nullptr;
 	mNormalsRenderTarget = nullptr;
+
+	delete mCubeShadowMap;
+	mCubeShadowMap = nullptr;
 
 	ActiveWindow::RemoveWindowResizedListener(this);
 }
