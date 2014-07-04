@@ -18,6 +18,7 @@ namespace core
 	static const std::string TAG_MAG_FILTER("magfilter");
 	static const std::string TAG_WRAP_S("wraps");
 	static const std::string TAG_WRAP_T("wrapt");
+	static const std::string TAG_WRAP_R("wrapr");
 
 	static const std::string ATTRIB_PATH("path");
 	static const std::string ATTRIB_ID("id");

@@ -36,6 +36,9 @@ bool SamplerStateXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, con
 	else if (name == TAG_WRAP_T) {
 		mSamplerState->wrapt = TextureWrap::Parse(GetLowerCaseValue(element), TextureWrap::DEFAULT);
 	}
+	else if (name == TAG_WRAP_R) {
+		mSamplerState->wrapr = TextureWrap::Parse(GetLowerCaseValue(element), TextureWrap::DEFAULT);
+	}
 
 	return true;
 }

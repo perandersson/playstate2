@@ -182,7 +182,7 @@ namespace core
 		/*!
 			\brief Set the render target at the given index
 
-			\remark Note that the render targets are not bound until you perform some kind of
+			\remark Render targets are not actually bound until you perform some kind of
 					rendering-action, such as clearing the screen.
 
 			\param renderTarget
@@ -194,13 +194,15 @@ namespace core
 		void SetRenderTarget(const RenderTarget2D* renderTarget, uint32 index);
 		
 		/*!
-			\brief Set the render target at the given index
+			\brief Bind a side of the render target cube at the given index
 
-			\remark Note that the render targets are not bound until you perform some kind of
+			\remark Render targets are not actually bound until you perform some kind of
 					rendering-action, such as clearing the screen.
 
 			\param renderTarget
 						The texture we want to draw our result to
+			\param side
+						The side of the cubed texture we want to draw our result to
 			\param index
 						The texture index for the render target. Useful if you want to
 						render to multiple textures at once.
@@ -210,7 +212,7 @@ namespace core
 		/*!
 			\brief Set the render target at the given index
 
-			\remark Note that the render targets are not bound until you perform some kind of
+			\remark Render targets are not actually bound until you perform some kind of
 					rendering-action, such as clearing the screen.
 
 			\param renderTarget

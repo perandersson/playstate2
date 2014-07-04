@@ -85,6 +85,11 @@ void UniformNotFound::SetTextureParameters(MinFilter::Enum minFilter, MagFilter:
 
 }
 
+void UniformNotFound::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr)
+{
+
+}
+
 void UniformNotFound::SetColorRGBA(const Color& color)
 {
 

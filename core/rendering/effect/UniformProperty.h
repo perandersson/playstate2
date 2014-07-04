@@ -24,12 +24,14 @@ namespace core
 		MagFilter::Enum magFilter;
 		TextureWrap::Enum wraps;
 		TextureWrap::Enum wrapt;
+		TextureWrap::Enum wrapr;
 
 		UniformProperty() {
 			minFilter = MinFilter::DEFAULT;
 			magFilter = MagFilter::DEFAULT;
 			wraps = TextureWrap::DEFAULT;
 			wrapt = TextureWrap::DEFAULT;
+			wrapr = TextureWrap::DEFAULT;
 		}
 	};
 

@@ -100,6 +100,7 @@ SamplerObject* EffectState::GenSamplerObject(std::shared_ptr<UniformProperty> pr
 	glSamplerParameteri(samplerID, GL_TEXTURE_MAG_FILTER, MagFilter::Parse(property->magFilter));
 	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_S, TextureWrap::Parse(property->wraps));
 	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_T, TextureWrap::Parse(property->wrapt));
+	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_R, TextureWrap::Parse(property->wrapr));
 
 	error = glGetError();
 	if (error != GL_NO_ERROR) {

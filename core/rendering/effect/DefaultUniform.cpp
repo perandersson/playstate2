@@ -94,6 +94,11 @@ void DefaultUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::
 	assert(false && "Invalid component type");
 }
 
+void DefaultUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr)
+{
+	assert(false && "Invalid component type");
+}
+
 void DefaultUniform::SetMatrix(const Matrix4x4& matrix)
 {
 	assert(false && "Invalid component type");

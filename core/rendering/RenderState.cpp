@@ -540,6 +540,11 @@ void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, uint32 ind
 void RenderState::SetRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side, uint32 index)
 {
 	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
+	if (side == TextureCubeSide::ALL) {
+		SetRenderTarget(renderTarget, side);
+		return;
+	}
+
 	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
 	GLenum textureTarget = TextureCubeSide::Parse(side);
 	RenderTargetInfo& info = mRenderTargetInfo[index];
