@@ -627,6 +627,30 @@ void RenderState::SetDepthRenderTarget(const RenderTarget2D* renderTarget)
 	mApplyRenderTarget = true;
 }
 
+void RenderState::SetDepthRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side)
+{
+	assert(side != TextureCubeSide::ALL && "Binding a cube depth render target with all side bound at the same time is not supported at the moment");
+	GLenum textureTarget = TextureCubeSide::Parse(side);
+	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
+	if (mDepthRenderTargetInfo.uid == uid && mDepthRenderTargetInfo.textureTarget == textureTarget)
+		return;
+
+	mDepthRenderTargetInfo.dirty = true;
+	mDepthRenderTargetInfo.texture = renderTarget;
+	mDepthRenderTargetInfo.uid = uid;
+
+	if (renderTarget != nullptr) {
+		GLenum attachmentType = GL_DEPTH_ATTACHMENT;
+		if (renderTarget->GetTextureFormat() == TextureFormat::DEPTH24_STENCIL8)
+			attachmentType = GL_DEPTH_STENCIL_ATTACHMENT;
+
+		mDepthRenderTargetInfo.attachmentType = attachmentType;
+		mDepthRenderTargetInfo.textureTarget = textureTarget;
+	}
+
+	mApplyRenderTarget = true;
+}
+
 IUniform* RenderState::FindUniform(const char* name)
 {
 	assert_not_null(mEffectState);

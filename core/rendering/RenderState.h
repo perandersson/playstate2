@@ -238,9 +238,9 @@ namespace core
 		void SetRenderTarget(const RenderTargetCube* renderTarget, uint32 index);
 
 		/*!
-			\brief Set the depth render target at the given index
+			\brief Set the depth render target
 
-			\remark Note that the render targets are not bound until you perform some kind of
+			\remark Render targets are not bound until you perform some kind of
 					rendering-action, such as clearing the screen.
 
 			\param renderTarget
@@ -248,6 +248,17 @@ namespace core
 		*/
 		void SetDepthRenderTarget(const RenderTarget2D* renderTarget);
 		
+		/*!
+			\brief Set the depth render target
+
+			\remark Render targets are not bound until you perform some kind of
+					rendering-action, such as clearing the screen.
+
+			\param renderTarget
+						The texture we want to draw our depth result to
+		*/
+		void SetDepthRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side);
+
 		/*!
 			\brief Retrieves a uniform based on it's name in the shader bound to this thread.
 
