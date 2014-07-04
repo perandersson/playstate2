@@ -12,8 +12,11 @@ using namespace core;
 
 EffectXmlVisitor::EffectXmlVisitor(IRenderContext* renderContext)
 : XMLDefaultVisitor(), 
-mRenderContext(renderContext), mEffect(nullptr), mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0), mBlend(false), mDepthTest(true), 
-mCullFace(CullFace::DEFAULT), mDepthFunc(DepthFunc::DEFAULT), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT)
+mRenderContext(renderContext), mEffect(nullptr), mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0), 
+mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT),
+mStencilTest(false),
+mBlend(false), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT),
+mCullFace(CullFace::DEFAULT)
 {
 
 }
@@ -46,9 +49,12 @@ bool EffectXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tin
 	const std::string name = GetLowerCaseName(element);
 	if (name == TAG_BLEND) {
 		mBlend = StringUtils::ToBool(GetLowerCaseValue(element));
-	}
-	if (name == TAG_DEPTH_TEST) {
+	} 
+	else if (name == TAG_DEPTH_TEST) {
 		mDepthTest = StringUtils::ToBool(GetLowerCaseValue(element));
+	}
+	else if (name == TAG_STENCIL_TEST) {
+		mStencilTest = StringUtils::ToBool(GetLowerCaseValue(element));
 	}
 	else if (name == TAG_CULL_FACE) {
 		mCullFace = CullFace::Parse(element.GetText(), CullFace::DEFAULT);

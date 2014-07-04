@@ -60,6 +60,14 @@ namespace core
 			return mDepthFunc;
 		}
 
+		inline void SetStencilTest(bool enable) {
+			mStencilTest = enable;
+		}
+
+		inline bool GetStencilTest() const {
+			return mStencilTest;
+		}
+
 		inline void SetBlend(bool enable) {
 			mBlend = enable;
 		}
@@ -111,6 +119,7 @@ namespace core
 
 		bool mDepthTest;
 		DepthFunc::Enum mDepthFunc;
+		bool mStencilTest;
 		bool mBlend;
 		BlendFunc mBlendFunc;
 		CullFace::Enum mCullFace;

@@ -37,11 +37,15 @@ namespace core
 		GLuint mGeometryShaderID;
 		UniformProperties mProperties;
 
-		bool mBlend;
 		bool mDepthTest;
-		CullFace::Enum mCullFace;
 		DepthFunc::Enum mDepthFunc;
+
+		bool mStencilTest;
+
+		bool mBlend;
 		SrcFactor::Enum mSrcFactor;
 		DestFactor::Enum mDestFactor;
+
+		CullFace::Enum mCullFace;
 	};
 }

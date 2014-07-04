@@ -118,6 +118,13 @@ namespace core
 		void SetDepthTest(bool enable);
 
 		/*!
+			\brief Enable- or disable stencil testing for vertices
+
+			\param enable
+		*/
+		void SetStencilTest(bool enable);
+
+		/*!
 			\brief Set how the depth is calculated for each vertice
 
 			\param func
@@ -358,6 +365,12 @@ namespace core
 
 		bool mDepthTest;
 		DepthFunc::Enum mDepthFunc;
+
+		//
+		// Stencil test
+		//
+		
+		bool mStencilTest;
 
 		//
 		// Blending
