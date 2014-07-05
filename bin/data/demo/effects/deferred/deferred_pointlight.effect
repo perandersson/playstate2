@@ -3,7 +3,9 @@
 	<Blend>true</Blend>
 	<SrcFactor>ONE</SrcFactor>
 	<DestFactor>ONE</DestFactor>
-	<DepthTest>true</DepthTest>
+	<DepthTest>false</DepthTest>
+	<FrontFace>CCW</FrontFace>
+	<CullFace>FRONT</CullFace>
 	<VertexShader>
 	<![CDATA[
 		#version 330

@@ -76,6 +76,11 @@ IndexBuffer* OpenGLRenderContext::CreateBuffer(const uint32* indices, uint32 num
 	return new IndexBuffer(bufferID, numIndices, usage);
 }
 
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
+{
+	return CreateBuffer(vertices, sizeof(PositionVertexType), PositionVertexTypeDeclaration, primitiveType, numVertices, usage);
+}
+
 VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
 	return CreateBuffer(vertices, sizeof(PositionTextureVertexType), PositionTextureVertexTypeDeclaration, primitiveType, numVertices, usage);

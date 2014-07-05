@@ -95,6 +95,26 @@ void Vector3::Negate()
 	z = -z;
 }
 
+Vector3 Vector3::Perp() const
+{
+	float32 min = fabs(x);
+	Vector3 axis(1, 0, 0);
+
+	const float32 ymin = fabs(y);
+	if (ymin < min) {
+		min = ymin;
+		axis = Vector3(0, 1, 0);
+	}
+
+	const float32 zmin = fabs(z);
+	if (zmin < min) {
+		min = zmin;
+		axis = Vector3(0, 0, 1);
+	}
+
+	return CrossProduct(axis);
+}
+
 bool Vector3::IsZero() const
 {
 	return abs(x) <= FLT_EPSILON &&

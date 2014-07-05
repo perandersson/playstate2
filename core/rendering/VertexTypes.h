@@ -13,6 +13,29 @@ namespace core
 
 	/////////////////////////////////////////////////////////////////////
 
+	struct PositionVertexType
+	{
+		Vector3 pos;
+
+		PositionVertexType()
+		{
+		}
+
+		PositionVertexType(Vector3 p)
+		{
+			pos = p;
+		}
+	};
+
+	static const VertexDesc PositionVertexTypeDeclaration = {
+		{
+			{ POSITION_ATTRIB_LOCATION, sizeof(Vector3), 3, VertexElementType::FLOAT, false },
+			0
+		}
+	};
+
+	/////////////////////////////////////////////////////////////////////
+
 	struct PositionTextureVertexType
 	{
 		Vector3 pos;

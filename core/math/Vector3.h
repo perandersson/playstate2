@@ -34,6 +34,7 @@ namespace core
 		void Normalize();
 		void Normalize(float32 distance);
 		void Negate();
+		Vector3 Perp() const;
 
 		inline Vector3 operator + (const Vector3& rhs) const {
 			return Vector3(x + rhs.x, y + rhs.y, z + rhs.z);
@@ -41,6 +42,10 @@ namespace core
 
 		inline Vector3 operator - (const Vector3& rhs) const {
 			return Vector3(x - rhs.x, y - rhs.y, z - rhs.z);
+		}
+
+		inline Vector3 operator - () const {
+			return Vector3(-x, -y, -z);
 		}
 
 		inline Vector3 operator * (const float32 rhs) const {

@@ -33,6 +33,11 @@ IndexBuffer* RenderContext::CreateBuffer(const uint32* indices, uint32 numIndice
 	return Kernel::GetRenderContext()->CreateBuffer(indices, numIndices, usage);
 }
 
+VertexBuffer* RenderContext::CreateBuffer(const PositionVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
+{
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, primitiveType, numVertices, usage);
+}
+
 VertexBuffer* RenderContext::CreateBuffer(const PositionTextureVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
 	return Kernel::GetRenderContext()->CreateBuffer(vertices, primitiveType, numVertices, usage);

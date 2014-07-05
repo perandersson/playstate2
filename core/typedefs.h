@@ -113,6 +113,10 @@ namespace core
 #define M_PI_F ((float32)M_PI)
 #endif
 
+#ifndef M_PI_DIV180
+#define M_PI_DIV180 0.01745329251994329576
+#endif
+
 #ifndef M_PI_2
 #define M_PI_2 1.57079632679489661923
 #endif
