@@ -11,7 +11,7 @@ namespace core
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, uint32 numVertices, uint32 sizeOfOneVertex, BufferUsage::Enum bufferUsage);
+		VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, uint32 sizeOfOneVertex, BufferUsage::Enum bufferUsage);
 		~VertexBuffer();
 
 		inline uint32 GetUID() const {
@@ -54,6 +54,7 @@ namespace core
 		uint32 mUID;
 		GLuint mBufferID;
 		const VertexDesc& mVertexDesc;
+		PrimitiveType::Enum mPrimitiveType;
 		uint32 mNumVertices;
 		uint32 mSizeOfOneVertex;
 		BufferUsage::Enum mBufferUsage;

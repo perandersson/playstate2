@@ -65,9 +65,9 @@ namespace core
 		*/
 		virtual IndexBuffer* CreateBuffer(const uint32* indices, uint32 numIndices, BufferUsage::Enum usage) = 0;
 
-		virtual VertexBuffer* CreateBuffer(const PositionTextureVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage) = 0;
-		virtual VertexBuffer* CreateBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage) = 0;
-		virtual VertexBuffer* CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices, BufferUsage::Enum usage) = 0;
+		virtual VertexBuffer* CreateBuffer(const PositionTextureVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage) = 0;
+		virtual VertexBuffer* CreateBuffer(const PositionTextureNormalVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage) = 0;
+		virtual VertexBuffer* CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage) = 0;
 
 		/*!
 			\brief Creates a two-dimensional render target

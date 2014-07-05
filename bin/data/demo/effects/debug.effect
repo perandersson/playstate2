@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Effect>
+	<DepthTest>false</DepthTest>
+	<VertexShader>
+	<![CDATA[
+		#version 330
+
+		uniform mat4 ProjectionMatrix;
+		uniform mat4 ViewMatrix;
+		uniform vec3 Color;
+		uniform vec3 ObjectPosition;
+		
+		layout(location = 0) in vec3 position;
+
+		out vec3 vs_color;
+
+		void main()
+		{
+			gl_Position = ProjectionMatrix * ViewMatrix * vec4(position.xyz + ObjectPosition.xyz, 1.0);
+			vs_color = Color;
+		}
+	]]>
+	</VertexShader>
+	<FragmentShader>
+	<![CDATA[
+		#version 330
+
+		in vec3 vs_color;
+
+		void main()
+		{
+			gl_FragColor = vec4(vs_color, 1.0);
+		}
+	]]>
+	</FragmentShader>
+</Effect>

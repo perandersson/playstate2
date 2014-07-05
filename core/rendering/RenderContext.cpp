@@ -33,19 +33,19 @@ IndexBuffer* RenderContext::CreateBuffer(const uint32* indices, uint32 numIndice
 	return Kernel::GetRenderContext()->CreateBuffer(indices, numIndices, usage);
 }
 
-VertexBuffer* RenderContext::CreateBuffer(const PositionTextureVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
+VertexBuffer* RenderContext::CreateBuffer(const PositionTextureVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return Kernel::GetRenderContext()->CreateBuffer(vertices, numVertices, usage);
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, primitiveType, numVertices, usage);
 }
 
-VertexBuffer* RenderContext::CreateBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
+VertexBuffer* RenderContext::CreateBuffer(const PositionTextureNormalVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return Kernel::GetRenderContext()->CreateBuffer(vertices, numVertices, usage);
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, primitiveType, numVertices, usage);
 }
 
-VertexBuffer* RenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices, BufferUsage::Enum usage)
+VertexBuffer* RenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return Kernel::GetRenderContext()->CreateBuffer(vertices, sizeOfOneVertex, vertexDesc, numVertices, usage);
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, sizeOfOneVertex, vertexDesc, primitiveType, numVertices, usage);
 }
 
 RenderTarget2D* RenderContext::CreateRenderTarget2D(const Size& size, TextureFormat::Enum format)

@@ -1225,5 +1225,8 @@
     <ClCompile Include="..\..\core\rendering\BufferUsage.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\rendering\VertexBufferUtils.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

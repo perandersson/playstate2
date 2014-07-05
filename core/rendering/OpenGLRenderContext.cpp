@@ -76,17 +76,17 @@ IndexBuffer* OpenGLRenderContext::CreateBuffer(const uint32* indices, uint32 num
 	return new IndexBuffer(bufferID, numIndices, usage);
 }
 
-VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return CreateBuffer(vertices, sizeof(PositionTextureVertexType), PositionTextureVertexTypeDeclaration, numVertices, usage);
+	return CreateBuffer(vertices, sizeof(PositionTextureVertexType), PositionTextureVertexTypeDeclaration, primitiveType, numVertices, usage);
 }
 
-VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureNormalVertexType* vertices, uint32 numVertices, BufferUsage::Enum usage)
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureNormalVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
-	return CreateBuffer(vertices, sizeof(PositionTextureNormalVertexType), PositionTextureNormalVertexTypeDeclaration, numVertices, usage);
+	return CreateBuffer(vertices, sizeof(PositionTextureNormalVertexType), PositionTextureNormalVertexTypeDeclaration, primitiveType, numVertices, usage);
 }
 
-VertexBuffer* OpenGLRenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, uint32 numVertices, BufferUsage::Enum usage)
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
 	assert_not_null(vertices);
 	assert(sizeOfOneVertex > 0 && "There is no point in creating a static buffer without any data");
@@ -105,7 +105,7 @@ VertexBuffer* OpenGLRenderContext::CreateBuffer(const void* vertices, uint32 siz
 		THROW_EXCEPTION(RenderingException, "Could not create vertex buffer. Reason: %d", status);
 	}
 
-	return new VertexBuffer(bufferID, vertexDesc, numVertices, sizeOfOneVertex, usage);
+	return new VertexBuffer(bufferID, vertexDesc, primitiveType, numVertices, sizeOfOneVertex, usage);
 }
 
 RenderTarget2D* OpenGLRenderContext::CreateRenderTarget2D(const Size& size, TextureFormat::Enum format)

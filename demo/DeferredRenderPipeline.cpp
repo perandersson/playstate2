@@ -2,7 +2,8 @@
 #include "DeferredRenderPipeline.h"
 
 DeferredRenderPipeline::DeferredRenderPipeline()
-: mDiffuseRenderTarget(nullptr), mPositionsRenderTarget(nullptr), mNormalsRenderTarget(nullptr),
+: mFullscreenQuad(nullptr), mUniformSphere(nullptr),
+mDiffuseRenderTarget(nullptr), mPositionsRenderTarget(nullptr), mNormalsRenderTarget(nullptr),
 mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr), mCubeShadowMap(nullptr)
 {
 	ActiveWindow::AddWindowResizedListener(this);
@@ -17,18 +18,28 @@ mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr), mCubeShadowMap(nullptr
 
 	mCubeShadowMap = RenderContext::CreateRenderTargetCube(Size(256, 256), TextureFormat::DEPTH24);
 
-	mDeferredEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred.effect");
-	mPointLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred_point_light.effect");
-	mTexturedEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred_result.effect");
-	//mShadowMappingEffect = ResourceManager::GetResource<Effect>("/demo/effects/shadow_mapping.effect");
+	mDeferredEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/deferred.effect");
+	mPointLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/deferred_pointlight.effect");
+	mTexturedEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/deferred_result.effect");
+	mDebugEffect = ResourceManager::GetResource<Effect>("/demo/effects/debug.effect");
+	mWhiteTexture = ResourceManager::GetResource<Texture2D>("/engine/textures/white.png");
 
-	mPointLightTexture = ResourceManager::GetResource<Texture2D>("/demo/effects/light.png");
-
-	mFullscreenQuad = std::shared_ptr<VertexBuffer>(VertexBufferUtils::CreateFullscreenQuad());
+	mUniformSphere = VertexBufferUtils::CreateSphere(1, 0, 0, 0, BufferUsage::STATIC);
+	mFullscreenQuad = VertexBufferUtils::CreateFullscreenQuad();
 }
 
 DeferredRenderPipeline::~DeferredRenderPipeline()
 {
+	if (mUniformSphere != nullptr) {
+		delete mUniformSphere;
+		mUniformSphere = nullptr;
+	}
+
+	if (mFullscreenQuad != nullptr) {
+		delete mFullscreenQuad;
+		mFullscreenQuad = nullptr;
+	}
+
 	delete mDiffuseRenderTarget;
 	delete mPositionsRenderTarget;
 	delete mNormalsRenderTarget;
@@ -50,6 +61,9 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 {
 	FindQuery query = { camera, RenderableFilter::DEFAULT };
+	// Submit the rendering of the scenes vertex components to another thread.
+	// This is not how it should be in the end. Purpose for this is to verify that
+	// threaded rendering works as intended
 	if (scene.Find(query, &mRenderBlockResultSet)) {
 		auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
 			RenderState* state = RenderContext::Activate(mDeferredEffect);
@@ -80,34 +94,12 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 		fut.get();
 	}
 
-	//if (scene.Find(query, &mRenderBlockResultSet)) {
-	//	RenderState* state = RenderContext::Activate(mDeferredEffect);
-	//	state->SetRenderTarget(mDiffuseRenderTarget, 0);
-	//	state->SetRenderTarget(mPositionsRenderTarget, 1);
-	//	state->SetRenderTarget(mNormalsRenderTarget, 2);
-	//	state->SetDepthRenderTarget(mDepthRenderTarget);
-	//	state->Clear(ClearType::COLOR | ClearType::DEPTH);
-
-	//	// Set camera properties
-	//	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-	//	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-
-	//	IUniform* modelMatrix = state->FindUniform("ModelMatrix");
-	//	IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
-	//	IUniform* diffuseColor = state->FindUniform("DiffuseColor");
-
-	//	RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
-	//	RenderBlockResultSet::Type block;
-	//	while (block = it.Next()) {
-	//		diffuseTexture->SetTexture(block->diffuseTexture);
-	//		diffuseColor->SetColorRGB(block->diffuseColor);
-	//		modelMatrix->SetMatrix(block->modelMatrix);
-	//		state->Render(block->vertexBuffer, block->indexBuffer);
-	//	}
-	//}
-
 	DrawLighting(scene, camera);
 	DrawFinalResultToScreen(scene, camera);
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	DrawDebugInfo(scene, camera);
+#endif
 }
 
 void DeferredRenderPipeline::OnWindowResized(const Size& newSize)
@@ -139,9 +131,8 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 
 		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
 		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-		state->FindUniform("LightTexture")->SetTexture(mPointLightTexture);
+		state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
 
-		IUniform* modelMatrix = state->FindUniform("ModelMatrix");
 		IUniform* lightColor = state->FindUniform("LightColor");
 		IUniform* lightPosition = state->FindUniform("LightPosition");
 		IUniform* constantAttenuation = state->FindUniform("ConstantAttenuation");
@@ -152,10 +143,6 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 		LightSourceResultSet::Iterator it = mLightSourceResultSet.GetIterator();
 		LightSourceResultSet::Type block;
 		while (block = it.Next()) {
-
-			// TODO Render point lights as six spot-lights with texture "LightTexture" that's specified above.
-			modelMatrix->SetMatrix(CalculateBillboardModelMatrix(block->position, camera));
-
 			lightColor->SetColorRGB(block->color);
 			lightPosition->SetVector3(block->position);
 			constantAttenuation->SetFloat(block->constantAttenuation);
@@ -163,22 +150,9 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 			quadraticAttenuation->SetFloat(block->quadricAttenuation);
 			lightRadius->SetFloat(block->radius);
 
-			state->Render(mFullscreenQuad.get());
+			state->Render(mUniformSphere);
 		}
 	}
-}
-
-Matrix4x4 DeferredRenderPipeline::CalculateBillboardModelMatrix(const Vector3& position, const Camera* camera)
-{
-	const Vector3 direction = (camera->GetPosition() - position).GetNormalized();
-	const Vector3 right = camera->GetUp().CrossProduct(direction);
-	const Vector3 up = direction.CrossProduct(right);
-
-	Matrix4x4 mat(right.x, right.y, right.z, 0.0f,
-		up.x, up.y, up.z, 0.0f,
-		direction.x, direction.y, direction.z, 0.0f,
-		position.x, position.y, position.z, 1.0f);
-	return mat;
 }
 
 void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const Camera* camera)
@@ -193,5 +167,23 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 	state->Clear(ClearType::COLOR | ClearType::DEPTH);
 	state->FindUniform("AmbientColor")->SetColorRGB(scene.GetAmbientLight());
 	state->FindUniform("ProjectionMatrix")->SetMatrix(Camera::GetOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f));
-	state->Render(mFullscreenQuad.get());
+	state->Render(mFullscreenQuad);
+}
+
+void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* camera)
+{
+	RenderState* state = RenderContext::Activate(mDebugEffect);
+
+	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+	auto color = state->FindUniform("Color");
+	auto objectPosition = state->FindUniform("ObjectPosition");
+
+	LightSourceResultSet::Iterator it = mLightSourceResultSet.GetIterator();
+	LightSourceResultSet::Type block;
+	while (block = it.Next()) {
+		color->SetColorRGB(block->color);
+		objectPosition->SetVector3(block->position);
+		state->Render(mUniformSphere);
+	}
 }

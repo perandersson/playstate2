@@ -25,7 +25,6 @@ namespace core
 			{ BONE_ID_ATTRIB_LOCATION, sizeof(uint32) * MAX_BONE_ID_COUNT, MAX_BONE_ID_COUNT, VertexElementType::UNSIGNED_INT, false },
 			{ BONE_WEIGHT_ATTRIB_LOCATION, sizeof(float32) * MAX_BONE_ID_COUNT, MAX_BONE_ID_COUNT, VertexElementType::FLOAT, false },
 			0
-		},
-		PrimitiveType::TRIANGLE
+		}
 	};
 }

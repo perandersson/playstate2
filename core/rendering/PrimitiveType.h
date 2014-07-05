@@ -10,6 +10,8 @@ namespace core
 		enum Enum {
 			POINT = 0,
 			TRIANGLE,
+			TRIANGLE_STRIP,
+			QUAD,
 			LINE_LOOP,
 
 			SIZE

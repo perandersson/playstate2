@@ -13,8 +13,8 @@ namespace {
 	}
 }
 
-VertexBuffer::VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, uint32 numVertices, uint32 sizeOfOneVertex, BufferUsage::Enum bufferUsage)
-: mUID(GenBufferUID()), mBufferID(bufferID), mVertexDesc(vertexDesc), mNumVertices(numVertices), mSizeOfOneVertex(sizeOfOneVertex), mBufferUsage(bufferUsage)
+VertexBuffer::VertexBuffer(GLuint bufferID, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, uint32 sizeOfOneVertex, BufferUsage::Enum bufferUsage)
+: mUID(GenBufferUID()), mBufferID(bufferID), mVertexDesc(vertexDesc), mPrimitiveType(primitiveType), mNumVertices(numVertices), mSizeOfOneVertex(sizeOfOneVertex), mBufferUsage(bufferUsage)
 {
 	assert(mNumVertices > 0 && "Why create a vertex buffer without any vertices in it?");
 	assert(mSizeOfOneVertex > 0 && "The size of one vertex cannot be 0");
@@ -45,7 +45,7 @@ void VertexBuffer::Render(uint32 startIndex, uint32 count) const
 		count = mNumVertices - startIndex;
 	}
 
-	glDrawArrays(GetPrimitiveTypeEnum(mVertexDesc.primitiveType), startIndex, count);
+	glDrawArrays(GetPrimitiveTypeEnum(mPrimitiveType), startIndex, count);
 }
 
 void VertexBuffer::Render(const IndexBuffer* buffer) const
@@ -65,7 +65,7 @@ void VertexBuffer::Render(const IndexBuffer* buffer, uint32 firstElement, uint32
 	assert(buffer != NULL && "No index buffer was supplied");
 
 	// So far only the GL_UNSIGNED_INT indice type is usable
-	glDrawElements(GetPrimitiveTypeEnum(mVertexDesc.primitiveType), numElements, GL_UNSIGNED_INT, (void*)(firstElement * sizeof(uint32)));
+	glDrawElements(GetPrimitiveTypeEnum(mPrimitiveType), numElements, GL_UNSIGNED_INT, (void*)(firstElement * sizeof(uint32)));
 }
 
 void VertexBuffer::Update(const void* vertices, uint32 numVertices)
@@ -100,7 +100,9 @@ GLenum VertexBuffer::GetPrimitiveTypeEnum(PrimitiveType::Enum primitiveType)
 	static const GLenum enums[PrimitiveType::SIZE] = {
 		GL_POINTS,
 		GL_TRIANGLES,
-		GL_LINE_LOOP
+		GL_TRIANGLE_STRIP,
+		GL_QUADS,
+		GL_LINE_LOOP,
 	};
 	return enums[primitiveType];
 }

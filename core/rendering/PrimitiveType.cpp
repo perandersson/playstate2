@@ -4,14 +4,13 @@ using namespace core;
 
 uint32 PrimitiveType::GetElementCount(PrimitiveType::Enum type)
 {
-	switch (type) {
-	case POINT:
-		return 1;
-	case TRIANGLE:
-		return 3;
-	case LINE_LOOP:
-		return 1;
-	}
+	static uint32 counts[SIZE] = {
+		1,
+		3,
+		3,
+		4,
+		1
+	};
 
-	return 0;
+	return counts[(uint32)type];
 }

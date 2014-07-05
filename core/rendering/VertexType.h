@@ -72,6 +72,5 @@ namespace core
 	struct VertexDesc
 	{
 		VertexElementDesc elements[MAX_VERTEX_ELEMENT_DESC];
-		PrimitiveType::Enum primitiveType;
 	};
 }
