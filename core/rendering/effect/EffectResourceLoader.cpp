@@ -2,6 +2,7 @@
 #include "EffectResourceLoader.h"
 #include "EffectXmlVisitor.h"
 #include "../../configuration/Configuration.h"
+#include "../../logging/Logger.h"
 #include <tinyxml2.h>
 using namespace core;
 using namespace tinyxml2;
@@ -32,6 +33,7 @@ ResourceObject* EffectResourceLoader::Load(const IFile* file)
 		return visitor.GetEffect();
 	}
 	catch (LoadResourceException e) {
+		Logger::Error("Could not load effect resource. Reason: '%s'", e.GetMessage().c_str());
 		if (Configuration::ToBool("graphics.developmentmode", false)) {
 			return new Effect(0);
 		}
