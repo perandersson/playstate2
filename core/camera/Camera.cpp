@@ -5,14 +5,14 @@
 using namespace core;
 
 Camera::Camera()
-: ScriptObject()
+: ScriptObject(), mNearPlane(0), mFarPlane(0)
 {
 }
 
 Camera::Camera(const Camera& camera)
 : ScriptObject(),
 mViewFrustum(camera.mViewFrustum), mViewMatrix(camera.mViewMatrix), mProjectionMatrix(camera.mProjectionMatrix),
-mPosition(camera.mPosition), mCenter(camera.mCenter), mUp(camera.mUp)
+mPosition(camera.mPosition), mCenter(camera.mCenter), mUp(camera.mUp), mNearPlane(0), mFarPlane(0)
 {
 
 }
@@ -48,6 +48,9 @@ void Camera::SetPerspective(float32 nearPlane, float32 farPlane, float32 fov, fl
 	mProjectionMatrix._43 = (-temp * farPlane) / temp4;
 
 	mViewFrustum.SetPerspective(nearPlane, farPlane, fov, ratio);
+
+	mNearPlane = nearPlane;
+	mFarPlane = farPlane;
 }
 
 void Camera::SetOrtho2D(float32 left, float32 right, float32 bottom, float32 top)
@@ -91,6 +94,8 @@ void Camera::LookAt(const Vector3& eye, const Vector3& center, const Vector3& up
 	// http://www.opengl.org/wiki/GluLookAt_code
 
 	const Vector3 forward = (center - eye).GetNormalized();
+	mLookingAtDirection = forward;
+
 	const Vector3 side = (forward.CrossProduct(up)).GetNormalized();
 	const Vector3 newUp = side.CrossProduct(forward).GetNormalized();
 

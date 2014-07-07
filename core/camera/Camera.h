@@ -58,6 +58,24 @@ namespace core
 			return mCenter;
 		}
 
+		inline float32 GetNearPlane() const {
+			return mNearPlane;
+		}
+
+		/*!
+			\brief
+		*/
+		inline float32 GetFarPlane() const {
+			return mFarPlane;
+		}
+
+		/*!
+		
+		*/
+		inline const Vector3& GetLookingAtDirection() const {
+			return mLookingAtDirection;
+		}
+
 	public:
 		//
 		// Generate a orthographic projection matrix and returns the result
@@ -80,5 +98,10 @@ namespace core
 		Vector3 mPosition;
 		Vector3 mCenter;
 		Vector3 mUp;
+
+		float32 mNearPlane;
+		float32 mFarPlane; 
+
+		Vector3 mLookingAtDirection;
 	};
 }

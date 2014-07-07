@@ -24,8 +24,8 @@ for i=-10, 9 do
 		local color = {math.random(0, 100) / 100.0, math.random(0, 100) / 100.0, math.random(0, 100) / 100.0}
 		local radius = 10.0
 		local constantAttenuation = 0.0
-		local linearAttenuation = 0.0
-		local quadricAttenuation = 0.5
+		local linearAttenuation = 0.6
+		local quadricAttenuation = 0.2
 		local pointLight = PointLight()
 		pointLight:SetColor(color)
 		pointLight:SetRadius(radius)
@@ -50,5 +50,13 @@ for i=-10, 9 do
 		level1:AddSceneNode(node)
 	end
 end
+
+-- Add a spotlight
+local spotlightNode = SpotLight()
+spotlightNode:SetPosition({0.0, 50.0, 0.0})
+spotlightNode:SetColor({1.0, 0.0, 0.0})
+spotlightNode:SetDirection({0.0, -1.0, 0.0})
+spotlightNode:SetCutoff(45.0)
+level1:AddSceneNode(spotlightNode)
 
 return level1

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Effect>
+	<DepthTest>true</DepthTest>
+	<DepthMask>false</DepthMask>
+	<DepthFunc>LEQUAL</DepthFunc>
+	<Blend>false</Blend>
+	<SrcFactor>ONE</SrcFactor>
+	<DestFactor>ONE</DestFactor>
+	<FrontFace>CCW</FrontFace>
+	<CullFace>FRONT</CullFace>
+	<VertexShader>
+	<![CDATA[
+		#version 330
+
+		uniform mat4 ProjectionMatrix;
+		uniform mat4 ViewMatrix;
+
+		// Light properties
+		uniform float LightRadius;
+		uniform vec3 LightPosition;
+
+		layout(location = 0) in vec3 in_Position;
+		layout(location = 2) in vec2 in_TexCoord;
+
+		out vec2 vs_TexCoord;
+		out vec3 vs_lightPosInWorldSpace;
+		
+		void main()
+		{
+			// The vertex position (add the supplied LightPosition because we are using a uniform cone as a model)
+			vec4 Vp = ViewMatrix * vec4(in_Position.xyz + LightPosition.xyz, 1.0);
+			
+			// The light position in local camera space
+			vs_lightPosInWorldSpace = vec3(ViewMatrix * vec4(LightPosition.xyz, 1.0));
+			
+			gl_Position = ProjectionMatrix * Vp;
+			vs_TexCoord = in_TexCoord;
+		}
+	]]>
+	</VertexShader>
+	<SamplerState Id="LightTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<FragmentShader>
+	<![CDATA[
+		#version 330
+
+		// Texture samples to decide if the light should be rendered
+		uniform sampler2D PositionsTexture;
+		uniform sampler2D NormalsTexture;
+		
+		// The size of the screen
+		uniform vec2 ScreenSize;
+
+		// How the texture looks like
+		uniform sampler2D LightTexture;
+
+		// Variables used by the point light
+		uniform float LightCutoff;
+		uniform vec3 LightColor;
+		uniform vec3 LightPosition;
+		uniform vec3 LightDirection;
+		
+		// Position of the pixel
+		in vec2 vs_TexCoord;
+		in vec3 vs_lightPosInWorldSpace;
+
+		void main()
+		{
+			// Calculate the screen texture coordinates based on the fragments coordinate and the screen size
+			vec2 screenCoords = gl_FragCoord.xy / ScreenSize;
+			
+			// Retrieves the pixel from the texture used by the spotlight
+			vec4 final_color;
+			
+			// Retrieves the fragment position
+			vec3 Fpos = texture2D(PositionsTexture, screenCoords).xyz;
+			
+			// Light direction (direction between the current position and the light position)
+			vec3 L = normalize(vs_lightPosInWorldSpace - Fpos);
+			
+			// Spot Direction
+			vec3 D = normalize(LightDirection);
+						
+			// Retrieves the normal for the current pixel
+			vec3 N = normalize(texture2D(NormalsTexture, screenCoords).xyz * 2.0 - 1.0);
+			
+			float NdotL = max(dot(N, L), 0.0);
+			if(NdotL > 0.0) {
+				float spotEffect = dot(D, -L);
+				float spotCosCutoff = cos(LightCutoff);
+				if(spotEffect > spotCosCutoff) {
+				}
+					final_color = texture2D(LightTexture, vs_TexCoord) * vec4(LightColor, 1.0);
+			}
+			
+			gl_FragColor = final_color;
+			//gl_FragColor = vec4(L.xyz, 1.0);
+			//gl_FragColor = vec4(N.xyz, 1.0);
+			//gl_FragColor = vec4(vs_ScreenSpaceTexCoord.x, 0.0, 0.0, 1.0);
+		}
+	]]>
+	</FragmentShader>
+</Effect>

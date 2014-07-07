@@ -95,6 +95,18 @@ namespace core
 			\throws RenderingException if the supplied size or format is invalid
 		*/
 		virtual Texture2D* CreateTexture2D(const Size& size, TextureFormat::Enum format, const byte* bytes) = 0;
+
+		/*!
+			\brief Resizes the supplied texture
+
+			Resizes the supplied texture to the new supplied size.
+
+			\remark This clears the textures internal memory
+
+			\param texture
+			\param newSize
+		*/
+		virtual void ResizeTexture2D(Texture2D* texture, const Size& newSize) = 0;
 		
 		/*!
 			\brief Creates a render target with six sides

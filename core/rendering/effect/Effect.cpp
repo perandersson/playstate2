@@ -8,7 +8,7 @@ using namespace core;
 
 Effect::Effect(GLuint programID)
 : ResourceObject(), mProgramID(programID),
-mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT),
+mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT), mDepthMask(true),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }), 
 mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT),

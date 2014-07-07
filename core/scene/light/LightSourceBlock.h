@@ -18,8 +18,6 @@ namespace core
 		float32 linearAttenuation;
 		float32 quadricAttenuation;
 		const Texture2D* diffuseTexture;
-		const VertexBuffer* vertexBuffer;
-		const IndexBuffer* indexBuffer;
 	};
 
 

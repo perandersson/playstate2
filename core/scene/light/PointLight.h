@@ -57,7 +57,5 @@ namespace core
 		float32 mConstantAttenuation;
 		float32 mLinearAttenuation;
 		float32 mQuadricAttenuation;
-
-		VertexBuffer* mPointLightBuffer;
 	};
 }

@@ -15,7 +15,7 @@ RenderState::RenderState()
 : mViewport(Rect::ZERO), 
 mEffectUID(0),
 mVertexBufferUID(0), mIndexBufferUID(0), mVertexArrayID(0),
-mDepthTest(false), mDepthFunc(DepthFunc::DEFAULT),
+mDepthTest(false), mDepthFunc(DepthFunc::DEFAULT), mDepthMask(true),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT),
@@ -30,6 +30,7 @@ mApplyEffectState(true), mMaxDrawBuffers(0), mMaxActiveTextures(0), mNextTexture
 	glDisable(GL_STENCIL_TEST);
 	glStencilMask(BIT_ALL);
 	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glActiveTexture(GL_TEXTURE0);
@@ -121,6 +122,7 @@ EffectState* RenderState::ApplyEffect(const Effect* effect)
 
 	SetDepthTest(effect->GetDepthTest());
 	SetDepthFunc(effect->GetDepthFunc());
+	SetDepthMask(effect->GetDepthMask());
 
 	SetStencilTest(effect->GetStencilTest());
 	SetStencilMask(effect->GetStencilMask());
@@ -256,7 +258,7 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 	// Set the vertex attributes
 	//
 	
-	bool boundAttribLocations[MAX_VERTEX_ELEMENT_DESC];
+	bool boundAttribLocations[MAX_VERTEX_ELEMENT_DESC] = { false };
 	uint32 offset = 0;
 	for (uint32 i = 0; i < 8; ++i) {
 		const VertexElementDesc& elemDesc = desc.elements[i];
@@ -336,7 +338,7 @@ void RenderState::BindIndexBuffer(const IndexBuffer* indexBuffer)
 	if (mIndexBufferUID == uid)
 		return;
 
-	const GLuint bufferID = indexBuffer == nullptr ? indexBuffer->GetBufferID() : 0;
+	const GLuint bufferID = indexBuffer != nullptr ? indexBuffer->GetBufferID() : 0;
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
 	mIndexBufferUID = uid;
 
@@ -379,6 +381,35 @@ void RenderState::SetDepthTest(bool enable)
 #endif
 }
 
+void RenderState::SetDepthFunc(DepthFunc::Enum func)
+{
+	if (mDepthFunc == func)
+		return;
+
+	glDepthFunc(GetDepthFuncAsEnum(func));
+	mDepthFunc = func;
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not set the depth function used when render faces on the screen");
+#endif
+}
+
+void RenderState::SetDepthMask(bool depthMask)
+{
+	if (mDepthMask == depthMask)
+		return;
+
+	glDepthMask(depthMask ? GL_TRUE : GL_FALSE);
+	mDepthMask = depthMask;
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not set the depth mask used when render faces on the screen");
+#endif
+}
+
 void RenderState::SetStencilTest(bool enable)
 {
 	if (mStencilTest == enable)
@@ -409,21 +440,6 @@ void RenderState::SetStencilMask(uint32 mask)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could not enable/disable stencil testing");
-#endif
-}
-
-void RenderState::SetDepthFunc(DepthFunc::Enum func)
-{
-	if (mDepthFunc == func)
-		return;
-
-	glDepthFunc(GetDepthFuncAsEnum(func));
-	mDepthFunc = func;
-
-#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
-	GLenum err = glGetError();
-	if (err != GL_NO_ERROR)
-		THROW_EXCEPTION(RenderingException, "Could not set the depth function used when render faces on the screen");
 #endif
 }
 
@@ -867,8 +883,8 @@ void RenderState::ApplyBuffers(const VertexBuffer* buffer, const IndexBuffer* in
 		ApplyRenderTargets();
 	}
 
-	BindIndexBuffer(indexBuffer);
 	BindVertexBuffer(buffer);
+	BindIndexBuffer(indexBuffer);
 }
 
 EffectState* RenderState::GetEffectState(const Effect* effect)

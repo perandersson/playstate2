@@ -8,6 +8,8 @@ namespace core
 	public:
 		enum Enum {
 			R = 0,
+			R16F,
+			R32F,
 			RGB,
 			RGBA,
 			RGBA8,
@@ -18,7 +20,9 @@ namespace core
 			BGR,
 			BGRA,
 			DEPTH24,
+			DEPTH32F,
 			DEPTH24_STENCIL8,
+			DEPTH32F_STENCIL8,
 
 			SIZE
 		};

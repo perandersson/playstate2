@@ -19,12 +19,6 @@
 		}
 	]]>
 	</VertexShader>
-	<SamplerState Id="PositionsTexture">
-		<MinFilter>LINEAR</MinFilter>
-		<MagFilter>LINEAR</MagFilter>
-		<WrapS>CLAMP_TO_EDGE</WrapS>
-		<WrapT>CLAMP_TO_EDGE</WrapT>
-	</SamplerState>
 	<SamplerState Id="DiffuseTexture">
 		<MinFilter>LINEAR</MinFilter>
 		<MagFilter>LINEAR</MagFilter>
@@ -47,8 +41,8 @@
 	<![CDATA[
 		#version 330
 
-		uniform sampler2D PositionsTexture;
 		uniform sampler2D DiffuseTexture;
+		uniform sampler2D DepthTexture;
 		uniform sampler2D NormalsTexture;
 		uniform sampler2D LightTexture;
 
@@ -59,16 +53,14 @@
 		void main()
 		{
 			vec4 image = texture2D(DiffuseTexture, uvCoords);
+			float depth = texture2D(DepthTexture, uvCoords).r;
 			
-			vec3 position = texture2D(PositionsTexture, uvCoords).xyz;
-			vec3 normal = texture2D(NormalsTexture, uvCoords).xyz;
-			normal = normalize(normal);
+			vec3 N = normalize(texture2D(NormalsTexture, uvCoords).xyz  * 2.0 - 1.0);
 			
-			//image *= texture2D(LightTexture, uvCoords);
 			vec4 light = texture2D(LightTexture, uvCoords);
-			gl_FragColor = (image + vec4(AmbientColor, 1.0)) * (light + vec4(AmbientColor, 1.0));
-			//gl_FragColor = image;
-			//gl_FragColor = vec4(normal, 1.0);
+			//gl_FragColor = (image + vec4(AmbientColor, 1.0)) * (light + vec4(AmbientColor, 1.0));
+			//gl_FragColor = vec4(depth, depth, depth, 1.0);
+			gl_FragColor = vec4(light.rgb, 1.0);
 		}
 	]]>
 	</FragmentShader>

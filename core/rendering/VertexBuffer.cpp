@@ -64,8 +64,9 @@ void VertexBuffer::Render(const IndexBuffer* buffer, uint32 firstElement, uint32
 {
 	assert(buffer != NULL && "No index buffer was supplied");
 
-	// So far only the GL_UNSIGNED_INT indice type is usable
-	glDrawElements(GetPrimitiveTypeEnum(mPrimitiveType), numElements, GL_UNSIGNED_INT, (void*)(firstElement * sizeof(uint32)));
+	const uint32 count = numElements / PrimitiveType::GetElementCount(mPrimitiveType);
+	const GLenum mode = GetPrimitiveTypeEnum(mPrimitiveType);
+	glDrawElements(mode, count, GL_UNSIGNED_INT, (void*)(firstElement * sizeof(uint32)));
 }
 
 void VertexBuffer::Update(const void* vertices, uint32 numVertices)
@@ -101,7 +102,6 @@ GLenum VertexBuffer::GetPrimitiveTypeEnum(PrimitiveType::Enum primitiveType)
 		GL_POINTS,
 		GL_TRIANGLES,
 		GL_TRIANGLE_STRIP,
-		GL_QUADS,
 		GL_LINE_LOOP,
 	};
 	return enums[primitiveType];

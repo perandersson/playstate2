@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Effect>
+	<DepthTest>false</DepthTest>
+	<Blend>true</Blend>
+	<SrcFactor>ONE</SrcFactor>
+	<DestFactor>ONE</DestFactor>
+	<FrontFace>CCW</FrontFace>
+	<CullFace>FRONT</CullFace>
+	<VertexShader>
+	<![CDATA[
+		#version 330
+
+		uniform mat4 ProjectionMatrix;
+		uniform mat4 ViewMatrix;
+
+		// Screen information
+		uniform vec3 CameraPosition;
+		
+		// Light properties
+		uniform float LightRadius;
+		uniform vec3 LightPosition;
+
+		// Light Vertex information
+		layout(location = 0) in vec3 in_Position;
+		layout(location = 2) in vec2 in_texCoord;
+
+		// Data to fragment shader
+		out vec2 vs_TexCoords;
+		out vec3 vs_ViewSpacePosition;
+		out vec3 vs_ViewSpaceLightPosition;
+		out vec3 vs_ViewSpaceCameraPosition;
+
+		void main()
+		{			
+			// The vertex position (add the supplied LightPosition because we are using a uniform sphere as a model)
+			vec3 scaledVertex = in_Position.xyz * LightRadius;
+			vec4 Vp = ViewMatrix * vec4(scaledVertex + LightPosition, 1.0);
+			
+			// View-space position
+			vs_ViewSpacePosition = Vp.xyz;
+			
+			// View-space light position
+			vs_ViewSpaceLightPosition = vec3(ViewMatrix * vec4(LightPosition, 1.0));
+			
+			// Send the texture coordinates to the fragment shader
+			vs_TexCoords = in_texCoord;
+			
+			// Render the vertices at the projected position
+			gl_Position = ProjectionMatrix * Vp;
+			
+			// View-space camera position
+			vs_ViewSpaceCameraPosition = vec3(ViewMatrix * vec4(CameraPosition, 1.0));
+		}
+	]]>
+	</VertexShader>
+	<SamplerState Id="LightTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<SamplerState Id="DepthTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<SamplerState Id="NormalsTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<FragmentShader>
+	<![CDATA[
+		#version 330
+
+		// Texture samples to decide if the light should be rendered
+		uniform sampler2D DepthTexture;
+		uniform sampler2D NormalsTexture;
+		
+		// Screen information
+		uniform vec3 CameraForward;
+		uniform vec3 CameraPosition;
+		uniform float ProjectionA;
+		uniform float ProjectionB;
+		uniform vec2 ScreenSize;
+		
+		// How the texture looks like
+		uniform sampler2D LightTexture;
+
+		// Variables used by the point light
+		uniform float LightRadius;
+		uniform vec3 LightColor;
+		uniform float ConstantAttenuation;
+		uniform float LinearAttenuation;
+		uniform float QuadraticAttenuation;
+
+		// Position of the pixel
+		in vec2 vs_TexCoords;
+		in vec3 vs_ViewSpacePosition;
+		in vec3 vs_ViewSpaceLightPosition;
+		in vec3 vs_ViewSpaceCameraPosition;
+		
+		/*!
+			\brief Calculates the view-space position based on the current pixels depth value
+			
+			\param screenCoords
+		*/
+		vec3 CalculateViewSpacePosition(vec2 screenCoords)
+		{
+			// Normalize the view ray
+			vec3 viewRay = normalize(vec3(vs_ViewSpacePosition.xy / vs_ViewSpacePosition.z, 1.0f));
+			
+			// Sample the depth buffer and convert it to linear depth
+			float depth = texture2D(DepthTexture, screenCoords).r;
+			float linearDepth = ProjectionB / (depth - ProjectionA);
+			
+			// Project the view ray onto the camera's z-axis
+			float viewZDist = dot(CameraForward, viewRay);
+
+			// Scale the view ray by the ratio of the linear z value to the projected view ray
+			return vs_ViewSpaceCameraPosition + viewRay * (linearDepth / viewZDist);
+		}
+		
+		void main()
+		{
+			vec4 color = texture2D(LightTexture, vs_TexCoords) * vec4(LightColor, 1.0);
+			if(color.a == 0)
+				discard;
+				
+			// Calculate the screen texture coordinates based on the fragments coordinate and the screen size
+			vec2 screenCoords = gl_FragCoord.xy / ScreenSize;
+			
+			// Retrieves the fragment normal
+			vec3 N = normalize(texture2D(NormalsTexture, screenCoords).xyz * 2.0 - 1.0);
+			
+			// Get view-space position
+			vec3 P = CalculateViewSpacePosition(screenCoords); 
+			
+			// Light direction
+			vec3 L = vs_ViewSpaceLightPosition - P;
+			float attenuation = clamp(1.0f - length(L) / LightRadius, 0.0, 1.0); 
+			
+			//vec3 Eye = normalize(vs_ViewSpaceCameraPosition - P);
+			//float intensity = max(dot(N, L), 0.0);
+			
+			float Ldist3 = length(L);
+			//float Ldist2 = dot(L, L);
+			//float Ldist = sqrt(Ldist2);
+			L /= Ldist3;
+			
+			//float NdotL = max(dot(N, L), 0.0);
+			//float Latt = ConstantAttenuation;
+			//Latt += LinearAttenuation * Ldist;
+			//Latt += QuadraticAttenuation * Ldist2;
+			//
+			gl_FragColor = color * attenuation;
+			gl_FragColor = vec4(L, 1.0);
+			gl_FragColor = vec4(P, 1.0);
+			//gl_FragColor = vec4(N, 1.0);
+			//gl_FragColor = vec4(attenuation, attenuation, attenuation, 1.0);
+			//gl_FragColor = vec4(vs_ViewSpaceLightPosition, 1.0);
+		}
+	]]>
+	</FragmentShader>
+</Effect>

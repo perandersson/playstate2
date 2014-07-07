@@ -2,38 +2,49 @@
 #include "DeferredRenderPipeline.h"
 
 DeferredRenderPipeline::DeferredRenderPipeline()
-: mFullscreenQuad(nullptr), mUniformSphere(nullptr),
-mDiffuseRenderTarget(nullptr), mPositionsRenderTarget(nullptr), mNormalsRenderTarget(nullptr),
+: mFullscreenQuad(nullptr), mSphere(nullptr),
+mDiffuseRenderTarget(nullptr), mNormalsRenderTarget(nullptr),
 mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr), mCubeShadowMap(nullptr)
 {
 	ActiveWindow::AddWindowResizedListener(this);
 
 	const Size& windowSize = ActiveWindow::GetSize();
 
-	mDiffuseRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA);
-	mPositionsRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA16F);
-	mNormalsRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGB10_A2);
-	mDepthRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::DEPTH24);
+	mDiffuseRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA16F);
+	//mMaterialsRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA16F);
+	mNormalsRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA16F);
+	mDepthRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::DEPTH32F);
 	mLightRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA);
 
-	mCubeShadowMap = RenderContext::CreateRenderTargetCube(Size(256, 256), TextureFormat::DEPTH24);
+	mCubeShadowMap = RenderContext::CreateRenderTargetCube(Size(256, 256), TextureFormat::DEPTH32F);
 
-	mDeferredEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/deferred.effect");
-	mPointLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/deferred_pointlight.effect");
-	mTexturedEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/deferred_result.effect");
+	mDeferredEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/geometry.effect");
+	mPointLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/pointlight.effect");
+	//mSpotLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/spotlight.effect");
+	mTexturedEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/result.effect");
 	mDebugEffect = ResourceManager::GetResource<Effect>("/demo/effects/debug.effect");
 	mWhiteTexture = ResourceManager::GetResource<Texture2D>("/engine/textures/white.png");
 
-	mUniformSphere = VertexBufferUtils::CreateSphere(1, 0, 0, 0, BufferUsage::STATIC);
+	//mUniformSphere = VertexBufferUtils::CreateSphere(1, 0, 0, 0, BufferUsage::STATIC);
+	mSphere = Sphere::Create(1, 10, BufferUsage::STATIC);
+	//const Vector3 position(0.0f, 10.0f, 0.0f);
+	//const Vector3 direction(0.0f, -1.0f, 0.0f);
+	//const float cutoff = 45.0f;
+	//mCone = VertexBufferUtils::CreateSpotLight(position, direction, cutoff);
 	mFullscreenQuad = VertexBufferUtils::CreateFullscreenQuad();
 }
 
 DeferredRenderPipeline::~DeferredRenderPipeline()
 {
-	if (mUniformSphere != nullptr) {
-		delete mUniformSphere;
-		mUniformSphere = nullptr;
+	if (mSphere != nullptr) {
+		delete mSphere;
+		mSphere = nullptr;
 	}
+
+	//if (mCone != nullptr) {
+	//	delete mCone;
+	//	mCone = nullptr;
+	//}
 
 	if (mFullscreenQuad != nullptr) {
 		delete mFullscreenQuad;
@@ -41,14 +52,12 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 	}
 
 	delete mDiffuseRenderTarget;
-	delete mPositionsRenderTarget;
 	delete mNormalsRenderTarget;
 	delete mDepthRenderTarget;
 	delete mLightRenderTarget;
 
 	mDiffuseRenderTarget = nullptr;
 	mDepthRenderTarget = nullptr;
-	mPositionsRenderTarget = nullptr;
 	mLightRenderTarget = nullptr;
 	mNormalsRenderTarget = nullptr;
 
@@ -68,18 +77,18 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 		auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
 			RenderState* state = RenderContext::Activate(mDeferredEffect);
 			state->SetRenderTarget(mDiffuseRenderTarget, 0);
-			state->SetRenderTarget(mPositionsRenderTarget, 1);
-			state->SetRenderTarget(mNormalsRenderTarget, 2);
+			state->SetRenderTarget(mNormalsRenderTarget, 1);
 			state->SetDepthRenderTarget(mDepthRenderTarget);
 			state->Clear(ClearType::COLOR | ClearType::DEPTH);
 
 			// Set camera properties
 			state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
 			state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+			state->FindUniform("FarClip")->SetFloat(camera->GetFarPlane());
 
-			IUniform* modelMatrix = state->FindUniform("ModelMatrix");
-			IUniform* diffuseTexture = state->FindUniform("DiffuseTexture");
-			IUniform* diffuseColor = state->FindUniform("DiffuseColor");
+			auto modelMatrix = state->FindUniform("ModelMatrix");
+			auto diffuseTexture = state->FindUniform("DiffuseTexture");
+			auto diffuseColor = state->FindUniform("DiffuseColor");
 
 			RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
 			RenderBlockResultSet::Type block;
@@ -104,17 +113,10 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 
 void DeferredRenderPipeline::OnWindowResized(const Size& newSize)
 {
-	delete mDiffuseRenderTarget;
-	delete mPositionsRenderTarget;
-	delete mNormalsRenderTarget;
-	delete mDepthRenderTarget;
-	delete mLightRenderTarget;
-
-	mDiffuseRenderTarget = RenderContext::CreateRenderTarget2D(newSize, TextureFormat::RGBA);
-	mPositionsRenderTarget = RenderContext::CreateRenderTarget2D(newSize, TextureFormat::RGBA16F);
-	mNormalsRenderTarget = RenderContext::CreateRenderTarget2D(newSize, TextureFormat::RGB10_A2);
-	mDepthRenderTarget = RenderContext::CreateRenderTarget2D(newSize, TextureFormat::DEPTH24);
-	mLightRenderTarget = RenderContext::CreateRenderTarget2D(newSize, TextureFormat::RGBA);
+	mDiffuseRenderTarget->Resize(newSize);
+	mNormalsRenderTarget->Resize(newSize);
+	mDepthRenderTarget->Resize(newSize);
+	mLightRenderTarget->Resize(newSize);
 }
 
 void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* camera)
@@ -122,15 +124,24 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 	FindQuery query = { camera, RenderableFilter::DEFAULT };
 	RenderState* state = RenderContext::Activate(mPointLightEffect);
 	state->SetRenderTarget(mLightRenderTarget, 0);
+	state->SetDepthMask(false);
 	state->Clear(ClearType::COLOR);
 
 	if (scene.Find(query, &mLightSourceResultSet)) {
-		state->FindUniform("DiffuseTexture")->SetTexture(mDiffuseRenderTarget);
-		state->FindUniform("PositionsTexture")->SetTexture(mPositionsRenderTarget);
+		state->FindUniform("DepthTexture")->SetTexture(mDepthRenderTarget);
 		state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
 
 		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
 		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+
+		// Screen information
+		state->FindUniform("ProjectionA")->SetFloat(camera->GetFarPlane() / (camera->GetFarPlane() - camera->GetNearPlane()));
+		state->FindUniform("ProjectionB")->SetFloat((-camera->GetFarPlane() * camera->GetNearPlane()) / (camera->GetFarPlane() - camera->GetNearPlane()));
+		const Size& size = ActiveWindow::GetSize();
+		state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
+		state->FindUniform("CameraForward")->SetVector3(camera->GetLookingAtDirection());
+		state->FindUniform("CameraPosition")->SetVector3(camera->GetPosition());
+
 		state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
 
 		IUniform* lightColor = state->FindUniform("LightColor");
@@ -143,6 +154,10 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 		LightSourceResultSet::Iterator it = mLightSourceResultSet.GetIterator();
 		LightSourceResultSet::Type block;
 		while (block = it.Next()) {
+			// Ignore spotlights
+			if (block->direction.IsNotZero())
+				continue;
+
 			lightColor->SetColorRGB(block->color);
 			lightPosition->SetVector3(block->position);
 			constantAttenuation->SetFloat(block->constantAttenuation);
@@ -150,9 +165,44 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 			quadraticAttenuation->SetFloat(block->quadricAttenuation);
 			lightRadius->SetFloat(block->radius);
 
-			state->Render(mUniformSphere);
+			state->Render(mSphere->GetVertexBuffer(), mSphere->GetIndexBuffer());
 		}
-	}
+
+		//state = RenderContext::Activate(mSpotLightEffect);
+		//state->SetRenderTarget(mLightRenderTarget, 0);
+		//state->SetDepthRenderTarget(mDepthRenderTarget);
+
+		//state->FindUniform("PositionsTexture")->SetTexture(mPositionsRenderTarget);
+		//state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
+		//state->FindUniform("DepthTexture")->SetTexture(mDepthRenderTarget);
+
+		//state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+		//state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+		//state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
+
+		//state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
+
+		//lightRadius = state->FindUniform("LightRadius");
+		//auto lightCutoff = state->FindUniform("LightCutoff");
+		//lightColor = state->FindUniform("LightColor");
+		//lightPosition = state->FindUniform("LightPosition");
+		//auto lightDirection = state->FindUniform("LightDirection");
+
+		//it = mLightSourceResultSet.GetIterator();
+		//while (block = it.Next()) {
+		//	// Ignore point-lights
+		//	if (block->direction.IsZero())
+		//		continue;
+
+		//	lightRadius->SetFloat(block->radius);
+		//	lightCutoff->SetFloat(block->radius);
+		//	lightColor->SetColorRGB(block->color);
+		//	lightPosition->SetVector3(block->position);
+		//	lightDirection->SetVector3(block->direction);
+
+		//	state->Render(mCone);
+		//}
+	}	
 }
 
 void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const Camera* camera)
@@ -160,7 +210,7 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 	RenderState* state = RenderContext::Activate(mTexturedEffect);
 
 	state->FindUniform("DiffuseTexture")->SetTexture(mDiffuseRenderTarget);
-	state->FindUniform("PositionsTexture")->SetTexture(mPositionsRenderTarget);
+	state->FindUniform("DepthTexture")->SetTexture(mDepthRenderTarget);
 	state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
 	state->FindUniform("LightTexture")->SetTexture(mLightRenderTarget);
 
@@ -182,8 +232,12 @@ void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* cam
 	LightSourceResultSet::Iterator it = mLightSourceResultSet.GetIterator();
 	LightSourceResultSet::Type block;
 	while (block = it.Next()) {
+		// Ignore spotlights
+		if (block->direction.IsNotZero())
+			continue;
+
 		color->SetColorRGB(block->color);
 		objectPosition->SetVector3(block->position);
-		state->Render(mUniformSphere);
+		state->Render(mSphere->GetVertexBuffer(), mSphere->GetIndexBuffer());
 	}
 }

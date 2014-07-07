@@ -8,7 +8,6 @@ uint32 PrimitiveType::GetElementCount(PrimitiveType::Enum type)
 		1,
 		3,
 		3,
-		4,
 		1
 	};
 

@@ -81,7 +81,9 @@ namespace core
 		inline Resource<Texture> GetTexture() const {
 			return mTexture;
 		}
-		
+
+	public:
+		virtual void OnAddedToSceneGroup();
 		virtual void CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const;
 
 	private:

@@ -40,6 +40,7 @@ namespace core
 
 		bool mDepthTest;
 		DepthFunc::Enum mDepthFunc;
+		bool mDepthMask;
 
 		bool mStencilTest;
 		uint32 mStencilMask;

@@ -123,6 +123,9 @@
     <Filter Include="Source Files\scene\tree">
       <UniqueIdentifier>{9b71548a-205b-4bab-aacf-49289813441e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendering\shape">
+      <UniqueIdentifier>{cbd321f2-ba15-418d-b79e-5313199f662e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\core\playstate.h">
@@ -764,6 +767,9 @@
     <ClInclude Include="..\..\core\rendering\VertexBufferUtils.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\shape\Sphere.h">
+      <Filter>Source Files\rendering\shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1227,6 +1233,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\VertexBufferUtils.cpp">
       <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\shape\Sphere.cpp">
+      <Filter>Source Files\rendering\shape</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

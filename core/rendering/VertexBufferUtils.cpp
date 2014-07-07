@@ -3,13 +3,13 @@
 #include "../math/MathUtils.h"
 using namespace core;
 
-VertexBuffer* VertexBufferUtils::CreateSphere(float32 R, float32 H, float32 K, float32 Z, BufferUsage::Enum usage) {
-	const uint32 SPACE = 10;
-	const uint32 VERTEX_COUNT = (90 / SPACE) * (360 / SPACE) * 4;
+VertexBuffer* VertexBufferUtils::CreateSphere(float32 R, uint32 resolution, float32 H, float32 K, float32 Z, BufferUsage::Enum usage) {
+	const uint32 SPACE = resolution;
+	const uint32 VERTEX_COUNT = (180 / SPACE) * (360 / SPACE) * 4;
 
 	std::vector<PositionTextureVertexType> vertices(VERTEX_COUNT);
 	uint32 n = 0;
-	for (float32 b = 0; b <= 90 - SPACE; b += SPACE) {
+	for (float32 b = 0; b <= 180 - SPACE; b += SPACE) {
 		for (float32 a = 0; a <= 360 - SPACE; a += SPACE){
 			vertices[n].pos.x = R * sinf((a) / 180.0f * M_PI_F) * sinf((b) / 180.0f * M_PI_F) - H;
 			vertices[n].pos.y = R * cosf((a) / 180.0f * M_PI_F) * sinf((b) / 180.0f * M_PI_F) + K;
@@ -90,7 +90,6 @@ VertexBuffer* VertexBufferUtils::CreateCone(const Vector3& d, const Vector3& a, 
 
 	return RenderContext::CreateBuffer(&vertices[0], PrimitiveType::TRIANGLE, vertices.size(), BufferUsage::STATIC);
 }
-
 
 VertexBuffer* VertexBufferUtils::CreateSpotLight(const Vector3& position, const Vector3& direction, float32 cutoff)
 {

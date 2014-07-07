@@ -11,7 +11,6 @@ namespace core
 			POINT = 0,
 			TRIANGLE,
 			TRIANGLE_STRIP,
-			QUAD,
 			LINE_LOOP,
 
 			SIZE

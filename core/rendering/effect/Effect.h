@@ -46,6 +46,10 @@ namespace core
 			return mDepthFunc;
 		}
 
+		inline bool GetDepthMask() const {
+			return mDepthMask;
+		}
+
 		inline bool GetStencilTest() const {
 			return mStencilTest;
 		}
@@ -95,6 +99,10 @@ namespace core
 			mDepthFunc = func;
 		}
 
+		inline void SetDepthMask(bool mask) {
+			mDepthMask = mask;
+		}
+
 		inline void SetStencilTest(bool enable) {
 			mStencilTest = enable;
 		}
@@ -137,6 +145,7 @@ namespace core
 
 		bool mDepthTest;
 		DepthFunc::Enum mDepthFunc;
+		bool mDepthMask;
 		
 		bool mStencilTest;
 		uint32 mStencilMask;

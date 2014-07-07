@@ -14,7 +14,7 @@ using namespace core;
 EffectXmlVisitor::EffectXmlVisitor(IRenderContext* renderContext)
 : XMLDefaultVisitor(), 
 mRenderContext(renderContext), mEffect(nullptr), mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0), 
-mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT),
+mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT), mDepthMask(true),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT),
 mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT)
@@ -68,6 +68,9 @@ bool EffectXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tin
 	}
 	else if (name == TAG_DEPTH_FUNC) {
 		mDepthFunc = DepthFunc::Parse(element.GetText(), DepthFunc::DEFAULT);
+	}
+	else if (name == TAG_DEPTH_MASK) {
+		mDepthMask = StringUtils::ToBool(GetLowerCaseValue(element));
 	}
 	else if (name == TAG_SRC_FACTOR) {
 		mSrcFactor = SrcFactor::Parse(element.GetText(), SrcFactor::DEFAULT);
@@ -210,6 +213,7 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 		
 		mEffect->SetDepthTest(mDepthTest);
 		mEffect->SetDepthFunc(mDepthFunc);
+		mEffect->SetDepthMask(mDepthMask);
 
 		mEffect->SetStencilTest(mStencilTest);
 		mEffect->SetStencilMask(mStencilMask);

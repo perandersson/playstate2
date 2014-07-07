@@ -15,6 +15,8 @@
 #include "rendering/effect/Effect.h"
 #include "rendering/effect/EffectState.h"
 
+#include "rendering/shape/Sphere.h"
+
 #include "logging/Logger.h"
 
 #include "input/InputDevices.h"

@@ -18,7 +18,7 @@ namespace core
 			\param usage
 			\return
 		*/
-		static VertexBuffer* CreateSphere(float32 R, float32 H, float32 K, float32 Z, BufferUsage::Enum usage);
+		static VertexBuffer* CreateSphere(float32 R, uint32 resolution, float32 H, float32 K, float32 Z, BufferUsage::Enum usage);
 
 		/*!
 			\brief Create a VertexBuffer containing the vertices needed to draw a cone

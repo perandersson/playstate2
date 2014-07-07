@@ -117,6 +117,20 @@ namespace core
 			\param enable
 		*/
 		void SetDepthTest(bool enable);
+		
+		/*!
+			\brief Set how the depth is calculated for each vertice
+
+			\param func
+		*/
+		void SetDepthFunc(DepthFunc::Enum func);
+
+		/*!
+			\brief Enables/Disables writing to the Z-Buffer
+
+			\param mask
+		*/
+		void SetDepthMask(bool mask);
 
 		/*!
 			\brief Enable- or disable stencil testing for vertices
@@ -131,13 +145,6 @@ namespace core
 			\param mask
 		*/
 		void SetStencilMask(uint32 mask);
-
-		/*!
-			\brief Set how the depth is calculated for each vertice
-
-			\param func
-		*/
-		void SetDepthFunc(DepthFunc::Enum func);
 
 		/*!
 			\brief Enable- or disable blending
@@ -401,6 +408,7 @@ namespace core
 
 		bool mDepthTest;
 		DepthFunc::Enum mDepthFunc;
+		bool mDepthMask;
 
 		//
 		// Stencil test

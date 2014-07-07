@@ -9,10 +9,13 @@ namespace core
 	public:
 		enum Enum {
 			STATIC = 0,
-			DYNAMIC,
-
-			SIZE
+			DYNAMIC
 		};
+
+		/*!
+			\brief The size of this enum
+		*/
+		static const uint32 SIZE = Enum::DYNAMIC + 1;
 
 		/*!
 			\brief Converts this enum into a GLenum

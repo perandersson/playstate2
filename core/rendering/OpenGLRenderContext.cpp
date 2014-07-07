@@ -130,7 +130,13 @@ RenderTarget2D* OpenGLRenderContext::CreateRenderTarget2D(const Size& size, Text
 	case TextureFormat::DEPTH24:
 		_minMag = GL_NEAREST;
 		break;
+	case TextureFormat::DEPTH32F:
+		_minMag = GL_NEAREST;
+		break;
 	case TextureFormat::DEPTH24_STENCIL8:
+		_minMag = GL_NEAREST;
+		break;
+	case TextureFormat::DEPTH32F_STENCIL8:
 		_minMag = GL_NEAREST;
 		break;
 	}
@@ -185,6 +191,45 @@ Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat:
 	}
 
 	return new Texture2D(textureID, size, format);
+}
+
+void OpenGLRenderContext::ResizeTexture2D(Texture2D* texture, const Size& newSize)
+{
+	assert(newSize.x > 0.0f && "You cannot resize a texture to 0 width");
+	assert(newSize.y > 0.0f && "You cannot resize a texture to 0 height");
+
+	auto renderState = GetRenderState();
+
+	//
+	// Bind the texture
+	//
+
+	renderState->BindTexture(texture, 0);
+
+	//
+	// Resize the texture
+	//
+
+	const TextureFormat::Enum format = texture->GetTextureFormat();
+	const GLenum _format = GetTextureFormatAsEnum(format);
+	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
+
+	glTexImage2D(texture->GetTextureTarget(), 0, _internalFormat, newSize.width, newSize.height, 0, _format, GL_UNSIGNED_BYTE, NULL);
+
+	texture->SetSize(newSize);
+
+	//
+	// Make sure that the texture is not bound anymore
+	//
+
+	renderState->UnbindTexture();
+
+	glFlush();
+
+	GLenum status = glGetError();
+	if (status != GL_NO_ERROR) {
+		THROW_EXCEPTION(RenderingException, "Could not resize the supplied 2D texture. Reason: %d", status);
+	}
 }
 
 RenderTargetCube* OpenGLRenderContext::CreateRenderTargetCube(const Size& size, TextureFormat::Enum format)
@@ -330,10 +375,22 @@ GLenum OpenGLRenderContext::GetTextureFormatAsEnum(TextureFormat::Enum format)
 	case TextureFormat::DEPTH24:
 		_format = GL_DEPTH_COMPONENT;
 		break;
+	case TextureFormat::DEPTH32F:
+		_format = GL_DEPTH_COMPONENT;
+		break;
 	case TextureFormat::DEPTH24_STENCIL8:
 		_format = GL_DEPTH_STENCIL;
 		break;
+	case TextureFormat::DEPTH32F_STENCIL8:
+		_format = GL_DEPTH_STENCIL;
+		break;
 	case TextureFormat::R:
+		_format = GL_RED;
+		break;
+	case TextureFormat::R16F:
+		_format = GL_RED;
+		break;
+	case TextureFormat::R32F:
 		_format = GL_RED;
 		break;
 	case TextureFormat::BGR:
@@ -374,11 +431,23 @@ GLenum OpenGLRenderContext::GetInternalTextureFormatAsEnum(TextureFormat::Enum f
 	case TextureFormat::DEPTH24:
 		_internalFormat = GL_DEPTH_COMPONENT24;
 		break;
+	case TextureFormat::DEPTH32F:
+		_internalFormat = GL_DEPTH_COMPONENT32F;
+		break;
 	case TextureFormat::DEPTH24_STENCIL8:
 		_internalFormat = GL_DEPTH24_STENCIL8;
 		break;
+	case TextureFormat::DEPTH32F_STENCIL8:
+		_internalFormat = GL_DEPTH32F_STENCIL8;
+		break;
 	case TextureFormat::R:
 		_internalFormat = GL_R8;
+		break;
+	case TextureFormat::R16F:
+		_internalFormat = GL_R16F;
+		break;
+	case TextureFormat::R32F:
+		_internalFormat = GL_R32F;
 		break;
 	case TextureFormat::BGR:
 		_internalFormat = GL_RGB;

@@ -63,6 +63,11 @@ Texture2D* RenderContext::CreateTexture2D(const Size& size, TextureFormat::Enum 
 	return Kernel::GetRenderContext()->CreateTexture2D(size, format, bytes);
 }
 
+void RenderContext::ResizeTexture2D(Texture2D* texture, const Size& newSize)
+{
+	Kernel::GetRenderContext()->ResizeTexture2D(texture, newSize);
+}
+
 RenderTargetCube* RenderContext::CreateRenderTargetCube(const Size& size, TextureFormat::Enum format)
 {
 	return Kernel::GetRenderContext()->CreateRenderTargetCube(size, format);

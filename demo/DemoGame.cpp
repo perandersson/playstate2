@@ -69,7 +69,7 @@ void DemoGame::LoadContent(IResourceManager* resourceManager)
 	mCamera = new Camera();
 	const Size& windowSize = ActiveWindow::GetSize();
 	const float32 ratio = windowSize.width / (float32)windowSize.height;
-	mCamera->SetPerspective(0.1f, 1000.0f, 45.0f, ratio);
+	mCamera->SetPerspective(1.0f, 200.0f, 45.0f, ratio);
 	mCamera->LookAt(Vector3(0, 50.0f, 50.0f), Vector3(0, 0, 0), Vector3(0, 1.0f, 0));
 
 	scene->SetActiveCamera(mCamera);

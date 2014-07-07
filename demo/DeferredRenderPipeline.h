@@ -18,17 +18,19 @@ public:
 private:
 	Resource<Effect> mDeferredEffect;
 	Resource<Effect> mTexturedEffect;
-	Resource<Effect> mShadowMappingEffect;
+	//Resource<Effect> mSpotLightEffect;
 	Resource<Effect> mDebugEffect;
 	VertexBuffer* mFullscreenQuad;
 
 	Resource<Effect> mPointLightEffect;
-	VertexBuffer* mUniformSphere;
+	//VertexBuffer* mUniformSphere;
+	Sphere* mSphere;
+	//VertexBuffer* mCone;
 	Resource<Texture2D> mWhiteTexture;
 
 
 	RenderTarget2D* mDiffuseRenderTarget;
-	RenderTarget2D* mPositionsRenderTarget;
+	//RenderTarget2D* mMaterialsRenderTarget;
 	RenderTarget2D* mNormalsRenderTarget;
 	RenderTarget2D* mDepthRenderTarget;
 	RenderTarget2D* mLightRenderTarget;

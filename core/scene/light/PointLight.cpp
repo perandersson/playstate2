@@ -6,16 +6,12 @@
 using namespace core;
 
 PointLight::PointLight()
-: LightSource(), mColor(Color::WHITE), mRadius(1.0f), mConstantAttenuation(0.0f), mLinearAttenuation(0.0f), mQuadricAttenuation(0.0f), mPointLightBuffer(nullptr)
+: LightSource(), mColor(Color::WHITE), mRadius(1.0f), mConstantAttenuation(0.0f), mLinearAttenuation(0.0f), mQuadricAttenuation(0.0f)
 {
 }
 
 PointLight::~PointLight()
 {
-	if (mPointLightBuffer != nullptr) {
-		delete mPointLightBuffer;
-		mPointLightBuffer = nullptr;
-	}
 }
 
 void PointLight::SetOffset(const Vector3& offset)
@@ -50,12 +46,7 @@ void PointLight::SetQuadricAttenuation(float32 quadricAttenuation)
 
 void PointLight::OnAddedToSceneGroup()
 {
-	// Create a point-light buffer matching the radius of the object
-	//if (mPointLightBuffer == nullptr)
-	//	mPointLightBuffer = VertexBufferUtils::CreateSphere(70, 0, 0, 0, BufferUsage::DYNAMIC);	
-
-	// TODO: Create a formula for calculating the bounding box based on the radius and light intensity.
-	SetBoundingBox(AABB(Vector3::ZERO, 1.3f * mRadius, 1.3f * mRadius, 1.3f * mRadius));
+	SetBoundingBox(AABB(Vector3::ZERO, mRadius, mRadius, mRadius));
 	LightSource::OnAddedToSceneGroup();
 }
 
@@ -68,5 +59,4 @@ void PointLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet
 	block->constantAttenuation = mConstantAttenuation;
 	block->linearAttenuation = mLinearAttenuation;
 	block->quadricAttenuation = mQuadricAttenuation;
-	block->vertexBuffer = mPointLightBuffer;
 }
