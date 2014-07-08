@@ -65,7 +65,7 @@ void Camera::LookAt(const Vector3& eye, const Vector3& center, const Vector3& up
 
 Matrix4x4 Camera::GetOrtho2D(float32 left, float32 right, float32 bottom, float32 top)
 {
-	http://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
+	// http://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
 
 	const float32 near = -1;
 	const float32 far = 1;
@@ -87,7 +87,7 @@ Matrix4x4 Camera::GetOrtho2D(float32 left, float32 right, float32 bottom, float3
 
 Matrix4x4 Camera::GetPerspective(float32 near, float32 far, float32 fov, float32 ratio)
 {
-	http://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
+	// http://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
 
 	const float32 top = near * tanf(fov * (float32)(M_PI / 360.0));
 	const float32 bottom = -top;
