@@ -119,6 +119,10 @@ namespace core
 			return Vector3(-x, -y, -z);
 		}
 
+		inline float32 operator[](uint32 index) const {
+			return _array[index];
+		}
+
 		//
 		// Parse the supplied string and return a Vector3 instance based on it
 		static Vector3 Parse(const std::string& s);

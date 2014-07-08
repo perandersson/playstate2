@@ -33,6 +33,7 @@
 		void main()
 		{			
 			// The vertex position (add the supplied LightPosition because we are using a uniform sphere as a model)
+			// The rendered model has the size of 1.0. We then resize the model here into it's correct size.
 			vec3 scaledVertex = in_Position.xyz * LightRadius;
 			vec4 Vp = ViewMatrix * vec4(scaledVertex + LightPosition, 1.0);
 			
@@ -40,7 +41,7 @@
 			vs_ViewSpacePosition = Vp.xyz;
 			
 			// View-space light position
-			vs_ViewSpaceLightPosition = vec3(ViewMatrix * vec4(LightPosition, 1.0));
+			vs_ViewSpaceLightPosition = vec3(vec4(LightPosition, 1.0));
 			
 			// Send the texture coordinates to the fragment shader
 			vs_TexCoords = in_texCoord;
@@ -107,14 +108,32 @@
 			
 			\param screenCoords
 		*/
-		vec3 CalculateViewSpacePosition(vec2 screenCoords)
+		vec3 CalculateVSpacePosition(vec2 screenCoords)
 		{
 			// Normalize the view ray
 			vec3 viewRay = normalize(vec3(vs_ViewSpacePosition.xy / vs_ViewSpacePosition.z, 1.0f));
 			
 			// Sample the depth buffer and convert it to linear depth
 			float depth = texture2D(DepthTexture, screenCoords).r;
-			float linearDepth = ProjectionB / (depth - ProjectionA);
+			float linearDepth = ProjectionB / (ProjectionA - depth);
+			
+			// Scale the view ray by the ratio of the linear z value to the projected view ray
+			return viewRay * linearDepth;
+		}
+		
+		/*!
+			\brief Calculates the world-space position based on the current pixels depth value
+			
+			\param screenCoords
+		*/
+		vec3 CalculateWSpacePosition(vec2 screenCoords)
+		{
+			// Normalize the view ray
+			vec3 viewRay = normalize(vec3(vs_ViewSpacePosition.xy / vs_ViewSpacePosition.z, 1.0f));
+			
+			// Sample the depth buffer and convert it to linear depth
+			float depth = texture2D(DepthTexture, screenCoords).r;
+			float linearDepth = ProjectionB / (ProjectionA - depth);
 			
 			// Project the view ray onto the camera's z-axis
 			float viewZDist = dot(CameraForward, viewRay);
@@ -122,7 +141,6 @@
 			// Scale the view ray by the ratio of the linear z value to the projected view ray
 			return vs_ViewSpaceCameraPosition + viewRay * (linearDepth / viewZDist);
 		}
-		
 		void main()
 		{
 			vec4 color = texture2D(LightTexture, vs_TexCoords) * vec4(LightColor, 1.0);
@@ -136,30 +154,24 @@
 			vec3 N = normalize(texture2D(NormalsTexture, screenCoords).xyz * 2.0 - 1.0);
 			
 			// Get view-space position
-			vec3 P = CalculateViewSpacePosition(screenCoords); 
+			vec3 P = CalculateVSpacePosition(screenCoords); 
 			
 			// Light direction
 			vec3 L = vs_ViewSpaceLightPosition - P;
-			float attenuation = clamp(1.0f - length(L) / LightRadius, 0.0, 1.0); 
+						
+			float diffuseModifier = max(dot(N, normalize(L)), 0.0);
+			float radius = LightRadius;
+			float Ldist = length(L);
+			float noZTestFix = step(0.0, radius - Ldist);
 			
-			//vec3 Eye = normalize(vs_ViewSpaceCameraPosition - P);
-			//float intensity = max(dot(N, L), 0.0);
+			float attenuation = 1.0 / ((((Ldist / (1 - ((Ldist / radius) * (Ldist /radius)))) / radius) + 1) * (((Ldist / (1 - ((Ldist / radius) * (Ldist / radius)))) / radius) + 1));
+			vec4 diffuse = color * noZTestFix * diffuseModifier;
 			
-			float Ldist3 = length(L);
-			//float Ldist2 = dot(L, L);
-			//float Ldist = sqrt(Ldist2);
-			L /= Ldist3;
-			
-			//float NdotL = max(dot(N, L), 0.0);
-			//float Latt = ConstantAttenuation;
-			//Latt += LinearAttenuation * Ldist;
-			//Latt += QuadraticAttenuation * Ldist2;
-			//
-			gl_FragColor = color * attenuation;
-			gl_FragColor = vec4(L, 1.0);
-			gl_FragColor = vec4(P, 1.0);
-			//gl_FragColor = vec4(N, 1.0);
-			//gl_FragColor = vec4(attenuation, attenuation, attenuation, 1.0);
+			gl_FragColor = diffuse;
+			//gl_FragColor = vec4(normalize(L), 1.0);
+			//gl_FragColor = vec4(P, 1.0);
+			gl_FragColor = vec4(N, 1.0);
+			//gl_FragColor = vec4(diffuseModifier, diffuseModifier, diffuseModifier, 1.0);
 			//gl_FragColor = vec4(vs_ViewSpaceLightPosition, 1.0);
 		}
 	]]>

@@ -11,7 +11,10 @@
 		uniform mat4 ModelMatrix;
 		uniform mat4 ProjectionMatrix;
 		uniform mat4 ViewMatrix;
-		
+
+		// Screen information
+		uniform float FarClip;
+
 		// Vertex information
 		layout(location = 0) in vec3 position;
 		layout(location = 1) in vec3 normal;
@@ -27,8 +30,8 @@
 			// Calculate the view-space position
 			vec4 viewSpacePosition = ViewMatrix * ModelMatrix * vec4(position, 1.0);
 			
-			// Supply the view-space depth value to the fragment shader
-			vs_Depth = viewSpacePosition.z;
+			// Linearize the depth value so that it's [-near, -far] to the fragment shader
+			vs_Depth = viewSpacePosition.z / -FarClip;
 			
 			// Supply the view-space normal matrix to the fragment shader
 			mat4 normalMatrix = transpose(inverse(ModelMatrix));	
@@ -56,9 +59,6 @@
 		uniform sampler2D DiffuseTexture;
 		uniform vec3 DiffuseColor;
 
-		// Screen information
-		uniform float FarClip;
-
 		// Data from vertex shader
 		in vec3 vs_WorldSpaceNormals;
 		in vec2 vs_TexCoords;
@@ -68,7 +68,7 @@
 		{
 			gl_FragData[0] = vec4(texture2D(DiffuseTexture, vs_TexCoords).rgb, 0);
 			gl_FragData[1] = vec4(normalize(vs_WorldSpaceNormals) * 0.5 + 0.5, 0);
-			gl_FragDepth = -vs_Depth / FarClip;
+			gl_FragDepth = vs_Depth;
 		}
 	]]>
 	</FragmentShader>

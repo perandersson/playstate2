@@ -22,6 +22,9 @@
     <Filter Include="Source Files\types">
       <UniqueIdentifier>{3fc4ae4e-62e5-4a4c-ba8e-c382715e98ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{af996877-fff2-4bf3-bb47-b43a0fd3149e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core_tests\main.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core_tests\test\TestException.cpp">
       <Filter>Source Files\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core_tests\camera\Camera_test.cpp">
+      <Filter>Source Files\camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

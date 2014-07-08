@@ -21,9 +21,9 @@ void Renderable::UpdateModelMatrix()
 
 	mModelMatrix = Matrix4x4::Translation(position);
 	if (rotation.IsNotZero())
-		mModelMatrix = Matrix4x4::Rotation(rotation) * mModelMatrix;
+		mModelMatrix *= Matrix4x4::Rotation(rotation);
 	if (scale.IsNotZero())
-		mModelMatrix = Matrix4x4::Scale(scale) * mModelMatrix;
+		mModelMatrix *= Matrix4x4::Scale(scale);
 }
 
 void Renderable::OnPositionChanged()

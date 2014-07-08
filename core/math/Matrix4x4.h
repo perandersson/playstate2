@@ -3,57 +3,60 @@
 
 namespace core
 {
+	/*!
+		\brief A column-major 4x4 Matrix implementation
+	*/
 	struct Matrix4x4
 	{
 		union
 		{
 			struct {
-				float32 _11, _12, _13, _14;
-				float32 _21, _22, _23, _24;
-				float32 _31, _32, _33, _34;
-				float32 _41, _42, _43, _44;
+				float32 
+				_11, _21, _31, _41,
+				_12, _22, _32, _42,
+				_13, _23, _33, _43,
+				_14, _24, _34, _44;
 			};
 			struct {
-				float32 r1[4];
-				float32 r2[4];
-				float32 r3[4];
-				float32 r4[4];
+				/* Array block containing the the actual values. The first part is the column index and the second is the row index */
+				float32 m[4][4];
 			};
+
+			/* Array block containing the actual values. */
 			float32 _array[16];
 		};
 
 		Matrix4x4();
+		Matrix4x4(const float32* ptr);
 		Matrix4x4(float32 m11, float32 m12, float32 m13, float32 m14,
 				  float32 m21, float32 m22, float32 m23, float32 m24,
 				  float32 m31, float32 m32, float32 m33, float32 m34,
 				  float32 m41, float32 m42, float32 m43, float32 m44);
 		Matrix4x4(const Matrix4x4& mat);
 
-		//void Zero();
 		void Translate(const Vector3& vec);
-		float32 Determinant();
-		void Transpose();
-		void Invert();
-		void AxisAndAngleToMatrix(Vector3& vector, float32 angleRadians);
-		
-		Matrix4x4 operator + (const Matrix4x4& rhs) const;
-		Matrix4x4 operator - (const Matrix4x4& rhs) const;
+
 		Matrix4x4 operator * (const Matrix4x4& rhs) const;
+
+		/*!
+			\brief Mutliplies this matrix with the supplied vector. 
+
+			It is assumed that a vector's W component is 1.0
+
+			\param rhs
+					The value on the right-hand side of this object
+			\return A 3D vector
+		*/
 		Vector3 operator * (const Vector3& rhs) const;
 
-		Matrix4x4& operator += (const Matrix4x4& rhs);
-		Matrix4x4& operator -= (const Matrix4x4& rhs);
 		Matrix4x4& operator *= (const Matrix4x4& rhs);
-		Matrix4x4& operator *= (const float32 rhs);
-		Matrix4x4& operator /= (const float32 rhs);
-
-		Matrix4x4 operator * (const float32 rhs) const;
-		Matrix4x4 operator / (const float32 rhs) const;
 
 		Matrix4x4& operator = (const Matrix4x4& rhs);
 
 		bool operator == (const Matrix4x4& rhs) const;
 		bool operator != (const Matrix4x4& rhs) const;
+
+		float32 operator[](uint32 index) const;
 
 		static const Matrix4x4 IDENTITY;
 		static const Matrix4x4 ZERO;

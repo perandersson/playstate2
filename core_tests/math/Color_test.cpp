@@ -1,4 +1,4 @@
-#include <core/math/color.h>
+#include <core/math/Color.h>
 #include "../test/Test.h"
 using namespace core;
 

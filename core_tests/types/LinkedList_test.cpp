@@ -31,7 +31,7 @@ TEST_SUITE(LinkedList)
 		{
 			int count = 0;
 			DummyClass* item = mDummies.First();
-			while(item != NULL) {
+			while(item != nullptr) {
 				count++;
 				item = item->Link.Tail;
 			}
