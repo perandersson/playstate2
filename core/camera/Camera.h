@@ -58,14 +58,14 @@ namespace core
 			return mCenter;
 		}
 
-		inline float32 GetNearPlane() const {
+		inline float32 GetNearClipDistance() const {
 			return mNearPlane;
 		}
 
 		/*!
 			\brief
 		*/
-		inline float32 GetFarPlane() const {
+		inline float32 GetFarClipDistance() const {
 			return mFarPlane;
 		}
 

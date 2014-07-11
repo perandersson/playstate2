@@ -53,14 +53,14 @@
 		void main()
 		{
 			vec4 image = texture2D(DiffuseTexture, uvCoords);
-			float depth = texture2D(DepthTexture, uvCoords).r;
+			float depth = texture2D(NormalsTexture, uvCoords).a;
 			
 			vec3 N = normalize(texture2D(NormalsTexture, uvCoords).xyz  * 2.0 - 1.0);
 			
 			vec4 light = texture2D(LightTexture, uvCoords);
-			//gl_FragColor = (image + vec4(AmbientColor, 1.0)) * (light + vec4(AmbientColor, 1.0));
+			gl_FragColor = (image + vec4(AmbientColor, 1.0)) * (light + vec4(AmbientColor, 1.0));
 			//gl_FragColor = vec4(depth, depth, depth, 1.0);
-			gl_FragColor = vec4(light.rgb, 1.0);
+			//gl_FragColor = vec4(light.rgb, 1.0);
 		}
 	]]>
 	</FragmentShader>

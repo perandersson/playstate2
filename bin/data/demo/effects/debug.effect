@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Effect>
-	<DepthTest>false</DepthTest>
-	<CullFace>DISABLED</CullFace>
+	<DepthTest>true</DepthTest>
+	<FrontFace>CCW</FrontFace>
+	<CullFace>FRONT</CullFace>
 	<VertexShader>
 	<![CDATA[
 		#version 330
 
 		uniform mat4 ProjectionMatrix;
 		uniform mat4 ViewMatrix;
+		uniform mat4 ModelMatrix;
 		uniform vec3 Color;
-		uniform vec3 ObjectPosition;
 		
 		layout(location = 0) in vec3 position;
 
@@ -17,7 +18,7 @@
 
 		void main()
 		{
-			gl_Position = ProjectionMatrix * ViewMatrix * vec4(position.xyz + ObjectPosition.xyz, 1.0);
+			gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(position.xyz, 1.0);
 			vs_color = Color;
 		}
 	]]>

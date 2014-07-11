@@ -12,9 +12,6 @@
 		uniform mat4 ProjectionMatrix;
 		uniform mat4 ViewMatrix;
 
-		// Screen information
-		uniform float FarClip;
-
 		// Vertex information
 		layout(location = 0) in vec3 position;
 		layout(location = 1) in vec3 normal;
@@ -23,25 +20,22 @@
 		// Data to fragment shader
 		out vec3 vs_WorldSpaceNormals;
 		out vec2 vs_TexCoords;
-		out float vs_Depth;
+		out vec4 vs_ViewSpacePosition;
 
 		void main()
 		{
 			// Calculate the view-space position
-			vec4 viewSpacePosition = ViewMatrix * ModelMatrix * vec4(position, 1.0);
-			
-			// Linearize the depth value so that it's [-near, -far] to the fragment shader
-			vs_Depth = viewSpacePosition.z / -FarClip;
+			vs_ViewSpacePosition = ViewMatrix * ModelMatrix * vec4(position, 1.0);
 			
 			// Supply the view-space normal matrix to the fragment shader
-			mat4 normalMatrix = transpose(inverse(ModelMatrix));	
+			mat4 normalMatrix = transpose(inverse(ModelMatrix));
 			vs_WorldSpaceNormals = normalize(vec3(normalMatrix * vec4(normal, 1.0)));
 			
 			// Send the texture coordinates to the fragment shader
 			vs_TexCoords = texcoord;
 			
 			// Render the vertices at the projected position
-			gl_Position = ProjectionMatrix * viewSpacePosition;
+			gl_Position = ProjectionMatrix * vs_ViewSpacePosition;
 		}
 	]]>
 	</VertexShader>
@@ -55,6 +49,9 @@
 	<![CDATA[
 		#version 330
 
+		// Screen information
+		uniform float FarClipDistance;
+
 		// Mesh materials
 		uniform sampler2D DiffuseTexture;
 		uniform vec3 DiffuseColor;
@@ -62,13 +59,15 @@
 		// Data from vertex shader
 		in vec3 vs_WorldSpaceNormals;
 		in vec2 vs_TexCoords;
-		in float vs_Depth;
+		in vec4 vs_ViewSpacePosition;
 
 		void main()
 		{
+			// Color
 			gl_FragData[0] = vec4(texture2D(DiffuseTexture, vs_TexCoords).rgb, 0);
-			gl_FragData[1] = vec4(normalize(vs_WorldSpaceNormals) * 0.5 + 0.5, 0);
-			gl_FragDepth = vs_Depth;
+			
+			// Put the normal and the linearized depth value
+			gl_FragData[1] = vec4(normalize(vs_WorldSpaceNormals) * 0.5 + 0.5, -vs_ViewSpacePosition.z / FarClipDistance);
 		}
 	]]>
 	</FragmentShader>

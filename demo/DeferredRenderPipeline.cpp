@@ -84,7 +84,7 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 			// Set camera properties
 			state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
 			state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-			state->FindUniform("FarClip")->SetFloat(camera->GetFarPlane());
+			state->FindUniform("FarClipDistance")->SetFloat(camera->GetFarClipDistance());
 
 			auto modelMatrix = state->FindUniform("ModelMatrix");
 			auto diffuseTexture = state->FindUniform("DiffuseTexture");
@@ -124,6 +124,7 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 	FindQuery query = { camera, RenderableFilter::DEFAULT };
 	RenderState* state = RenderContext::Activate(mPointLightEffect);
 	state->SetRenderTarget(mLightRenderTarget, 0);
+	state->SetDepthRenderTarget(mDepthRenderTarget);
 	state->SetDepthMask(false);
 	state->Clear(ClearType::COLOR);
 
@@ -133,14 +134,14 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 
 		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
 		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+		auto modelMatrix = state->FindUniform("ModelMatrix");
 
 		// Screen information
-		state->FindUniform("ProjectionA")->SetFloat(camera->GetFarPlane() / (camera->GetFarPlane() - camera->GetNearPlane()));
-		state->FindUniform("ProjectionB")->SetFloat((-camera->GetFarPlane() * camera->GetNearPlane()) / (camera->GetFarPlane() - camera->GetNearPlane()));
 		const Size& size = ActiveWindow::GetSize();
 		state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
 		state->FindUniform("CameraForward")->SetVector3(camera->GetLookingAtDirection());
 		state->FindUniform("CameraPosition")->SetVector3(camera->GetPosition());
+		state->FindUniform("FarClipDistance")->SetFloat(camera->GetFarClipDistance());
 
 		state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
 
@@ -157,6 +158,9 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 			// Ignore spotlights
 			if (block->direction.IsNotZero())
 				continue;
+
+			Matrix4x4 m = Matrix4x4::Translation(block->position) * Matrix4x4::Scale(block->radius, block->radius, block->radius);
+			modelMatrix->SetMatrix(m);
 
 			lightColor->SetColorRGB(block->color);
 			lightPosition->SetVector3(block->position);
@@ -223,11 +227,14 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* camera)
 {
 	RenderState* state = RenderContext::Activate(mDebugEffect);
+	//state->SetDepthRenderTarget(mDepthRenderTarget);
+	//state->SetDepthMask(false);
 
 	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
 	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+	auto modelMatrix = state->FindUniform("ModelMatrix");
 	auto color = state->FindUniform("Color");
-	auto objectPosition = state->FindUniform("ObjectPosition");
+	//auto objectPosition = state->FindUniform("ObjectPosition");
 
 	LightSourceResultSet::Iterator it = mLightSourceResultSet.GetIterator();
 	LightSourceResultSet::Type block;
@@ -237,7 +244,7 @@ void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* cam
 			continue;
 
 		color->SetColorRGB(block->color);
-		objectPosition->SetVector3(block->position);
+		modelMatrix->SetMatrix(Matrix4x4::Translation(block->position));
 		state->Render(mSphere->GetVertexBuffer(), mSphere->GetIndexBuffer());
 	}
 }

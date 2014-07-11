@@ -44,23 +44,23 @@ void Camera::LookAt(const Vector3& eye, const Vector3& center, const Vector3& up
 {
 	mPosition = eye;
 	mCenter = center;
-	mUp = up;
+	mUp = up.GetNormalized();
 
 	// http://www.opengl.org/wiki/GluLookAt_code
 
-	const Vector3 forward = (center - eye).GetNormalized();
+	const Vector3 forward = (mCenter - mPosition).GetNormalized();
 	mLookingAtDirection = forward;
 
-	const Vector3 side = (forward.CrossProduct(up)).GetNormalized();
-	const Vector3 newUp = side.CrossProduct(forward).GetNormalized();
+	const Vector3 side = (forward.CrossProduct(mUp)).GetNormalized();
+	const Vector3 newUp = side.CrossProduct(forward);
 
 	mViewMatrix = Matrix4x4(
 		side.x, side.y, side.z, 0.0f,
 		newUp.x, newUp.y, newUp.z, 0.0f,
 		-forward.x, -forward.y, -forward.z, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f);
-	mViewMatrix.Translate(eye * -1.0f);
-	mViewFrustum.LookAt(eye, center, up);
+		0.f, 0.f, 0.f, 1.0f);
+	mViewMatrix.Translate(mPosition * -1.0f);
+	mViewFrustum.LookAt(mPosition, mCenter, mUp);
 }
 
 Matrix4x4 Camera::GetOrtho2D(float32 left, float32 right, float32 bottom, float32 top)
