@@ -1,3 +1,4 @@
+#include "../../Memory.h"
 #include "LightSourceBlockResultSetIterator.h"
 #include "LightSourceResultSet.h"
 using namespace core;

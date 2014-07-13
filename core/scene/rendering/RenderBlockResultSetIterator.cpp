@@ -1,3 +1,4 @@
+#include "../../Memory.h"
 #include "RenderBlockResultSetIterator.h"
 #include "RenderBlockResultSet.h"
 using namespace core;

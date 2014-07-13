@@ -13,7 +13,7 @@ MatrixUniform::~MatrixUniform()
 
 void MatrixUniform::Apply()
 {
-	glUniformMatrix4fv(GetComponentID(), 1, false, mValue._array);
+	glUniformMatrix4fv(mComponentID, 1, GL_FALSE, mValue._array);
 }
 
 void MatrixUniform::SetMatrix(const Matrix4x4& matrix)

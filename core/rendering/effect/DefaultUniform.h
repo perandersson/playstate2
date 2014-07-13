@@ -12,19 +12,17 @@ namespace core
 		DefaultUniform(const Effect* effect, RenderState* state, GLint componentID);
 		virtual ~DefaultUniform();
 
-		//
-		// Apply this uniform
+		/*!
+			\brief Applies this uniform for the currently active effect
+		*/
 		virtual void Apply() = 0;
 
-		//
-		// @return TRUE if the owner effect of this uniform is active; FALSE otherwise
-		bool IsEffectActive() const;
+		/*!
+			\brief Checks if the effect for this uniform is active
 
-		//
-		// 
-		inline GLint GetComponentID() const {
-			return mComponentID;
-		}
+			\return TRUE if the effect is active; FALSE otherwise
+		*/
+		bool IsEffectActive() const;
 
 	public:
 		virtual void SetFloat(float32 a);

@@ -6,18 +6,6 @@
 
 namespace core
 {
-	class RenderableFilter
-	{
-	public:
-		enum Enum {
-			GEOMETRY = BIT(1),
-			TEXTURES = BIT(2),
-			DEBUG_INFO = BIT(3),
-		};
-
-		static const uint32 DEFAULT = GEOMETRY | TEXTURES;
-	};
-
 	class Renderable : public SpatialSceneNode
 	{
 	public:

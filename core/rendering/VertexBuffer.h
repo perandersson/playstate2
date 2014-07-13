@@ -30,6 +30,10 @@ namespace core
 			return mNumVertices;
 		}
 
+		inline BufferUsage::Enum GetBufferUsage() const {
+			return mBufferUsage;
+		}
+
 		void Render() const;
 		void Render(uint32 startIndex) const;
 		void Render(uint32 startIndex, uint32 count) const;

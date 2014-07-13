@@ -94,7 +94,7 @@ SamplerObject* EffectState::GenSamplerObject(std::shared_ptr<UniformProperty> pr
 	if (error != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could create a new SamplerObject from effect file. Reason: %d", error);
 
-	SamplerObject* samplerObject = new SamplerObject(samplerID, property->minFilter, property->magFilter, property->wraps, property->wrapt);
+	SamplerObject* samplerObject = new SamplerObject(samplerID, property->minFilter, property->magFilter, property->wraps, property->wrapt, property->wrapr);
 
 	glSamplerParameteri(samplerID, GL_TEXTURE_MIN_FILTER, MinFilter::Parse(property->minFilter));
 	glSamplerParameteri(samplerID, GL_TEXTURE_MAG_FILTER, MagFilter::Parse(property->magFilter));

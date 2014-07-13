@@ -19,7 +19,7 @@ end
 
 -- Add lighting using random positions
 math.randomseed( os.time() )
-for i=-10, 9 do
+--[[for i=-10, 9 do
 	for j=-10, 9 do
 		local color = {math.random(0, 100) / 100.0, math.random(0, 100) / 100.0, math.random(0, 100) / 100.0}
 		local radius = 10.0
@@ -39,6 +39,7 @@ for i=-10, 9 do
 		level1:AddSceneNode(pointLight)
 	end
 end
+]]--
 
 -- Add ground
 local ground1 = Resource.Load("/demo/models/ground1/ground1.obj")
@@ -53,10 +54,10 @@ end
 
 -- Add a spotlight
 local spotlightNode = SpotLight()
-spotlightNode:SetPosition({0.0, 50.0, 0.0})
+spotlightNode:SetPosition({0.0, 20.0, 0.0})
 spotlightNode:SetColor({1.0, 0.0, 0.0})
-spotlightNode:SetDirection({0.0, -1.0, 0.0})
-spotlightNode:SetCutoff(45.0)
+spotlightNode:SetDirection({10.0, 0.0, 10.0})
+spotlightNode:SetCutoff(20.0)
 level1:AddSceneNode(spotlightNode)
 
 return level1

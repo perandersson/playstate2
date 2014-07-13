@@ -25,7 +25,7 @@ void Sampler2DUniform::Apply()
 
 	mRenderState->BindTexture(mTexture, mTextureIndex);
 	mRenderState->BindSampler(mSamplerObject, mTextureIndex);
-	glUniform1i(GetComponentID(), mTextureIndex);
+	glUniform1i(mComponentID, mTextureIndex);
 }
 
 void Sampler2DUniform::SetTexture(const Texture2D* texture)

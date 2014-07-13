@@ -770,6 +770,12 @@
     <ClInclude Include="..\..\core\rendering\shape\Sphere.h">
       <Filter>Source Files\rendering\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\shape\Cone.h">
+      <Filter>Source Files\rendering\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\FindQueryFilter.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1235,6 +1241,9 @@
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\shape\Sphere.cpp">
+      <Filter>Source Files\rendering\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\shape\Cone.cpp">
       <Filter>Source Files\rendering\shape</Filter>
     </ClCompile>
   </ItemGroup>

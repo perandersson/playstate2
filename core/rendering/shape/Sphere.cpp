@@ -1,3 +1,4 @@
+#include "../../Memory.h"
 #include "Sphere.h"
 #include "../RenderContext.h"
 #include "../VertexBufferUtils.h"
@@ -11,7 +12,15 @@ Sphere::Sphere(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, float32 rad
 
 Sphere::~Sphere()
 {
+	if (mIndexBuffer != nullptr) {
+		delete mIndexBuffer;
+		mIndexBuffer = nullptr;
+	}
 
+	if (mVertexBuffer != nullptr) {
+		delete mVertexBuffer;
+		mVertexBuffer = nullptr;
+	}
 }
 
 Sphere* Sphere::Create(float32 radius, uint32 resolution, BufferUsage::Enum usage)

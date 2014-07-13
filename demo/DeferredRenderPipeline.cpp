@@ -20,17 +20,11 @@ mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr), mCubeShadowMap(nullptr
 
 	mDeferredEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/geometry.effect");
 	mPointLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/pointlight.effect");
-	//mSpotLightEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/spotlight.effect");
 	mTexturedEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/result.effect");
 	mDebugEffect = ResourceManager::GetResource<Effect>("/demo/effects/debug.effect");
 	mWhiteTexture = ResourceManager::GetResource<Texture2D>("/engine/textures/white.png");
 
-	//mUniformSphere = VertexBufferUtils::CreateSphere(1, 0, 0, 0, BufferUsage::STATIC);
 	mSphere = Sphere::Create(1, 10, BufferUsage::STATIC);
-	//const Vector3 position(0.0f, 10.0f, 0.0f);
-	//const Vector3 direction(0.0f, -1.0f, 0.0f);
-	//const float cutoff = 45.0f;
-	//mCone = VertexBufferUtils::CreateSpotLight(position, direction, cutoff);
 	mFullscreenQuad = VertexBufferUtils::CreateFullscreenQuad();
 }
 
@@ -40,11 +34,6 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 		delete mSphere;
 		mSphere = nullptr;
 	}
-
-	//if (mCone != nullptr) {
-	//	delete mCone;
-	//	mCone = nullptr;
-	//}
 
 	if (mFullscreenQuad != nullptr) {
 		delete mFullscreenQuad;
@@ -69,7 +58,7 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 
 void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 {
-	FindQuery query = { camera, RenderableFilter::DEFAULT };
+	FindQuery query = { camera, FindQueryFilter::DEFAULT };
 	// Submit the rendering of the scenes vertex components to another thread.
 	// This is not how it should be in the end. Purpose for this is to verify that
 	// threaded rendering works as intended
@@ -121,30 +110,30 @@ void DeferredRenderPipeline::OnWindowResized(const Size& newSize)
 
 void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* camera)
 {
-	FindQuery query = { camera, RenderableFilter::DEFAULT };
 	RenderState* state = RenderContext::Activate(mPointLightEffect);
 	state->SetRenderTarget(mLightRenderTarget, 0);
 	state->SetDepthRenderTarget(mDepthRenderTarget);
 	state->SetDepthMask(false);
 	state->Clear(ClearType::COLOR);
 
-	if (scene.Find(query, &mLightSourceResultSet)) {
-		state->FindUniform("DepthTexture")->SetTexture(mDepthRenderTarget);
-		state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
+	state->FindUniform("DepthTexture")->SetTexture(mDepthRenderTarget);
+	state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
 
-		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-		auto modelMatrix = state->FindUniform("ModelMatrix");
+	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+	auto modelMatrix = state->FindUniform("ModelMatrix");
 
-		// Screen information
-		const Size& size = ActiveWindow::GetSize();
-		state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
-		state->FindUniform("CameraForward")->SetVector3(camera->GetLookingAtDirection());
-		state->FindUniform("CameraPosition")->SetVector3(camera->GetPosition());
-		state->FindUniform("FarClipDistance")->SetFloat(camera->GetFarClipDistance());
+	// Screen information
+	const Size& size = ActiveWindow::GetSize();
+	state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
+	state->FindUniform("FarClipDistance")->SetFloat(camera->GetFarClipDistance());
 
-		state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
+	// Default light texture
+	state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
 
+	// Draw spotlights
+	FindQuery query = { camera, FindQueryFilter::DEFAULT | FindQueryFilter::SPOT_LIGHTS };
+	if (scene.Find(query, &mSpotLightsResultSet)) {
 		IUniform* lightColor = state->FindUniform("LightColor");
 		IUniform* lightPosition = state->FindUniform("LightPosition");
 		IUniform* constantAttenuation = state->FindUniform("ConstantAttenuation");
@@ -152,13 +141,39 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 		IUniform* quadraticAttenuation = state->FindUniform("QuadraticAttenuation");
 		IUniform* lightRadius = state->FindUniform("LightRadius");
 
-		LightSourceResultSet::Iterator it = mLightSourceResultSet.GetIterator();
+		LightSourceResultSet::Iterator it = mSpotLightsResultSet.GetIterator();
 		LightSourceResultSet::Type block;
 		while (block = it.Next()) {
-			// Ignore spotlights
-			if (block->direction.IsNotZero())
-				continue;
+			modelMatrix->SetMatrix(Matrix4x4::Translation(block->position));
 
+			lightColor->SetColorRGB(block->color);
+			lightPosition->SetVector3(block->position);
+
+			//constantAttenuation->SetFloat(block->constantAttenuation);
+			//linearAttenuation->SetFloat(block->linearAttenuation);
+			//quadraticAttenuation->SetFloat(block->quadricAttenuation);
+
+			lightRadius->SetFloat(block->radius);
+
+			state->Render(block->vertexBuffer, block->indexBuffer);
+		}
+	}
+
+	// Post shadow render requests to multiple threads here
+
+	// Draw the pointlights 
+	query = { camera, FindQueryFilter::DEFAULT | FindQueryFilter::POINT_LIGHTS };
+	if (scene.Find(query, &mPointLightsResultSet)) {
+		IUniform* lightColor = state->FindUniform("LightColor");
+		IUniform* lightPosition = state->FindUniform("LightPosition");
+		IUniform* constantAttenuation = state->FindUniform("ConstantAttenuation");
+		IUniform* linearAttenuation = state->FindUniform("LinearAttenuation");
+		IUniform* quadraticAttenuation = state->FindUniform("QuadraticAttenuation");
+		IUniform* lightRadius = state->FindUniform("LightRadius");
+
+		LightSourceResultSet::Iterator it = mPointLightsResultSet.GetIterator();
+		LightSourceResultSet::Type block;
+		while (block = it.Next()) {
 			Matrix4x4 m = Matrix4x4::Translation(block->position) * Matrix4x4::Scale(block->radius, block->radius, block->radius);
 			modelMatrix->SetMatrix(m);
 
@@ -171,42 +186,7 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 
 			state->Render(mSphere->GetVertexBuffer(), mSphere->GetIndexBuffer());
 		}
-
-		//state = RenderContext::Activate(mSpotLightEffect);
-		//state->SetRenderTarget(mLightRenderTarget, 0);
-		//state->SetDepthRenderTarget(mDepthRenderTarget);
-
-		//state->FindUniform("PositionsTexture")->SetTexture(mPositionsRenderTarget);
-		//state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
-		//state->FindUniform("DepthTexture")->SetTexture(mDepthRenderTarget);
-
-		//state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-		//state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-		//state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
-
-		//state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
-
-		//lightRadius = state->FindUniform("LightRadius");
-		//auto lightCutoff = state->FindUniform("LightCutoff");
-		//lightColor = state->FindUniform("LightColor");
-		//lightPosition = state->FindUniform("LightPosition");
-		//auto lightDirection = state->FindUniform("LightDirection");
-
-		//it = mLightSourceResultSet.GetIterator();
-		//while (block = it.Next()) {
-		//	// Ignore point-lights
-		//	if (block->direction.IsZero())
-		//		continue;
-
-		//	lightRadius->SetFloat(block->radius);
-		//	lightCutoff->SetFloat(block->radius);
-		//	lightColor->SetColorRGB(block->color);
-		//	lightPosition->SetVector3(block->position);
-		//	lightDirection->SetVector3(block->direction);
-
-		//	state->Render(mCone);
-		//}
-	}	
+	}
 }
 
 void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const Camera* camera)
@@ -236,15 +216,23 @@ void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* cam
 	auto color = state->FindUniform("Color");
 	//auto objectPosition = state->FindUniform("ObjectPosition");
 
-	LightSourceResultSet::Iterator it = mLightSourceResultSet.GetIterator();
+	LightSourceResultSet::Iterator it = mPointLightsResultSet.GetIterator();
 	LightSourceResultSet::Type block;
 	while (block = it.Next()) {
-		// Ignore spotlights
-		if (block->direction.IsNotZero())
-			continue;
-
 		color->SetColorRGB(block->color);
 		modelMatrix->SetMatrix(Matrix4x4::Translation(block->position));
 		state->Render(mSphere->GetVertexBuffer(), mSphere->GetIndexBuffer());
 	}
+
+	it = mSpotLightsResultSet.GetIterator();
+	while (block = it.Next()) {
+		color->SetColorRGB(block->color);
+
+		Matrix4x4 m = Matrix4x4::Translation(block->position) * Matrix4x4::Scale(0.1f, 0.1f, 0.1f);
+		modelMatrix->SetMatrix(m);
+		state->Render(block->vertexBuffer, block->indexBuffer);
+	}
+
+
+
 }

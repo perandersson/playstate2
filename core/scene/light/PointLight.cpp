@@ -52,11 +52,13 @@ void PointLight::OnAddedToSceneGroup()
 
 void PointLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const
 {
-	auto block = _out_resultSet->Create();
-	block->position = GetAbsolutePosition() + mOffset;
-	block->color = mColor;
-	block->radius = mRadius;
-	block->constantAttenuation = mConstantAttenuation;
-	block->linearAttenuation = mLinearAttenuation;
-	block->quadricAttenuation = mQuadricAttenuation;
+	if (BIT_ISSET(query.filter, FindQueryFilter::POINT_LIGHTS)) {
+		auto block = _out_resultSet->Create();
+		block->position = GetAbsolutePosition() + mOffset;
+		block->color = mColor;
+		block->radius = mRadius;
+		block->constantAttenuation = mConstantAttenuation;
+		block->linearAttenuation = mLinearAttenuation;
+		block->quadricAttenuation = mQuadricAttenuation;
+	}
 }

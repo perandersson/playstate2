@@ -31,7 +31,7 @@ void IntUniform::Apply()
 		mValuesSet[0] = mValues[0];
 		mValuesSet[1] = mValues[1];
 		mValuesSet[2] = mValues[2];
-		glUniform3iv(GetComponentID(), 1, mValues);
+		glUniform3iv(mComponentID, 1, mValues);
 		break;
 	case 2:
 		if(mValuesSet[0] == mValues[0] &&
@@ -39,7 +39,7 @@ void IntUniform::Apply()
 			return;
 		mValuesSet[0] = mValues[0];
 		mValuesSet[1] = mValues[1];
-		glUniform3iv(GetComponentID(), 1, mValues);
+		glUniform3iv(mComponentID, 1, mValues);
 		break;
 	case 4:
 		if(mValuesSet[0] == mValues[0] &&
@@ -51,13 +51,13 @@ void IntUniform::Apply()
 		mValuesSet[1] = mValues[1];
 		mValuesSet[2] = mValues[2];
 		mValuesSet[3] = mValues[3];
-		glUniform3iv(GetComponentID(), 1, mValues);
+		glUniform3iv(mComponentID, 1, mValues);
 		break;
 	case 1:
 		if(mValuesSet[0] == mValues[0])
 			return;
 		mValuesSet[0] = mValues[0];
-		glUniform3iv(GetComponentID(), 1, mValues);
+		glUniform3iv(mComponentID, 1, mValues);
 		break;
 	default:
 		return;

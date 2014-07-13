@@ -7,11 +7,16 @@
 
 namespace core
 {
+	/*!
+		\brief Class representing a texture sampler state
+
+		A sampler state is responsible for calculating the actual pixel color for a texture at a give [S,T,R] coordinates
+	*/
 	class SamplerObject
 	{
 	public:
 		SamplerObject(GLuint samplerID, MinFilter::Enum minFilter, MagFilter::Enum magFilter,
-			TextureWrap::Enum wraps, TextureWrap::Enum wrapt);
+			TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr);
 		~SamplerObject();
 
 		inline uint32 GetUID() const {
@@ -22,8 +27,6 @@ namespace core
 			return mSamplerID;
 		}
 
-		void Bind(uint32 textureIndex);
-
 	private:
 		uint32 mUID;
 		GLuint mSamplerID;
@@ -32,5 +35,6 @@ namespace core
 		MagFilter::Enum mMagFilter;
 		TextureWrap::Enum mWrapS;
 		TextureWrap::Enum mWrapT;
+		TextureWrap::Enum mWrapR;
 	};
 }

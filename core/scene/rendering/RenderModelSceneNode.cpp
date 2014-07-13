@@ -27,11 +27,11 @@ void RenderModelSceneNode::PreRender(const FindQuery& state, RenderBlockResultSe
 		uint32 id = mesh.vertexBuffer->GetUID();
 		RenderBlock* block = resultSet->Create(id);
 		block->modelMatrix = GetModelMatrix();
-		if (BIT_ISSET(state.filter, RenderableFilter::GEOMETRY)) {
+		if (BIT_ISSET(state.filter, FindQueryFilter::GEOMETRY)) {
 			block->vertexBuffer = mesh.vertexBuffer;
 			block->indexBuffer = mesh.indexBuffer;
 		}
-		if (BIT_ISSET(state.filter, RenderableFilter::TEXTURES)) {
+		if (BIT_ISSET(state.filter, FindQueryFilter::TEXTURES)) {
 			block->diffuseTexture = mesh.diffuseTexture.Get();
 		}
 		block->diffuseColor = mesh.diffuseColor;
@@ -39,7 +39,7 @@ void RenderModelSceneNode::PreRender(const FindQuery& state, RenderBlockResultSe
 		block->count = mesh.vertexBuffer->GetNumVertices();
 	}
 
-	if (BIT_ISSET(state.filter, RenderableFilter::DEBUG_INFO)) {
+	if (BIT_ISSET(state.filter, FindQueryFilter::DEBUG_INFO)) {
 		/*
 		auto geometryBuilder = resultSet->GetGeometryBuilder();
 		geometryBuider->AddBox(aabb);

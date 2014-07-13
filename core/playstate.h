@@ -16,6 +16,7 @@
 #include "rendering/effect/EffectState.h"
 
 #include "rendering/shape/Sphere.h"
+#include "rendering/shape/Cone.h"
 
 #include "logging/Logger.h"
 

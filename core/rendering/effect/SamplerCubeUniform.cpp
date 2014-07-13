@@ -25,7 +25,7 @@ void SamplerCubeUniform::Apply()
 
 	mRenderState->BindTexture(mTexture, mTextureIndex);
 	mRenderState->BindSampler(mSamplerObject, mTextureIndex);
-	glUniform1i(GetComponentID(), mTextureIndex);
+	glUniform1i(mComponentID, mTextureIndex);
 }
 
 void SamplerCubeUniform::SetTexture(const TextureCube* texture)

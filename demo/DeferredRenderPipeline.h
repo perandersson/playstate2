@@ -18,14 +18,11 @@ public:
 private:
 	Resource<Effect> mDeferredEffect;
 	Resource<Effect> mTexturedEffect;
-	//Resource<Effect> mSpotLightEffect;
 	Resource<Effect> mDebugEffect;
 	VertexBuffer* mFullscreenQuad;
 
 	Resource<Effect> mPointLightEffect;
-	//VertexBuffer* mUniformSphere;
 	Sphere* mSphere;
-	//VertexBuffer* mCone;
 	Resource<Texture2D> mWhiteTexture;
 
 
@@ -38,5 +35,6 @@ private:
 	RenderTargetCube* mCubeShadowMap;
 
 	RenderBlockResultSet mRenderBlockResultSet;
-	LightSourceResultSet mLightSourceResultSet;
+	LightSourceResultSet mPointLightsResultSet;
+	LightSourceResultSet mSpotLightsResultSet;
 };

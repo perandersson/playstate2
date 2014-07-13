@@ -14,9 +14,6 @@
 		uniform mat4 ModelMatrix;
 		uniform mat4 ViewMatrix;
 
-		// Screen information
-		uniform vec3 CameraPosition;
-		
 		// Light properties
 		uniform float LightRadius;
 		uniform vec3 LightPosition;
@@ -29,7 +26,6 @@
 		out vec2 vs_TexCoords;
 		out vec3 vs_ViewSpacePosition;
 		out vec3 vs_ViewSpaceLightPosition;
-		out vec3 vs_ViewSpaceCameraPosition;
 
 		void main()
 		{			
@@ -48,9 +44,6 @@
 			
 			// Render the vertices at the projected position
 			gl_Position = ProjectionMatrix * Vp;
-			
-			// View-space camera position
-			vs_ViewSpaceCameraPosition = vec3(ViewMatrix * vec4(CameraPosition, 1.0));
 		}
 	]]>
 	</VertexShader>
@@ -84,8 +77,6 @@
 		uniform sampler2D NormalsTexture;
 		
 		// Screen information
-		uniform vec3 CameraForward;
-		uniform vec3 CameraPosition;
 		uniform vec2 ScreenSize;
 		uniform float FarClipDistance;
 
@@ -103,7 +94,6 @@
 		in vec2 vs_TexCoords;
 		in vec3 vs_ViewSpacePosition;
 		in vec3 vs_ViewSpaceLightPosition;
-		in vec3 vs_ViewSpaceCameraPosition;
 		
 		/*!
 			\brief Calculates the view-space position based on the current pixels depth value
@@ -137,18 +127,19 @@
 			// Get view-space position
 			vec3 P = CalculateVSpacePosition(screenCoords, geometry.a); 
 			
-			// Light direction
+			// Direction from the light to the direction
 			vec3 L = vs_ViewSpaceLightPosition - P;
 			float Ldist = length(L);
 			L *= (1.0 / Ldist);
-			if( Ldist > LightRadius ) discard;
+			//if( Ldist > LightRadius ) discard;
 			
 			// Calculate the light attenuation
 			float sqrDist = Ldist * Ldist;
 			float atten = max(0, 1 - sqrDist * (1 / (LightRadius*LightRadius)));
 			atten *= atten;
 	
-			gl_FragColor = color  * atten;
+			//gl_FragColor = color * atten;
+			gl_FragColor = vec4(N, 1.0);
 		}
 	]]>
 	</FragmentShader>

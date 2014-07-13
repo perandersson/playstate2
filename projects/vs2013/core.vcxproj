@@ -126,6 +126,7 @@
     <ClInclude Include="..\..\core\rendering\RenderTarget2D.h" />
     <ClInclude Include="..\..\core\rendering\RenderTargetCube.h" />
     <ClInclude Include="..\..\core\rendering\RenderTargetInfo.h" />
+    <ClInclude Include="..\..\core\rendering\shape\Cone.h" />
     <ClInclude Include="..\..\core\rendering\shape\Sphere.h" />
     <ClInclude Include="..\..\core\rendering\TextureCubeSide.h" />
     <ClInclude Include="..\..\core\rendering\SamplerObject.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\..\core\scene\Component.h" />
     <ClInclude Include="..\..\core\scene\Event.h" />
     <ClInclude Include="..\..\core\scene\FindQuery.h" />
+    <ClInclude Include="..\..\core\scene\FindQueryFilter.h" />
     <ClInclude Include="..\..\core\scene\light\LightSource.h" />
     <ClInclude Include="..\..\core\scene\light\LightSourceBlock.h" />
     <ClInclude Include="..\..\core\scene\light\LightSourceResultSet.h" />
@@ -316,6 +318,7 @@
     <ClCompile Include="..\..\core\rendering\RenderTarget2D.cpp" />
     <ClCompile Include="..\..\core\rendering\RenderTargetCube.cpp" />
     <ClCompile Include="..\..\core\rendering\SamplerObject.cpp" />
+    <ClCompile Include="..\..\core\rendering\shape\Cone.cpp" />
     <ClCompile Include="..\..\core\rendering\shape\Sphere.cpp" />
     <ClCompile Include="..\..\core\rendering\Texture.cpp" />
     <ClCompile Include="..\..\core\rendering\Texture2D.cpp" />

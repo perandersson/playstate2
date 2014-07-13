@@ -1,6 +1,7 @@
 #pragma once
 #include "LightSource.h"
 #include "../../rendering/Texture.h"
+#include "../../rendering/shape/Cone.h"
 
 namespace core
 {
@@ -53,7 +54,7 @@ namespace core
 			\brief Set the direction this spotlight is looking towards
 
 			\param direction
-					A direction (normalized) to where this spotlight is looking towards
+					A direction to where this spotlight is looking towards. The length of the direction vector defines how far the spotlight reaches.
 		*/
 		inline void SetDirection(const Vector3& direction) {
 			mDirection = direction;
@@ -85,11 +86,18 @@ namespace core
 	public:
 		virtual void OnAddedToSceneGroup();
 		virtual void CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const;
+		virtual void OnPositionChanged();
+		virtual void OnRotationChanged();
+		virtual void OnScaleChanged();
+
+	private:
+		void UpdateShape();
 
 	private:
 		Color mColor;
 		float32 mCutoff;
 		Vector3 mDirection;
+		Cone* mSpotLightCone;
 		Resource<Texture> mTexture;
 	};
 }

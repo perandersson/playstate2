@@ -11,7 +11,7 @@ namespace core
 	class SamplerObject;
 
 	/*!
-		\brief Class symbolizing the state of the effect bound to the current thread
+		\brief Class representing the state of the effect bound to the current thread
 	*/
 	class EffectState
 	{
@@ -45,6 +45,12 @@ namespace core
 		IUniform* FindUniform(const std::string& name);
 
 	private:
+		/*!
+			\brief Generate a sampler object based on the supplied property
+
+			\param property
+						The uniform property
+		*/
 		SamplerObject* GenSamplerObject(std::shared_ptr<UniformProperty> property);
 
 	private:
