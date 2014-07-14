@@ -30,6 +30,8 @@ namespace core
 		static void UnloadResource(Resource<T> resource) {
 			Kernel::GetResourceManager()->UnloadResource(resource);
 		}
+
+		static void AddResource(ResourceObject* object, const std::string& absolutePath);
 	};
 
 }

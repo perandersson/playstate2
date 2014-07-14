@@ -27,7 +27,7 @@ ResourceObject* EffectResourceLoader::Load(const IFile* file)
 		THROW_EXCEPTION(LoadResourceException, "Could not parse file: '%s'", file->GetAbsolutePath().c_str());
 
 	try {
-		EffectXmlVisitor visitor(GetRenderContext());
+		EffectXmlVisitor visitor(GetRenderContext(), file);
 		if (!document.Accept(&visitor))
 			THROW_EXCEPTION(LoadResourceException, "Could not build scene group: '%s'", file->GetAbsolutePath().c_str());
 		return visitor.GetEffect();

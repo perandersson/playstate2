@@ -776,6 +776,15 @@
     <ClInclude Include="..\..\core\scene\FindQueryFilter.h">
       <Filter>Source Files\scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\ShaderObject.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\effect\ShaderObjectResourceLoader.h">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\filesystem\FileUtils.h">
+      <Filter>Source Files\filesystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1245,6 +1254,12 @@
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\shape\Cone.cpp">
       <Filter>Source Files\rendering\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\ShaderObject.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\effect\ShaderObjectResourceLoader.cpp">
+      <Filter>Source Files\rendering\effect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

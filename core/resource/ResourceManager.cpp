@@ -11,3 +11,8 @@ void ResourceManager::RegisterLoader(IResourceLoader* loader, const std::string&
 {
 	return Kernel::GetResourceManager()->RegisterLoader(loader, suffix);
 }
+
+void ResourceManager::AddResource(ResourceObject* object, const std::string& absolutePath)
+{
+	Kernel::GetResourceManager()->AddResource(object, absolutePath);
+}

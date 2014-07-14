@@ -47,10 +47,13 @@ namespace core
 		//
 		virtual void WriteBytes(byte* bytes, size_t size) = 0;
 
-		//
-		// @return The path to the file
+		/*!
+			\brief Retrieves the absolute path to the file.
+
+			The absolute path contains: [path]/[name].[suffix]
+		*/
 		virtual const std::string& GetAbsolutePath() const = 0;
-		
+
 		//
 		// @return A new directory instance where this file is located.
 		virtual std::shared_ptr<IDirectory> GetDirectory() const = 0;

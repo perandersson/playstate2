@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\core\configuration\lua\LuaConfiguration.h" />
     <ClInclude Include="..\..\core\Exception.h" />
     <ClInclude Include="..\..\core\filesystem\FileSystem.h" />
+    <ClInclude Include="..\..\core\filesystem\FileUtils.h" />
     <ClInclude Include="..\..\core\filesystem\IDirectory.h" />
     <ClInclude Include="..\..\core\filesystem\exception\FileException.h" />
     <ClInclude Include="..\..\core\filesystem\IFile.h" />
@@ -95,6 +96,8 @@
     <ClInclude Include="..\..\core\rendering\BlendFunc.h" />
     <ClInclude Include="..\..\core\rendering\ClearType.h" />
     <ClInclude Include="..\..\core\rendering\CullFace.h" />
+    <ClInclude Include="..\..\core\rendering\effect\ShaderObject.h" />
+    <ClInclude Include="..\..\core\rendering\effect\ShaderObjectResourceLoader.h" />
     <ClInclude Include="..\..\core\rendering\FrontFace.h" />
     <ClInclude Include="..\..\core\rendering\DepthFunc.h" />
     <ClInclude Include="..\..\core\rendering\effect\DefaultUniform.h" />
@@ -291,6 +294,8 @@
     <ClCompile Include="..\..\core\rendering\BlendFunc.cpp" />
     <ClCompile Include="..\..\core\rendering\BufferUsage.cpp" />
     <ClCompile Include="..\..\core\rendering\CullFace.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\ShaderObject.cpp" />
+    <ClCompile Include="..\..\core\rendering\effect\ShaderObjectResourceLoader.cpp" />
     <ClCompile Include="..\..\core\rendering\FrontFace.cpp" />
     <ClCompile Include="..\..\core\rendering\DepthFunc.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\DefaultUniform.cpp" />

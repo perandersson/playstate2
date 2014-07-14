@@ -6,6 +6,7 @@
 #include "../DepthFunc.h"
 #include "../BlendFunc.h"
 #include "../IRenderContext.h"
+#include "../../filesystem/IFile.h"
 #include "UniformProperty.h"
 
 namespace core
@@ -17,7 +18,7 @@ namespace core
 		typedef std::hash_map<std::string, std::shared_ptr<UniformProperty>> UniformProperties;
 
 	public:
-		EffectXmlVisitor(IRenderContext* renderContext);
+		EffectXmlVisitor(IRenderContext* renderContext, const IFile* file);
 		virtual ~EffectXmlVisitor();
 
 		/*!
@@ -25,13 +26,15 @@ namespace core
 		*/
 		Effect* GetEffect();
 
-	// XMLVisitor
-	public:
 		virtual bool VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute);
 		virtual bool VisitExit(const tinyxml2::XMLElement& element);
 
 	private:
+		GLuint CompileShader(const char* text, GLenum type);
+
+	private:
 		IRenderContext* mRenderContext;
+		const IFile* mFile;
 		Effect* mEffect;
 		GLuint mVertexShaderID;
 		GLuint mFragmentShaderID;

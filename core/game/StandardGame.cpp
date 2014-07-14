@@ -3,6 +3,7 @@
 #include "../kernel/Kernel.h"
 #include "../rendering/TextureResourceLoader.h"
 #include "../rendering/effect/EffectResourceLoader.h"
+#include "../rendering/effect/ShaderObjectResourceLoader.h"
 #include "../model/PSMFResourceLoader.h"
 #include "../model/WaveFrontResourceLoader.h"
 #include "../scene/Updatable.h"
@@ -121,6 +122,9 @@ bool StandardGame::Initialize()
 	resourceManager->RegisterLoader(new WavefrontResourceLoader(), "obj");
 	resourceManager->RegisterLoader(new TrueTypeFontResourceLoader(), "ttf");
 	resourceManager->RegisterLoader(new EffectResourceLoader(), "effect");
+	resourceManager->RegisterLoader(new ShaderObjectResourceLoader(GL_VERTEX_SHADER), "vs");
+	resourceManager->RegisterLoader(new ShaderObjectResourceLoader(GL_FRAGMENT_SHADER), "fs");
+	resourceManager->RegisterLoader(new ShaderObjectResourceLoader(GL_GEOMETRY_SHADER), "gs");
 
 	IClassLoader* classLoader = Kernel::GetClassLoader();
 

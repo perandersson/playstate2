@@ -21,6 +21,8 @@ namespace core
 		virtual Resource<ResourceObject> GetResource(std::shared_ptr<IFile> file);
 		virtual void RegisterLoader(IResourceLoader* loader, const std::string& suffix);
 		virtual void UnloadResource(Resource<ResourceObject> resource);
+		virtual void AddResource(ResourceObject* object, const std::string& absolutePath);
+
 		virtual void OnFileChanged(const IFile* file, FileChangeAction::Enum action);
 
 	private:

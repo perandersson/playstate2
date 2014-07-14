@@ -1,16 +1,18 @@
 #pragma once
 #include "../RenderContextResourceLoader.h"
-#include "Effect.h"
 
 namespace core
 {
-	class EffectResourceLoader : public RenderContextResourceLoader
+	class ShaderObjectResourceLoader : public RenderContextResourceLoader
 	{
 	public:
-		EffectResourceLoader();
-		virtual ~EffectResourceLoader();
+		ShaderObjectResourceLoader(GLenum type);
+		virtual ~ShaderObjectResourceLoader();
 
 		virtual ResourceObject* Load(const IFile* file);
 		virtual ResourceObject* GetDefaultResource();
+
+	private:
+		GLenum mType;
 	};
 }

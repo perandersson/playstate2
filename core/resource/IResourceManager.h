@@ -69,6 +69,14 @@ namespace core
 					The resource we want to release
 		*/
 		virtual void UnloadResource(Resource<ResourceObject> resource) = 0;
+
+		/*!
+			\brief Adds a resource to the resource manager programatically. 
+
+			\param object
+			\param absolutePath
+		*/
+		virtual void AddResource(ResourceObject* object, const std::string& absolutePath) = 0;
 		
 	};
 

@@ -9,11 +9,15 @@
 #include "../../logging/Logger.h"
 #include "../IRenderContext.h"
 #include "../RenderState.h"
+#include "ShaderObject.h"
+#include "../../resource/ResourceManager.h"
+#include "../../filesystem/FileUtils.h"
 using namespace core;
 
-EffectXmlVisitor::EffectXmlVisitor(IRenderContext* renderContext)
+EffectXmlVisitor::EffectXmlVisitor(IRenderContext* renderContext, const IFile* file)
 : XMLDefaultVisitor(), 
-mRenderContext(renderContext), mEffect(nullptr), mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0), 
+mRenderContext(renderContext), mFile(file), mEffect(nullptr), 
+mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0),
 mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT), mDepthMask(true),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT),
@@ -24,20 +28,6 @@ mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT)
 
 EffectXmlVisitor::~EffectXmlVisitor()
 {
-	if (mGeometryShaderID != 0) {
-		glDeleteShader(mGeometryShaderID);
-		mGeometryShaderID = 0;
-	}
-
-	if (mVertexShaderID != 0) {
-		glDeleteShader(mVertexShaderID);
-		mVertexShaderID = 0;
-	}
-	
-	if (mFragmentShaderID != 0) {
-		glDeleteShader(mFragmentShaderID);
-		mFragmentShaderID = 0;
-	}
 }
 
 Effect* EffectXmlVisitor::GetEffect()
@@ -87,45 +77,54 @@ bool EffectXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tin
 		return false;
 	}
 	else if (name == TAG_GEOMETRY_SHADER) {
-		const char* text = element.GetText();
-		mGeometryShaderID = glCreateShader(GL_GEOMETRY_SHADER);
-		glShaderSource(mGeometryShaderID, 1, &text, NULL);
-		glCompileShader(mGeometryShaderID);
-
-		GLint status = 0;
-		glGetShaderiv(mVertexShaderID, GL_COMPILE_STATUS, &status);
-		if (!status) {
-			GLchar infoLogg[2048];
-			glGetShaderInfoLog(mVertexShaderID, 2048, NULL, infoLogg);
-			THROW_EXCEPTION(LoadResourceException, "Could not compile geometry shader: '%s'", infoLogg);
+		std::string path = GetAttribute(element, ATTRIB_PATH);
+		if (path.length() > 0) {
+			auto shaderFile = mFile->OpenFile(path);
+			Resource<ShaderObject> shader = ResourceManager::GetResource<ShaderObject>(shaderFile);
+			if (shader->GetShaderType() != GL_GEOMETRY_SHADER) {
+				THROW_EXCEPTION(LoadResourceException, "Invalid fragment shader type. It's not GL_GEOMETRY_SHADER");
+			}
+			mGeometryShaderID = shader->GetShaderID();
+		}
+		else {
+			const char* text = element.GetText();
+			mGeometryShaderID = CompileShader(text, GL_GEOMETRY_SHADER);
+			std::string path = FileUtils::GetTempPath(std::string(".gs"));
+			ResourceManager::AddResource(new ShaderObject(mGeometryShaderID, GL_GEOMETRY_SHADER), path);
 		}
 	}
 	else if (name == TAG_VERTEX_SHADER) {
-		const char* text = element.GetText();
-		mVertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(mVertexShaderID, 1, &text, NULL);
-		glCompileShader(mVertexShaderID);
-
-		GLint status = 0;
-		glGetShaderiv(mVertexShaderID, GL_COMPILE_STATUS, &status);
-		if (!status) {
-			GLchar infoLogg[2048];
-			glGetShaderInfoLog(mVertexShaderID, 2048, NULL, infoLogg);
-			THROW_EXCEPTION(LoadResourceException, "Could not compile vertex shader: '%s'", infoLogg);
+		std::string path  = GetAttribute(element, ATTRIB_PATH);
+		if (path.length() > 0) {
+			auto shaderFile = mFile->OpenFile(path);
+			Resource<ShaderObject> shader = ResourceManager::GetResource<ShaderObject>(shaderFile);
+			if (shader->GetShaderType() != GL_VERTEX_SHADER) {
+				THROW_EXCEPTION(LoadResourceException, "Invalid fragment shader type. It's not GL_VERTEX_SHADER");
+			}
+			mVertexShaderID = shader->GetShaderID();
+		}
+		else {
+			const char* text = element.GetText();
+			mVertexShaderID = CompileShader(text, GL_VERTEX_SHADER);
+			std::string path = FileUtils::GetTempPath(std::string(".vs"));
+			ResourceManager::AddResource(new ShaderObject(mVertexShaderID, GL_VERTEX_SHADER), path);
 		}
 	}
 	else if (name == TAG_FRAGMENT_SHADER) {
-		mFragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-		const char* text = element.GetText();
-		glShaderSource(mFragmentShaderID, 1, &text, NULL);
-		glCompileShader(mFragmentShaderID);
-
-		GLint status = 0;
-		glGetShaderiv(mFragmentShaderID, GL_COMPILE_STATUS, &status);
-		if (!status) {
-			GLchar infoLogg[2048];
-			glGetShaderInfoLog(mFragmentShaderID, 2048, NULL, infoLogg);
-			THROW_EXCEPTION(LoadResourceException, "Could not compile fragment shader: '%s'", infoLogg);
+		std::string path = GetAttribute(element, ATTRIB_PATH);
+		if (path.length() > 0) {
+			auto shaderFile = mFile->OpenFile(path);
+			Resource<ShaderObject> shader = ResourceManager::GetResource<ShaderObject>(shaderFile);
+			if (shader->GetShaderType() != GL_FRAGMENT_SHADER) {
+				THROW_EXCEPTION(LoadResourceException, "Invalid fragment shader type. It's not GL_FRAGMENT_SHADER");
+			}
+			mFragmentShaderID = shader->GetShaderID();
+		}
+		else {
+			const char* text = element.GetText();
+			mFragmentShaderID = CompileShader(text, GL_FRAGMENT_SHADER);
+			std::string path = FileUtils::GetTempPath(std::string(".fs"));
+			ResourceManager::AddResource(new ShaderObject(mFragmentShaderID, GL_FRAGMENT_SHADER), path);
 		}
 	}
 
@@ -147,14 +146,11 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 		// Detach the shaders when done
 		// @see http://www.opengl.org/wiki/GLSL_Object
 		glDetachShader(program, mFragmentShaderID);
-		glDeleteShader(mFragmentShaderID);
 		mFragmentShaderID = 0;
 		glDetachShader(program, mVertexShaderID);
-		glDeleteShader(mVertexShaderID);
 		mVertexShaderID = 0;		
 		if (mGeometryShaderID != 0) {
 			glDetachShader(program, mGeometryShaderID);
-			glDeleteShader(mGeometryShaderID);
 		}
 
 		GLint status = 0;
@@ -226,4 +222,30 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 	}
 
 	return true;
+}
+
+GLuint EffectXmlVisitor::CompileShader(const char* text, GLenum type)
+{
+	GLuint shaderID = glCreateShader(type);
+	glShaderSource(shaderID, 1, &text, NULL);
+	glCompileShader(shaderID);
+
+	GLint status = 0;
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &status);
+	if (!status) {
+		GLchar infoLogg[2048];
+		glGetShaderInfoLog(shaderID, 2048, NULL, infoLogg);
+		switch (type) {
+		case GL_GEOMETRY_SHADER:
+			THROW_EXCEPTION(LoadResourceException, "Could not compile geometry shader. Reason: '%s'", infoLogg);
+		case GL_VERTEX_SHADER:
+			THROW_EXCEPTION(LoadResourceException, "Could not compile vertex shader. Reason: '%s'", infoLogg);
+		case GL_FRAGMENT_SHADER:
+			THROW_EXCEPTION(LoadResourceException, "Could not compile fragment shader. Reason: '%s'", infoLogg);
+		default:
+			THROW_EXCEPTION(LoadResourceException, "Could not compile shader. Reason: '%s'", infoLogg);
+		}
+	}
+
+	return shaderID;
 }

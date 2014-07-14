@@ -58,7 +58,7 @@ Resource<ResourceObject> ThreadSafeResourceManager::GetResource(const std::strin
 		THROW_EXCEPTION(ResourceException, "No ResourceLoader registered for suffix: %s", suffix.c_str());
 
 	std::lock_guard<std::recursive_mutex> lg(mResourcesMutex);
-	ResourceNameToResource::iterator it = mResources.find(absolutePath);
+	auto it = mResources.find(absolutePath);
 	ResourceData* data;
 	if (it != mResources.end()) {
 		data = it->second;
@@ -123,6 +123,29 @@ void ThreadSafeResourceManager::UnloadResource(Resource<ResourceObject> resource
 
 	data->resource = data->defaultResource;
 	delete data;
+}
+
+void ThreadSafeResourceManager::AddResource(ResourceObject* object, const std::string& absolutePath)
+{
+	// TODO: Ignore if it's a default resource.
+	if (!BIT_ISSET(mAccessibility.load(), ResourceAccess::LOADING)) {
+		Logger::Warn("You are not allowed to load resources at the moment");
+		return;
+	}
+
+	auto suffix = GetSuffixFromName(absolutePath);
+	auto resourceLoader = GetLoaderFromSuffix(suffix);
+
+	std::lock_guard<std::recursive_mutex> lg(mResourcesMutex);
+	auto it = mResources.find(absolutePath);
+	if (it != mResources.end()) {
+		Logger::Error("Cannot add resource: '%s'. It's already loaded", absolutePath.c_str());
+	}
+
+	ResourceData* data = new ResourceData();
+	data->defaultResource = resourceLoader->GetDefaultResource();
+	data->resource = object;
+	mResources.insert(std::make_pair(absolutePath, data));
 }
 
 IResourceLoader* ThreadSafeResourceManager::GetLoaderFromSuffix(const std::string& suffix) const
