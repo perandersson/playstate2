@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Effect>
-	<DepthTest>false</DepthTest>
+	<DepthTest>true</DepthTest>
 	<Blend>true</Blend>
 	<SrcFactor>ONE</SrcFactor>
 	<DestFactor>ONE</DestFactor>
