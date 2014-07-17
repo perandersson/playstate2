@@ -16,6 +16,12 @@ SpotLight::~SpotLight()
 	}
 }
 
+void SpotLight::SetSpotDirection(const Vector3& spotDirection)
+{
+	mSpotDirection = spotDirection;
+	UpdateShape();
+}
+
 void SpotLight::OnAddedToSceneGroup()
 {
 	// Create a point-light buffer matching the radius of the object

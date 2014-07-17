@@ -12,8 +12,8 @@ public:
 	virtual void OnWindowResized(const Size& newSize);
 
 	void DrawLighting(const Scene& scene, const Camera* camera);
-	void DrawPointLights(const Scene& scene, const Camera* camera);
-	void DrawSpotLights(const Scene& scene, const Camera* camera);
+	bool DrawPointLights(const Scene& scene, const Camera* camera, bool clear);
+	bool DrawSpotLights(const Scene& scene, const Camera* camera, bool clear);
 
 	void DrawFinalResultToScreen(const Scene& scene, const Camera* camera);
 	void DrawDebugInfo(const Scene& scene, const Camera* camera);

@@ -320,12 +320,6 @@ void RenderState::BindVertexBuffer(const VertexBuffer* vertexBuffer)
 			glDisableVertexAttribArray(i);
 	}
 
-	//
-	// Unbind the vertex buffer when VAO is setup
-	//
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	err = glGetError();
 	if (err != GL_NO_ERROR)

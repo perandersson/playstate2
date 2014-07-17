@@ -114,16 +114,20 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 	//
 	// Setup deferred lighting effect
 	//
-	DrawSpotLights(scene, camera);
-	DrawPointLights(scene, camera);
+	bool cleared = DrawSpotLights(scene, camera, true);
+	cleared = DrawPointLights(scene, camera, !cleared);
+	// TODO: Add Directional lights!
+	// TODO: Add Area lights!
 }
 
-void DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* camera)
+bool DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* camera, bool clear)
 {
 	RenderState* state = RenderContext::Activate(mPointLightEffect);
 	state->SetRenderTarget(mLightRenderTarget, 0);
 	state->SetDepthRenderTarget(mDepthRenderTarget);
 	state->SetDepthMask(false);
+	if (clear)
+		state->Clear(ClearType::COLOR);
 
 	state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
 
@@ -164,33 +168,36 @@ void DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* c
 			state->Render(mSphere->GetVertexBuffer(), mSphere->GetIndexBuffer());
 		}
 	}
+
+	return mPointLightsResultSet.GetSize() > 0;
 }
 
-void DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* camera)
+bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* camera, bool clear)
 {
-	RenderState* state = RenderContext::Activate(mSpotLightEffect);
-	state->SetRenderTarget(mLightRenderTarget, 0);
-	state->SetDepthRenderTarget(mDepthRenderTarget);
-	state->SetDepthMask(false);
-	state->Clear(ClearType::COLOR);
-
-	state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
-
-	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
-	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
-	auto modelMatrix = state->FindUniform("ModelMatrix");
-
-	// Screen information
-	const Size& size = ActiveWindow::GetSize();
-	state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
-	state->FindUniform("FarClipDistance")->SetFloat(camera->GetFarClipDistance());
-
-	// Default light texture
-	state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
-
 	// Draw spotlights
 	FindQuery query = { camera, FindQueryFilter::DEFAULT | FindQueryFilter::SPOT_LIGHTS };
 	if (scene.Find(query, &mSpotLightsResultSet)) {
+		RenderState* state = RenderContext::Activate(mSpotLightEffect);
+		state->SetRenderTarget(mLightRenderTarget, 0);
+		state->SetDepthRenderTarget(mDepthRenderTarget);
+		state->SetDepthMask(false);
+		if (clear)
+			state->Clear(ClearType::COLOR);
+
+		state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
+
+		state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
+		state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
+		auto modelMatrix = state->FindUniform("ModelMatrix");
+
+		// Screen information
+		const Size& size = ActiveWindow::GetSize();
+		state->FindUniform("ScreenSize")->SetVector2(Vector2(size.x, size.y));
+		state->FindUniform("FarClipDistance")->SetFloat(camera->GetFarClipDistance());
+
+		// Default light texture
+		state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
+
 		IUniform* lightColor = state->FindUniform("LightColor");
 		IUniform* lightPosition = state->FindUniform("LightPosition");
 		IUniform* constantAttenuation = state->FindUniform("ConstantAttenuation");
@@ -217,7 +224,7 @@ void DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 	}
 
 	// TODO: Post shadow render requests to multiple threads here
-
+	return mSpotLightsResultSet.GetSize() > 0;
 }
 
 void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const Camera* camera)

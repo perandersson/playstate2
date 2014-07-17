@@ -3,6 +3,7 @@
 #include "IndexBuffer.h"
 #include "RenderContext.h"
 #include "RenderState.h"
+#include "exception/RenderingException.h"
 #include <atomic>
 using namespace core;
 
@@ -88,6 +89,11 @@ void VertexBuffer::Update(const void* vertices, uint32 numVertices)
 
 	glBufferData(GL_ARRAY_BUFFER, mNumVertices * mSizeOfOneVertex, vertices, GL_DYNAMIC_DRAW);
 	glFlush();
+
+	GLenum status = glGetError();
+	if (status != GL_NO_ERROR) {
+		THROW_EXCEPTION(RenderingException, "Could not update vertex buffer. Reason: %d", status);
+	}
 
 	//
 	// Mark the current vertex buffer as dirty

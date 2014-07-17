@@ -56,9 +56,7 @@ namespace core
 			\param direction
 					A direction to where this spotlight is looking towards. The length of the direction vector defines how far the spotlight reaches.
 		*/
-		inline void SetSpotDirection(const Vector3& spotDirection) {
-			mSpotDirection = spotDirection;
-		}
+		void SetSpotDirection(const Vector3& spotDirection);
 
 		/*!
 			\brief Retrieves the direction where this spotlight is lookat towards

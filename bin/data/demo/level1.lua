@@ -1,6 +1,7 @@
 local MovePlayerBehaviour = require "demo.components.MovePlayerBehaviour"
 local FollowCameraBehaviour = require "demo.components.FollowCameraBehaviour"
 local SinusLightBehaviour = require "demo.components.SinusLightBehaviour"
+local RotateLightBehaviour = require "demo.components.RotateLightBehaviour"
 
 local level1 = QuadTreeSceneGroup()
 level1:SetQuadTree({0, 0, 0}, 1100.0, 10000.0, 1100.0, 3)
@@ -19,7 +20,7 @@ end
 
 -- Add lighting using random positions
 math.randomseed( os.time() )
---[[for i=-10, 9 do
+for i=-10, 9 do
 	for j=-10, 9 do
 		local color = {math.random(0, 100) / 100.0, math.random(0, 100) / 100.0, math.random(0, 100) / 100.0}
 		local radius = 10.0
@@ -39,7 +40,6 @@ math.randomseed( os.time() )
 		level1:AddSceneNode(pointLight)
 	end
 end
-]]--
 
 -- Add ground
 local ground1 = Resource.Load("/demo/models/ground1/ground1.obj")
@@ -56,8 +56,11 @@ end
 local spotlightNode = SpotLight()
 spotlightNode:SetPosition({0.0, 20.0, 0.0})
 spotlightNode:SetColor({1.0, 0.0, 0.0})
-spotlightNode:SetSpotDirection({40.0, -20.0, -20.0})
+spotlightNode:SetSpotDirection({0.0, -20.0, 0.0})
 spotlightNode:SetCutoff(20.0)
+local rotateLightBehaviour = RotateLightBehaviour()
+rotateLightBehaviour:SetRadius(40.0)
+spotlightNode:AddComponent(rotateLightBehaviour)
 level1:AddSceneNode(spotlightNode)
 
 return level1
