@@ -56,7 +56,7 @@ end
 local spotlightNode = SpotLight()
 spotlightNode:SetPosition({0.0, 20.0, 0.0})
 spotlightNode:SetColor({1.0, 0.0, 0.0})
-spotlightNode:SetDirection({10.0, -20.0, 10.0})
+spotlightNode:SetSpotDirection({40.0, -20.0, -20.0})
 spotlightNode:SetCutoff(20.0)
 level1:AddSceneNode(spotlightNode)
 

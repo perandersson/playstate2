@@ -197,6 +197,7 @@ void DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 		IUniform* linearAttenuation = state->FindUniform("LinearAttenuation");
 		IUniform* quadraticAttenuation = state->FindUniform("QuadraticAttenuation");
 		IUniform* lightCutoff = state->FindUniform("LightCutoff");
+		IUniform* cosLightCutoff = state->FindUniform("CosLightCutoff");
 		IUniform* spotDirection = state->FindUniform("SpotDirection");
 
 		LightSourceResultSet::Iterator it = mSpotLightsResultSet.GetIterator();
@@ -208,6 +209,7 @@ void DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 			lightPosition->SetVector3(block->position);
 
 			lightCutoff->SetFloat(block->radius);
+			cosLightCutoff->SetFloat(cosf(block->radius * ANG2RAD));
 			spotDirection->SetVector3(block->direction);
 
 			state->Render(block->vertexBuffer, block->indexBuffer);

@@ -28,7 +28,7 @@
 			vs_ViewSpacePosition = ViewMatrix * ModelMatrix * vec4(position, 1.0);
 			
 			// Supply the view-space normal matrix to the fragment shader
-			mat4 normalMatrix = transpose(inverse(ModelMatrix));
+			mat4 normalMatrix = transpose(inverse(ViewMatrix * ModelMatrix));
 			vs_WorldSpaceNormals = normalize(vec3(normalMatrix * vec4(normal, 1.0)));
 			
 			// Send the texture coordinates to the fragment shader

@@ -30,7 +30,7 @@ void SpotLight::OnAddedToSceneGroup()
 	Vector3 direction = mSpotDirection - mAbsolutePosition;
 	float32 height = direction.Length();
 	direction /= height;
-	mSpotLightCone = Cone::Create(Vector3::ZERO, direction, height, mCutoff, 20U, BufferUsage::DYNAMIC);
+	mSpotLightCone = Cone::Create(Vector3::ZERO, direction, height, mCutoff, 30U, BufferUsage::DYNAMIC);
 }
 
 void SpotLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const
@@ -72,6 +72,6 @@ void SpotLight::UpdateShape()
 		float32 height = direction.Length();
 		direction /= height;
 
-		mSpotLightCone->Update(Vector3::ZERO, direction, height, mCutoff, 20U);
+		mSpotLightCone->Update(Vector3::ZERO, direction, height, mCutoff, 30U);
 	}
 }

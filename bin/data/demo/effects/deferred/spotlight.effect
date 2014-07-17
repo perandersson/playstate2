@@ -42,8 +42,8 @@
 			vs_ViewSpaceLightPosition = vec3(ViewMatrix * vec4(LightPosition, 1.0));
 			
 			//
-			//mat4 normalMatrix = transpose(inverse(ModelMatrix));
-			//vs_SpotDirection = normalize(vec3(normalMatrix * vec4(SpotDirection, 1.0)));
+			mat4 normalMatrix = transpose(inverse(ViewMatrix * ModelMatrix));
+			vs_SpotDirection = normalize(vec3(normalMatrix * vec4(SpotDirection, 1.0)));
 			
 			// Send the texture coordinates to the fragment shader
 			vs_TexCoords = in_texCoord;
@@ -81,6 +81,7 @@
 
 		// Variables used by the spotlight
 		uniform float LightCutoff;
+		uniform float CosLightCutoff;
 		uniform vec3 LightColor;
 		uniform vec3 SpotDirection;
 
@@ -121,12 +122,12 @@
 			// Get view-space position from the depth value
 			vec3 P = CalculateVSpacePosition(screenCoords, geometry.a); 
 			
-			// Direction from the light to the surface
-			vec3 L = normalize(P - vs_ViewSpaceLightPosition);
+			// Direction from the surface to the light
+			vec3 L = normalize(vs_ViewSpaceLightPosition - P);
 						
 			float atten = 0.0;
-			float clampedCosine = max(0.0, dot(SpotDirection, L));
-			if (clampedCosine > cos(LightCutoff)) // inside of spotlight cone?
+			float clampedCosine = dot(-L, vs_SpotDirection);
+			if (clampedCosine > CosLightCutoff) // inside of spotlight cone?
 			{
 				atten = clampedCosine; // pow(clampedCosine, light0.spotExponent);   
 			}
