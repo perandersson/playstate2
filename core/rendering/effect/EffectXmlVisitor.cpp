@@ -21,7 +21,8 @@ mGeometryShaderID(0), mVertexShaderID(0), mFragmentShaderID(0),
 mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT), mDepthMask(true),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mSrcFactor(SrcFactor::DEFAULT), mDestFactor(DestFactor::DEFAULT),
-mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT)
+mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT),
+mPolygonMode(PolygonMode::DEFAULT)
 {
 
 }
@@ -61,6 +62,9 @@ bool EffectXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tin
 	}
 	else if (name == TAG_DEPTH_MASK) {
 		mDepthMask = StringUtils::ToBool(GetLowerCaseValue(element));
+	}
+	else if (name == TAG_POLYGON_MODE) {
+		mPolygonMode = PolygonMode::Parse(element.GetText(), PolygonMode::DEFAULT);
 	}
 	else if (name == TAG_SRC_FACTOR) {
 		mSrcFactor = SrcFactor::Parse(element.GetText(), SrcFactor::DEFAULT);
@@ -219,6 +223,8 @@ bool EffectXmlVisitor::VisitExit(const tinyxml2::XMLElement& element)
 
 		mEffect->SetFrontFace(mFrontFace);
 		mEffect->SetCullFace(mCullFace);
+
+		mEffect->SetPolygonMode(mPolygonMode);
 	}
 
 	return true;

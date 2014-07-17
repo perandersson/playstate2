@@ -5,6 +5,7 @@
 #include "../CullFace.h"
 #include "../DepthFunc.h"
 #include "../BlendFunc.h"
+#include "../PolygonMode.h"
 #include "../IRenderContext.h"
 #include "../../filesystem/IFile.h"
 #include "UniformProperty.h"
@@ -54,5 +55,7 @@ namespace core
 
 		FrontFace::Enum mFrontFace;
 		CullFace::Enum mCullFace;
+
+		PolygonMode::Enum mPolygonMode;
 	};
 }

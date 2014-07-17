@@ -12,7 +12,8 @@ mDepthTest(true), mDepthFunc(DepthFunc::DEFAULT), mDepthMask(true),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }), 
 mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT),
-mClearColor(Color::NOTHING), mClearDepth(1.0f)
+mClearColor(Color::NOTHING), mClearDepth(1.0f),
+mPolygonMode(PolygonMode::DEFAULT)
 {
 }
 

@@ -65,25 +65,25 @@ int SpotLight_GetCutoff(struct lua_State* L)
 	return ScriptUtils::PushFloat32(L, 0.0f);
 }
 
-int SpotLight_SetDirection(struct lua_State* L)
+int SpotLight_SetSpotDirection(struct lua_State* L)
 {
 	Vector3 value = ScriptUtils::ToVector3(L);
 	SpotLight* self = ScriptUtils::ToObject<SpotLight>(L);
 	if (self != nullptr)
-		self->SetDirection(value);
+		self->SetSpotDirection(value);
 	else
-		ScriptUtils::LogError(L, "Expected: SpotLight.SetDirection(self, Vector3)");
+		ScriptUtils::LogError(L, "Expected: SpotLight.SetSpotDirection(self, Vector3)");
 
 	return 0;
 }
 
-int SpotLight_GetDirection(struct lua_State* L)
+int SpotLight_GetSpotDirection(struct lua_State* L)
 {
 	SpotLight* self = ScriptUtils::ToObject<SpotLight>(L);
 	if (self != nullptr)
-		return ScriptUtils::PushVector3(L, self->GetDirection());
+		return ScriptUtils::PushVector3(L, self->GetSpotDirection());
 	else
-		ScriptUtils::LogError(L, "Expected: SpotLight.GetDirection(self)");
+		ScriptUtils::LogError(L, "Expected: SpotLight.GetSpotDirection(self)");
 
 	return ScriptUtils::PushVector3(L, Vector3::ZERO);
 }

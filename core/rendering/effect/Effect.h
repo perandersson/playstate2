@@ -4,6 +4,7 @@
 #include "../DepthFunc.h"
 #include "../BlendFunc.h"
 #include "../CullFace.h"
+#include "../PolygonMode.h"
 #include "../FrontFace.h"
 #include "../SamplerObject.h"
 #include "../../math/Color.h"
@@ -82,6 +83,10 @@ namespace core
 			return mClearDepth;
 		}
 
+		inline PolygonMode::Enum GetPolygonMode() const {
+			return mPolygonMode;
+		}
+
 	friend class EffectXmlVisitor;
 	private:
 		/*!
@@ -136,6 +141,10 @@ namespace core
 			mClearDepth = depth;
 		}
 
+		inline void SetPolygonMode(PolygonMode::Enum polygonMode) {
+			mPolygonMode = polygonMode;
+		}
+
 	private:
 		bool IsActive() const;
 
@@ -158,5 +167,7 @@ namespace core
 
 		Color mClearColor;
 		float32 mClearDepth;
+
+		PolygonMode::Enum mPolygonMode;
 	};
 }

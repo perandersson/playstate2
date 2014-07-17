@@ -27,7 +27,7 @@ void SpotLight::OnAddedToSceneGroup()
 	LightSource::OnAddedToSceneGroup();
 
 	// Create a shape that contains the entire spotlight
-	Vector3 direction = mDirection - mAbsolutePosition;
+	Vector3 direction = mSpotDirection - mAbsolutePosition;
 	float32 height = direction.Length();
 	direction /= height;
 	mSpotLightCone = Cone::Create(Vector3::ZERO, direction, height, mCutoff, 20U, BufferUsage::DYNAMIC);
@@ -68,7 +68,7 @@ void SpotLight::UpdateShape()
 {
 	// Update the spotlight's shape
 	if (mSpotLightCone != nullptr) {
-		Vector3 direction = mDirection - mAbsolutePosition;
+		Vector3 direction = mSpotDirection - mAbsolutePosition;
 		float32 height = direction.Length();
 		direction /= height;
 

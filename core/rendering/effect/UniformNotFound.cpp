@@ -95,12 +95,22 @@ void UniformNotFound::SetColorRGBA(const Color& color)
 
 }
 
+void UniformNotFound::SetColorRGBA(const Color& color, float32 a)
+{
+
+}
+
 void UniformNotFound::SetColorRGB(const Color& color)
 {
 
 }
 
 void UniformNotFound::SetMatrix(const Matrix4x4& matrix)
+{
+
+}
+
+void UniformNotFound::SetVector4(const Vector3& vec, float32 w)
 {
 
 }

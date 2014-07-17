@@ -8,8 +8,8 @@ int SpotLight_SetColor(struct lua_State* L);
 int SpotLight_GetColor(struct lua_State* L);
 int SpotLight_SetCutoff(struct lua_State* L);
 int SpotLight_GetCutoff(struct lua_State* L);
-int SpotLight_SetDirection(struct lua_State* L);
-int SpotLight_GetDirection(struct lua_State* L);
+int SpotLight_SetSpotDirection(struct lua_State* L);
+int SpotLight_GetSpotDirection(struct lua_State* L);
 int SpotLight_SetTexture(struct lua_State* L);
 
 static luaL_Reg SpotLight_Methods[] = {
@@ -19,8 +19,8 @@ static luaL_Reg SpotLight_Methods[] = {
 	{ "GetColor", SpotLight_GetColor },
 	{ "SetCutoff", SpotLight_SetCutoff },
 	{ "GetCutoff", SpotLight_GetCutoff },
-	{ "SetDirection", SpotLight_SetDirection },
-	{ "GetDirection", SpotLight_GetDirection },
+	{ "SetSpotDirection", SpotLight_SetSpotDirection },
+	{ "GetSpotDirection", SpotLight_GetSpotDirection },
 	{ "SetTexture", SpotLight_SetTexture },
 	{ nullptr, nullptr }
 };

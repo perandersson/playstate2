@@ -12,17 +12,22 @@ public:
 	virtual void OnWindowResized(const Size& newSize);
 
 	void DrawLighting(const Scene& scene, const Camera* camera);
+	void DrawPointLights(const Scene& scene, const Camera* camera);
+	void DrawSpotLights(const Scene& scene, const Camera* camera);
+
 	void DrawFinalResultToScreen(const Scene& scene, const Camera* camera);
 	void DrawDebugInfo(const Scene& scene, const Camera* camera);
 
 private:
-	Resource<Effect> mDeferredEffect;
-	Resource<Effect> mTexturedEffect;
+	Resource<Effect> mGeometryEffect;
+	Resource<Effect> mResultEffect;
 	Resource<Effect> mDebugEffect;
 	VertexBuffer* mFullscreenQuad;
 
 	Resource<Effect> mPointLightEffect;
+	Resource<Effect> mSpotLightEffect;
 	Sphere* mSphere;
+
 	Resource<Texture2D> mWhiteTexture;
 
 

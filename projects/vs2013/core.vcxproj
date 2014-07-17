@@ -120,6 +120,7 @@
     <ClInclude Include="..\..\core\rendering\IRenderContext.h" />
     <ClInclude Include="..\..\core\rendering\MagFilter.h" />
     <ClInclude Include="..\..\core\rendering\MinFilter.h" />
+    <ClInclude Include="..\..\core\rendering\PolygonMode.h" />
     <ClInclude Include="..\..\core\rendering\PrimitiveType.h" />
     <ClInclude Include="..\..\core\rendering\OpenGLRenderContext.h" />
     <ClInclude Include="..\..\core\rendering\RenderContext.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="..\..\core\rendering\IndexBuffer.cpp" />
     <ClCompile Include="..\..\core\rendering\MagFilter.cpp" />
     <ClCompile Include="..\..\core\rendering\MinFilter.cpp" />
+    <ClCompile Include="..\..\core\rendering\PolygonMode.cpp" />
     <ClCompile Include="..\..\core\rendering\PrimitiveType.cpp" />
     <ClCompile Include="..\..\core\rendering\OpenGLRenderContext.cpp" />
     <ClCompile Include="..\..\core\rendering\RenderContext.cpp" />

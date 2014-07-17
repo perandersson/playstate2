@@ -109,7 +109,17 @@ void DefaultUniform::SetColorRGBA(const Color& color)
 	assert(false && "Invalid component type");
 }
 
+void DefaultUniform::SetColorRGBA(const Color& color, float32 a)
+{
+	assert(false && "Invalid component type");
+}
+
 void DefaultUniform::SetColorRGB(const Color& color)
+{
+	assert(false && "Invalid component type");
+}
+
+void DefaultUniform::SetVector4(const Vector3& vec, float32 w)
 {
 	assert(false && "Invalid component type");
 }

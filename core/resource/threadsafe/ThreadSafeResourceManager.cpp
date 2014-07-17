@@ -181,6 +181,7 @@ void ThreadSafeResourceManager::OnFileChanged(const IFile* file, FileChangeActio
 	if (it != mResources.end()) {
 		ResourceData* data = it->second;
 		if (!IsDefaultResource(data)) {
+			Logger::Info("Reloading resource: %s", absolutePath.c_str());
 			auto suffix = GetSuffixFromName(absolutePath);
 			auto resourceLoader = GetLoaderFromSuffix(suffix);
 			try {

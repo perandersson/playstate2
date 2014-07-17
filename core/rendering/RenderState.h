@@ -8,6 +8,7 @@
 #include "BlendFunc.h"
 #include "FrontFace.h"
 #include "CullFace.h"
+#include "PolygonMode.h"
 #include "effect/EffectState.h"
 #include "IUniform.h"
 #include "RenderTargetInfo.h"
@@ -209,6 +210,15 @@ namespace core
 		void BindSampler(SamplerObject* samplerObject, uint32 index);
 
 		/*!
+			\brief Sets the mode for the upcomming polygons
+
+			\param mode
+					The polygon mode
+		*/
+		void SetPolygonMode(PolygonMode::Enum mode);
+
+
+		/*!
 			\brief Set the render target at the given index
 
 			\remark Render targets are not actually bound until you perform some kind of
@@ -279,7 +289,7 @@ namespace core
 
 			\param name
 						The name of the uniform variable
-			\name The uniform if found; A pointer to an UniformNotFound instance if no component is found.
+			\name The uniform if found; A pointer to an UniformNotFound instance if not found.
 		*/
 		IUniform* FindUniform(const char* name);
 		
@@ -288,7 +298,7 @@ namespace core
 
 			\param name
 						The name of the uniform variable
-			\name The uniform if found; A pointer to an UniformNotFound instance if no component is found.
+			\name The uniform if found; A pointer to an UniformNotFound instance if not found.
 		*/
 		IUniform* FindUniform(const std::string& name);
 
@@ -337,6 +347,7 @@ namespace core
 		static GLenum GetDestFactorAsEnum(DestFactor::Enum dfactor);
 		static GLenum GetFrontFaceAsEnum(FrontFace::Enum frontFace);
 		static GLenum GetCullFaceAsEnum(CullFace::Enum cullFace);
+		static GLenum GetPolygonModeAsEnum(PolygonMode::Enum mode);
 
 
 	friend class OpenGLRenderContext;
@@ -446,6 +457,11 @@ namespace core
 		std::vector<GLenum> mTextureTarget;
 		std::vector<uint32> mSamplerObjectUID;
 		uint32 mActiveTextureIndex;
+
+		//
+		// Polygon mode
+		//
+		PolygonMode::Enum mPolygonMode;
 
 		//
 		// Bound render targets

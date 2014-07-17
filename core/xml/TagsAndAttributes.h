@@ -10,6 +10,7 @@ namespace core
 	static const std::string TAG_STENCIL_MASK("stencilmask");
 	static const std::string TAG_FRONT_FACE("frontface");
 	static const std::string TAG_CULL_FACE("cullface");
+	static const std::string TAG_POLYGON_MODE("polygonmode");
 	static const std::string TAG_DEPTH_FUNC("depthfunc");
 	static const std::string TAG_DEPTH_MASK("depthmask");
 	static const std::string TAG_SRC_FACTOR("srcfactor");

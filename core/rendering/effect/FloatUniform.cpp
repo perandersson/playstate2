@@ -118,12 +118,36 @@ void FloatUniform::SetColorRGBA(const Color& color)
 		FloatUniform::Apply();
 }
 
+void FloatUniform::SetColorRGBA(const Color& color, float32 a)
+{
+	mCount = 4;
+	mValues[0] = color.a;
+	mValues[1] = color.g;
+	mValues[2] = color.b;
+	mValues[3] = a;
+
+	if (IsEffectActive())
+		FloatUniform::Apply();
+}
+
 void FloatUniform::SetColorRGB(const Color& color)
 {
 	mCount = 3;
 	mValues[0] = color.r;
 	mValues[1] = color.g;
 	mValues[2] = color.b;
+
+	if (IsEffectActive())
+		FloatUniform::Apply();
+}
+
+void FloatUniform::SetVector4(const Vector3& vec, float32 w)
+{
+	mCount = 4;
+	mValues[0] = vec.x;
+	mValues[1] = vec.y;
+	mValues[2] = vec.z;
+	mValues[3] = w;
 
 	if (IsEffectActive())
 		FloatUniform::Apply();

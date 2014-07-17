@@ -56,15 +56,15 @@ namespace core
 			\param direction
 					A direction to where this spotlight is looking towards. The length of the direction vector defines how far the spotlight reaches.
 		*/
-		inline void SetDirection(const Vector3& direction) {
-			mDirection = direction;
+		inline void SetSpotDirection(const Vector3& spotDirection) {
+			mSpotDirection = spotDirection;
 		}
 
 		/*!
 			\brief Retrieves the direction where this spotlight is lookat towards
 		*/
-		inline const Vector3& GetDirection() const {
-			return mDirection;
+		inline const Vector3& GetSpotDirection() const {
+			return mSpotDirection;
 		}
 
 		/*!
@@ -96,7 +96,7 @@ namespace core
 	private:
 		Color mColor;
 		float32 mCutoff;
-		Vector3 mDirection;
+		Vector3 mSpotDirection;
 		Cone* mSpotLightCone;
 		Resource<Texture> mTexture;
 	};

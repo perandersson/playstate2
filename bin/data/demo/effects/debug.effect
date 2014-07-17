@@ -10,11 +10,11 @@
 		uniform mat4 ProjectionMatrix;
 		uniform mat4 ViewMatrix;
 		uniform mat4 ModelMatrix;
-		uniform vec3 Color;
+		uniform vec4 Color;
 		
 		layout(location = 0) in vec3 position;
 
-		out vec3 vs_color;
+		out vec4 vs_color;
 
 		void main()
 		{
@@ -27,11 +27,11 @@
 	<![CDATA[
 		#version 330
 
-		in vec3 vs_color;
+		in vec4 vs_color;
 
 		void main()
 		{
-			gl_FragColor = vec4(vs_color, 1.0);
+			gl_FragColor = vs_color;
 		}
 	]]>
 	</FragmentShader>

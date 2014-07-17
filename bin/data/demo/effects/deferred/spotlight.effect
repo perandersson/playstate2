@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Effect>
 	<DepthTest>true</DepthTest>
-	<DepthMask>false</DepthMask>
-	<DepthFunc>LEQUAL</DepthFunc>
-	<Blend>false</Blend>
+	<Blend>true</Blend>
 	<SrcFactor>ONE</SrcFactor>
 	<DestFactor>ONE</DestFactor>
 	<FrontFace>CCW</FrontFace>
@@ -13,28 +11,45 @@
 		#version 330
 
 		uniform mat4 ProjectionMatrix;
+		uniform mat4 ModelMatrix;
 		uniform mat4 ViewMatrix;
 
 		// Light properties
 		uniform float LightRadius;
 		uniform vec3 LightPosition;
+		uniform vec3 SpotDirection;
 
+		// Light Vertex information
 		layout(location = 0) in vec3 in_Position;
-		layout(location = 2) in vec2 in_TexCoord;
+		layout(location = 2) in vec2 in_texCoord;
 
-		out vec2 vs_TexCoord;
-		out vec3 vs_lightPosInWorldSpace;
-		
+		// Data to fragment shader
+		out vec2 vs_TexCoords;
+		out vec3 vs_ViewSpacePosition;
+		out vec3 vs_ViewSpaceLightPosition;
+		out vec3 vs_SpotDirection;
+
 		void main()
-		{
-			// The vertex position (add the supplied LightPosition because we are using a uniform cone as a model)
-			vec4 Vp = ViewMatrix * vec4(in_Position.xyz + LightPosition.xyz, 1.0);
+		{			
+			// The vertex position (add the supplied LightPosition because we are using a uniform sphere as a model)
+			// The rendered model has the size of 1.0. We then resize the model here into it's correct size.
+			vec4 Vp = ViewMatrix * ModelMatrix * vec4(in_Position.xyz, 1.0);
 			
-			// The light position in local camera space
-			vs_lightPosInWorldSpace = vec3(ViewMatrix * vec4(LightPosition.xyz, 1.0));
+			// View-space position
+			vs_ViewSpacePosition = Vp.xyz;
 			
+			// View-space light position
+			vs_ViewSpaceLightPosition = vec3(ViewMatrix * vec4(LightPosition, 1.0));
+			
+			//
+			//mat4 normalMatrix = transpose(inverse(ModelMatrix));
+			//vs_SpotDirection = normalize(vec3(normalMatrix * vec4(SpotDirection, 1.0)));
+			
+			// Send the texture coordinates to the fragment shader
+			vs_TexCoords = in_texCoord;
+			
+			// Render the vertices at the projected position
 			gl_Position = ProjectionMatrix * Vp;
-			vs_TexCoord = in_TexCoord;
 		}
 	]]>
 	</VertexShader>
@@ -44,63 +59,79 @@
 		<WrapS>CLAMP_TO_EDGE</WrapS>
 		<WrapT>CLAMP_TO_EDGE</WrapT>
 	</SamplerState>
+	<SamplerState Id="NormalsTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
 	<FragmentShader>
 	<![CDATA[
 		#version 330
-
+				
 		// Texture samples to decide if the light should be rendered
-		uniform sampler2D PositionsTexture;
 		uniform sampler2D NormalsTexture;
 		
-		// The size of the screen
+		// Screen information
 		uniform vec2 ScreenSize;
+		uniform float FarClipDistance;
 
 		// How the texture looks like
 		uniform sampler2D LightTexture;
 
-		// Variables used by the point light
+		// Variables used by the spotlight
 		uniform float LightCutoff;
 		uniform vec3 LightColor;
-		uniform vec3 LightPosition;
-		uniform vec3 LightDirection;
-		
-		// Position of the pixel
-		in vec2 vs_TexCoord;
-		in vec3 vs_lightPosInWorldSpace;
+		uniform vec3 SpotDirection;
 
+		// Position of the pixel
+		in vec2 vs_TexCoords;
+		in vec3 vs_ViewSpacePosition;
+		in vec3 vs_ViewSpaceLightPosition;
+		in vec3 vs_SpotDirection;
+		
+		/*!
+			\brief Calculates the view-space position based on the current pixels depth value
+			
+			\param screenCoords
+			\param depth
+		*/
+		vec3 CalculateVSpacePosition(vec2 screenCoords, float depth)
+		{
+			// Normalize the view ray
+			vec3 viewRay = vec3(vs_ViewSpacePosition.xy * (-FarClipDistance / vs_ViewSpacePosition.z), -FarClipDistance);
+				
+			// Scale the view ray by the ratio of the linear z value to the projected view ray
+			return viewRay * depth;
+		}
+		
 		void main()
 		{
-			// Calculate the screen texture coordinates based on the fragments coordinate and the screen size
+			vec4 color = texture2D(LightTexture, vs_TexCoords) * vec4(LightColor, 1.0);
+			if(color.a == 0)
+				discard;
+				
+			// Calculate the screen texture coordinates based on the screen size
 			vec2 screenCoords = gl_FragCoord.xy / ScreenSize;
+				
+			// Retrieves the fragment normal
+			vec4 geometry = texture2D(NormalsTexture, screenCoords);
+			vec3 N = normalize(geometry.xyz * 2.0 - 1.0);
 			
-			// Retrieves the pixel from the texture used by the spotlight
-			vec4 final_color;
+			// Get view-space position from the depth value
+			vec3 P = CalculateVSpacePosition(screenCoords, geometry.a); 
 			
-			// Retrieves the fragment position
-			vec3 Fpos = texture2D(PositionsTexture, screenCoords).xyz;
-			
-			// Light direction (direction between the current position and the light position)
-			vec3 L = normalize(vs_lightPosInWorldSpace - Fpos);
-			
-			// Spot Direction
-			vec3 D = normalize(LightDirection);
+			// Direction from the light to the surface
+			vec3 L = normalize(P - vs_ViewSpaceLightPosition);
 						
-			// Retrieves the normal for the current pixel
-			vec3 N = normalize(texture2D(NormalsTexture, screenCoords).xyz * 2.0 - 1.0);
-			
-			float NdotL = max(dot(N, L), 0.0);
-			if(NdotL > 0.0) {
-				float spotEffect = dot(D, -L);
-				float spotCosCutoff = cos(LightCutoff);
-				if(spotEffect > spotCosCutoff) {
-				}
-					final_color = texture2D(LightTexture, vs_TexCoord) * vec4(LightColor, 1.0);
+			float atten = 0.0;
+			float clampedCosine = max(0.0, dot(SpotDirection, L));
+			if (clampedCosine > cos(LightCutoff)) // inside of spotlight cone?
+			{
+				atten = clampedCosine; // pow(clampedCosine, light0.spotExponent);   
 			}
 			
-			gl_FragColor = final_color;
-			//gl_FragColor = vec4(L.xyz, 1.0);
-			//gl_FragColor = vec4(N.xyz, 1.0);
-			//gl_FragColor = vec4(vs_ScreenSpaceTexCoord.x, 0.0, 0.0, 1.0);
+			gl_FragColor = color * atten;
 		}
 	]]>
 	</FragmentShader>

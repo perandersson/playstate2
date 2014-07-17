@@ -42,8 +42,10 @@ namespace core
 		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr) = 0;
 
 		virtual void SetColorRGBA(const Color& color) = 0;
+		virtual void SetColorRGBA(const Color& color, float32 a) = 0;
 		virtual void SetColorRGB(const Color& color) = 0;
 		virtual void SetMatrix(const Matrix4x4& matrix) = 0;
+		virtual void SetVector4(const Vector3& vec, float32 w) = 0;
 		virtual void SetVector3(const Vector3& vec) = 0;
 		virtual void SetVector2(const Vector2& vec) = 0;
 	};

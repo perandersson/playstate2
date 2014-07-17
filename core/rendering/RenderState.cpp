@@ -21,6 +21,7 @@ mStencilTest(false), mStencilMask(BIT_ALL),
 mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
 mActiveTextureIndex(0),
+mPolygonMode(PolygonMode::DEFAULT),
 mFrameBufferID(0), mApplyRenderTarget(false), mFrameBufferApplied(false),
 mApplyEffectState(true), mMaxDrawBuffers(0), mMaxActiveTextures(0), mNextTextureIndex(0)
 {
@@ -134,6 +135,8 @@ EffectState* RenderState::ApplyEffect(const Effect* effect)
 
 	SetFrontFace(effect->GetFrontFace());
 	SetCullFace(effect->GetCullFace());
+
+	SetPolygonMode(effect->GetPolygonMode());
 
 	SetClearColor(effect->GetClearColor());
 	SetClearDepth(effect->GetClearDepth());
@@ -592,6 +595,22 @@ void RenderState::BindSampler(SamplerObject* samplerObject, uint32 index)
 #endif
 }
 
+void RenderState::SetPolygonMode(PolygonMode::Enum mode)
+{
+	if (mPolygonMode == mode)
+		return;
+
+	// Only GL_FRONT_AND_BACK works. Everything else is deprecated
+	glPolygonMode(GL_FRONT_AND_BACK, GetPolygonModeAsEnum(mode));
+	mPolygonMode = mode;
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not change the polygon mode");
+#endif
+}
+
 void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, uint32 index)
 {
 	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
@@ -979,6 +998,17 @@ GLenum RenderState::GetCullFaceAsEnum(CullFace::Enum cullFace)
 	};
 
 	return enums[(uint32)cullFace];
+}
+
+GLenum RenderState::GetPolygonModeAsEnum(PolygonMode::Enum mode)
+{
+	static const GLenum enums[PolygonMode::SIZE] = {
+		GL_POINT,
+		GL_LINE,
+		GL_FILL
+	};
+
+	return enums[(uint32)mode];
 }
 
 void RenderState::UnbindIndexBuffer()

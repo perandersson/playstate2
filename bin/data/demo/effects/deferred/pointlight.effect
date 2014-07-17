@@ -53,12 +53,6 @@
 		<WrapS>CLAMP_TO_EDGE</WrapS>
 		<WrapT>CLAMP_TO_EDGE</WrapT>
 	</SamplerState>
-	<SamplerState Id="DepthTexture">
-		<MinFilter>LINEAR</MinFilter>
-		<MagFilter>LINEAR</MagFilter>
-		<WrapS>CLAMP_TO_EDGE</WrapS>
-		<WrapT>CLAMP_TO_EDGE</WrapT>
-	</SamplerState>
 	<SamplerState Id="NormalsTexture">
 		<MinFilter>LINEAR</MinFilter>
 		<MagFilter>LINEAR</MagFilter>
@@ -69,11 +63,7 @@
 	<![CDATA[
 		#version 330
 		
-		uniform mat4 ProjectionMatrix;
-		uniform mat4 ViewMatrix;
-
 		// Texture samples to decide if the light should be rendered
-		uniform sampler2D DepthTexture;
 		uniform sampler2D NormalsTexture;
 		
 		// Screen information
@@ -86,6 +76,7 @@
 		// Variables used by the point light
 		uniform float LightRadius;
 		uniform vec3 LightColor;
+		uniform vec4 SpotDirection;
 		uniform float ConstantAttenuation;
 		uniform float LinearAttenuation;
 		uniform float QuadraticAttenuation;
@@ -101,11 +92,10 @@
 			\param screenCoords
 			\param depth
 		*/
-		vec3 CalculateVSpacePosition(vec2 screenCoords, float depth)
+		vec3 CalculateVSpacePosition(in vec2 screenCoords, in float depth)
 		{
 			// Normalize the view ray
 			vec3 viewRay = vec3(vs_ViewSpacePosition.xy * (-FarClipDistance / vs_ViewSpacePosition.z), -FarClipDistance);
-			//float linearDepth = ProjectionMatrix[2][3] / (depth - ProjectionMatrix[2][2]);
 				
 			// Scale the view ray by the ratio of the linear z value to the projected view ray
 			return viewRay * depth;
@@ -124,22 +114,21 @@
 			vec4 geometry = texture2D(NormalsTexture, screenCoords);
 			vec3 N = normalize(geometry.xyz * 2.0 - 1.0);
 			
-			// Get view-space position
+			// Get view-space position from the depth value
 			vec3 P = CalculateVSpacePosition(screenCoords, geometry.a); 
 			
 			// Direction from the light to the direction
-			vec3 L = vs_ViewSpaceLightPosition - P;
+			vec3 L = P - vs_ViewSpaceLightPosition;
 			float Ldist = length(L);
 			L *= (1.0 / Ldist);
-			//if( Ldist > LightRadius ) discard;
+			if( Ldist > LightRadius ) discard;
 			
 			// Calculate the light attenuation
 			float sqrDist = Ldist * Ldist;
 			float atten = max(0, 1 - sqrDist * (1 / (LightRadius*LightRadius)));
 			atten *= atten;
-	
-			//gl_FragColor = color * atten;
-			gl_FragColor = vec4(N, 1.0);
+			
+			gl_FragColor = color * atten;
 		}
 	]]>
 	</FragmentShader>
