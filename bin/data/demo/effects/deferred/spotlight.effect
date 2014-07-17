@@ -125,14 +125,19 @@
 			// Direction from the surface to the light
 			vec3 L = normalize(vs_ViewSpaceLightPosition - P);
 						
-			float atten = 0.0;
 			float clampedCosine = dot(-L, vs_SpotDirection);
-			if (clampedCosine > CosLightCutoff) // inside of spotlight cone?
-			{
-				atten = clampedCosine; // pow(clampedCosine, light0.spotExponent);   
-			}
+			if (clampedCosine < CosLightCutoff)
+				discard;
+				
+			float atten = smoothstep(0.0, CosLightCutoff, clampedCosine);
+			//float sqrDist = clampedCosine * clampedCosine;
+			//float atten = max(0, 1 - sqrDist);
+			//atten *= atten;
 			
-			gl_FragColor = color * atten;
+			//atten = clampedCosine;
+			float spotDecay = 2.5;
+			float spotIntensity = pow(abs(smoothstep(CosLightCutoff, 1, clampedCosine)), spotDecay); 
+			gl_FragColor = color * spotIntensity;
 		}
 	]]>
 	</FragmentShader>
