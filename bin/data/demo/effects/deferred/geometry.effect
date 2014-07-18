@@ -18,7 +18,7 @@
 		layout(location = 2) in vec2 texcoord;
 
 		// Data to fragment shader
-		out vec3 vs_WorldSpaceNormals;
+		out vec3 vs_ViewSpaceNormal;
 		out vec2 vs_TexCoords;
 		out vec4 vs_ViewSpacePosition;
 
@@ -29,7 +29,7 @@
 			
 			// Supply the view-space normal matrix to the fragment shader
 			mat4 normalMatrix = transpose(inverse(ViewMatrix * ModelMatrix));
-			vs_WorldSpaceNormals = normalize(vec3(normalMatrix * vec4(normal, 1.0)));
+			vs_ViewSpaceNormal = normalize(vec3(normalMatrix * vec4(normal, 1.0)));
 			
 			// Send the texture coordinates to the fragment shader
 			vs_TexCoords = texcoord;
@@ -57,7 +57,7 @@
 		uniform vec3 DiffuseColor;
 
 		// Data from vertex shader
-		in vec3 vs_WorldSpaceNormals;
+		in vec3 vs_ViewSpaceNormal;
 		in vec2 vs_TexCoords;
 		in vec4 vs_ViewSpacePosition;
 
@@ -67,7 +67,7 @@
 			gl_FragData[0] = vec4(texture2D(DiffuseTexture, vs_TexCoords).rgb, 0);
 			
 			// Put the normal and the linearized depth value
-			gl_FragData[1] = vec4(normalize(vs_WorldSpaceNormals) * 0.5 + 0.5, -vs_ViewSpacePosition.z / FarClipDistance);
+			gl_FragData[1] = vec4(normalize(vs_ViewSpaceNormal) * 0.5 + 0.5, -vs_ViewSpacePosition.z / FarClipDistance);
 		}
 	]]>
 	</FragmentShader>
