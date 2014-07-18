@@ -11,6 +11,8 @@ int SpotLight_GetCutoff(struct lua_State* L);
 int SpotLight_SetSpotDirection(struct lua_State* L);
 int SpotLight_GetSpotDirection(struct lua_State* L);
 int SpotLight_SetTexture(struct lua_State* L);
+int SpotLight_SetSpotExponent(struct lua_State* L);
+int SpotLight_GetSpotExponent(struct lua_State* L);
 
 static luaL_Reg SpotLight_Methods[] = {
 	{ SCRIPT_CONSTRUCTOR, SpotLight_Factory },
@@ -22,5 +24,7 @@ static luaL_Reg SpotLight_Methods[] = {
 	{ "SetSpotDirection", SpotLight_SetSpotDirection },
 	{ "GetSpotDirection", SpotLight_GetSpotDirection },
 	{ "SetTexture", SpotLight_SetTexture },
+	{ "SetSpotExponent", SpotLight_SetSpotExponent },
+	{ "GetSpotExponent", SpotLight_GetSpotExponent },
 	{ nullptr, nullptr }
 };

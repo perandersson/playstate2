@@ -1,6 +1,6 @@
 #pragma once
 #include "LightSource.h"
-#include "../../rendering/Texture.h"
+#include "../../rendering/Texture2D.h"
 #include "../../rendering/shape/Cone.h"
 
 namespace core
@@ -51,6 +51,24 @@ namespace core
 		}
 
 		/*!
+			\brief Set's the spotlight exponent
+
+			\param exponent
+		*/
+		inline void SetSpotExponent(float32 exponent) {
+			mSpotExponent = exponent;
+		}
+
+		/*!
+			\brief Retrieves the spotlight exponent used for the light calculation
+
+			\return The spotlight exponent
+		*/
+		inline float32 GetSpotExponent() const {
+			return mSpotExponent;
+		}
+
+		/*!
 			\brief Set the direction this spotlight is looking towards
 
 			\param direction
@@ -70,7 +88,7 @@ namespace core
 
 			\param texture
 		*/
-		inline void SetTexture(Resource<Texture> texture) {
+		inline void SetTexture(Resource<Texture2D> texture) {
 			mTexture = texture;
 		}
 
@@ -94,8 +112,9 @@ namespace core
 	private:
 		Color mColor;
 		float32 mCutoff;
+		float32 mSpotExponent;
 		Vector3 mSpotDirection;
 		Cone* mSpotLightCone;
-		Resource<Texture> mTexture;
+		Resource<Texture2D> mTexture;
 	};
 }

@@ -90,12 +90,35 @@ int SpotLight_GetSpotDirection(struct lua_State* L)
 
 int SpotLight_SetTexture(struct lua_State* L)
 {
-	Resource<Texture> value = ScriptUtils::ToResource<Texture>(L);
+	Resource<Texture2D> value = ScriptUtils::ToResource<Texture2D>(L);
 	SpotLight* self = ScriptUtils::ToObject<SpotLight>(L);
 	if (self != nullptr)
 		self->SetTexture(value);
 	else
-		ScriptUtils::LogError(L, "Expected: SpotLight.SetTexture(self, Texture)");
+		ScriptUtils::LogError(L, "Expected: SpotLight.SetTexture(self, Texture2D)");
 
 	return 0;
+}
+
+int SpotLight_SetSpotExponent(struct lua_State* L)
+{
+	float32 value = ScriptUtils::ToFloat32(L);
+	SpotLight* self = ScriptUtils::ToObject<SpotLight>(L);
+	if (self != nullptr)
+		self->SetSpotExponent(value);
+	else
+		ScriptUtils::LogError(L, "Expected: SpotLight.SetSpotExponent(self, float32)");
+
+	return 0;
+}
+
+int SpotLight_GetSpotExponent(struct lua_State* L)
+{
+	SpotLight* self = ScriptUtils::ToObject<SpotLight>(L);
+	if (self != nullptr)
+		return ScriptUtils::PushFloat32(L, self->GetSpotExponent());
+	else
+		ScriptUtils::LogError(L, "Expected: SpotLight.GetSpotExponent(self)");
+
+	return ScriptUtils::PushFloat32(L, 0.0f);
 }

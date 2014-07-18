@@ -3,7 +3,7 @@
 using namespace core;
 
 SpotLight::SpotLight()
-: LightSource(), mSpotLightCone(nullptr)
+: LightSource(), mSpotLightCone(nullptr), mSpotExponent(2.0f)
 {
 
 }
@@ -46,7 +46,9 @@ void SpotLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet*
 		block->position = GetAbsolutePosition();
 		block->color = mColor;
 		block->direction = mSpotLightCone->GetDirection();
+		block->spotExponent = mSpotExponent;
 		block->radius = mCutoff;
+		block->diffuseTexture = mTexture.Get();
 		block->vertexBuffer = mSpotLightCone->GetVertexBuffer();
 		block->indexBuffer = mSpotLightCone->GetIndexBuffer();
 	}

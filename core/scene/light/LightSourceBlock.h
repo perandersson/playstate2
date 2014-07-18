@@ -14,6 +14,7 @@ namespace core
 		Vector3 direction;
 		Color color;
 		float32 radius;
+		float32 spotExponent;
 		float32 constantAttenuation;
 		float32 linearAttenuation;
 		float32 quadricAttenuation;

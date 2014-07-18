@@ -196,7 +196,7 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 		state->FindUniform("FarClipDistance")->SetFloat(camera->GetFarClipDistance());
 
 		// Default light texture
-		state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
+		auto lightTexture = state->FindUniform("LightTexture");
 
 		IUniform* lightColor = state->FindUniform("LightColor");
 		IUniform* lightPosition = state->FindUniform("LightPosition");
@@ -206,6 +206,7 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 		IUniform* lightCutoff = state->FindUniform("LightCutoff");
 		IUniform* cosLightCutoff = state->FindUniform("CosLightCutoff");
 		IUniform* spotDirection = state->FindUniform("SpotDirection");
+		IUniform* spotExponent = state->FindUniform("SpotExponent");
 
 		LightSourceResultSet::Iterator it = mSpotLightsResultSet.GetIterator();
 		LightSourceResultSet::Type block;
@@ -219,6 +220,12 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 			cosLightCutoff->SetFloat(cosf(block->radius * ANG2RAD));
 			spotDirection->SetVector3(block->direction);
 
+			if (block->diffuseTexture == nullptr)
+				lightTexture->SetTexture(mWhiteTexture);
+			else
+				lightTexture->SetTexture(block->diffuseTexture);
+
+			spotExponent->SetFloat(block->spotExponent);
 			state->Render(block->vertexBuffer, block->indexBuffer);
 		}
 	}

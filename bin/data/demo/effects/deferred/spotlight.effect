@@ -27,7 +27,7 @@
 		out vec2 vs_TexCoords;
 		out vec3 vs_ViewSpacePosition;
 		out vec3 vs_ViewSpaceLightPosition;
-		out vec3 vs_SpotDirection;
+		out vec3 vs_ViewSpaceSpotDirection;
 
 		void main()
 		{			
@@ -41,9 +41,9 @@
 			// View-space light position
 			vs_ViewSpaceLightPosition = vec3(ViewMatrix * vec4(LightPosition, 1.0));
 			
-			//
+			// View-space spot direction
 			mat4 normalMatrix = transpose(inverse(ViewMatrix * ModelMatrix));
-			vs_SpotDirection = normalize(vec3(normalMatrix * vec4(SpotDirection, 1.0)));
+			vs_ViewSpaceSpotDirection = normalize(vec3(normalMatrix * vec4(SpotDirection, 1.0)));
 			
 			// Send the texture coordinates to the fragment shader
 			vs_TexCoords = in_texCoord;
@@ -80,16 +80,15 @@
 		uniform sampler2D LightTexture;
 
 		// Variables used by the spotlight
-		uniform float LightCutoff;
 		uniform float CosLightCutoff;
 		uniform vec3 LightColor;
-		uniform vec3 SpotDirection;
+		uniform float SpotExponent;
 
 		// Position of the pixel
 		in vec2 vs_TexCoords;
 		in vec3 vs_ViewSpacePosition;
 		in vec3 vs_ViewSpaceLightPosition;
-		in vec3 vs_SpotDirection;
+		in vec3 vs_ViewSpaceSpotDirection;
 		
 		/*!
 			\brief Calculates the view-space position based on the current pixels depth value
@@ -125,18 +124,12 @@
 			// Direction from the surface to the light
 			vec3 L = normalize(vs_ViewSpaceLightPosition - P);
 						
-			float clampedCosine = dot(-L, vs_SpotDirection);
+			float clampedCosine = dot(-L, vs_ViewSpaceSpotDirection);
 			if (clampedCosine < CosLightCutoff)
 				discard;
 				
 			float atten = smoothstep(0.0, CosLightCutoff, clampedCosine);
-			//float sqrDist = clampedCosine * clampedCosine;
-			//float atten = max(0, 1 - sqrDist);
-			//atten *= atten;
-			
-			//atten = clampedCosine;
-			float spotDecay = 2.5;
-			float spotIntensity = pow(abs(smoothstep(CosLightCutoff, 1, clampedCosine)), spotDecay); 
+			float spotIntensity = pow(abs(smoothstep(CosLightCutoff, 1, clampedCosine)), SpotExponent); 
 			gl_FragColor = color * spotIntensity;
 		}
 	]]>
