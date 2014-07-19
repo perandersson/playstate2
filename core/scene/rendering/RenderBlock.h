@@ -8,12 +8,14 @@ namespace core
 	class IndexBuffer;
 	class Texture2D;
 
-	//
-	// This block contains all the data neccessary for the pipeline
-	// to draw the object onto the screen.
+	/*!
+		\brief Struct containing all the neccessary data for the pipeline to draw it onto the screen.
+	*/
 	struct RenderBlock
 	{
+		/* A generated ID based on the parameters available for this render block */
 		uint32 id;
+
 		const VertexBuffer* vertexBuffer;
 		const IndexBuffer* indexBuffer;
 		uint32 startIndex;

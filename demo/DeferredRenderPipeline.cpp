@@ -220,10 +220,10 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 			cosLightCutoff->SetFloat(cosf(block->radius * ANG2RAD));
 			spotDirection->SetVector3(block->direction);
 
-			if (block->diffuseTexture == nullptr)
+			if (block->texture == nullptr)
 				lightTexture->SetTexture(mWhiteTexture);
 			else
-				lightTexture->SetTexture(block->diffuseTexture);
+				lightTexture->SetTexture(block->texture);
 
 			spotExponent->SetFloat(block->spotExponent);
 			state->Render(block->vertexBuffer, block->indexBuffer);

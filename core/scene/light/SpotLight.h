@@ -99,6 +99,13 @@ namespace core
 			return mTexture;
 		}
 
+		/*!
+			\brief Retrieves the spotlight cone
+		*/
+		inline const Cone* GetSpotLightCone() const {
+			return mSpotLightCone;
+		}
+
 	public:
 		virtual void OnAddedToSceneGroup();
 		virtual void CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const;

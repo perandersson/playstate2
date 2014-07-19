@@ -5,6 +5,8 @@
 
 namespace core
 {
+	class LightSource;
+
 	//
 	// 
 	class LightSourceResultSet

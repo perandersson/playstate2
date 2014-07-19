@@ -48,7 +48,7 @@ void SpotLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet*
 		block->direction = mSpotLightCone->GetDirection();
 		block->spotExponent = mSpotExponent;
 		block->radius = mCutoff;
-		block->diffuseTexture = mTexture.Get();
+		block->texture = mTexture.Get();
 		block->vertexBuffer = mSpotLightCone->GetVertexBuffer();
 		block->indexBuffer = mSpotLightCone->GetIndexBuffer();
 	}

@@ -21,6 +21,7 @@ namespace core
 		};
 
 		static const uint32 DEFAULT = GEOMETRY | TEXTURES;
+		static const uint32 ALL_LIGHTS = POINT_LIGHTS | SPOT_LIGHTS;
 	};
 
 }
