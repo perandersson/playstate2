@@ -108,6 +108,16 @@ Matrix4x4 Camera::GetPerspective(float32 near, float32 far, float32 fov, float32
 
 Matrix4x4 Camera::GetLookAt(const Vector3& eye, const Vector3& center, const Vector3& up)
 {
-	assert_not_implemented();
-	return Matrix4x4::IDENTITY;
+	// http://www.opengl.org/wiki/GluLookAt_code
+	const Vector3 forward = (center - eye).GetNormalized();
+	const Vector3 u = up.GetNormalized();
+
+	const Vector3 side = (forward.CrossProduct(u)).GetNormalized();
+	const Vector3 newUp = side.CrossProduct(forward);
+
+	return Matrix4x4(
+		side.x, side.y, side.z, 0.0f,
+		newUp.x, newUp.y, newUp.z, 0.0f,
+		-forward.x, -forward.y, -forward.z, 0.0f,
+		0.f, 0.f, 0.f, 1.0f);
 }
