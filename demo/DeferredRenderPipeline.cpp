@@ -145,12 +145,12 @@ bool DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* c
 
 	FindQuery query = { camera, FindQueryFilter::DEFAULT | FindQueryFilter::POINT_LIGHTS };
 	if (scene.Find(query, &mPointLightsResultSet)) {
-		IUniform* lightColor = state->FindUniform("LightColor");
-		IUniform* lightPosition = state->FindUniform("LightPosition");
-		IUniform* constantAttenuation = state->FindUniform("ConstantAttenuation");
-		IUniform* linearAttenuation = state->FindUniform("LinearAttenuation");
-		IUniform* quadraticAttenuation = state->FindUniform("QuadraticAttenuation");
-		IUniform* lightRadius = state->FindUniform("LightRadius");
+		auto lightColor = state->FindUniform("LightColor");
+		auto lightPosition = state->FindUniform("LightPosition");
+		auto constantAttenuation = state->FindUniform("ConstantAttenuation");
+		auto linearAttenuation = state->FindUniform("LinearAttenuation");
+		auto quadraticAttenuation = state->FindUniform("QuadraticAttenuation");
+		auto lightRadius = state->FindUniform("LightRadius");
 
 		LightSourceResultSet::Iterator it = mPointLightsResultSet.GetIterator();
 		LightSourceResultSet::Type block;
@@ -198,15 +198,14 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 		// Default light texture
 		auto lightTexture = state->FindUniform("LightTexture");
 
-		IUniform* lightColor = state->FindUniform("LightColor");
-		IUniform* lightPosition = state->FindUniform("LightPosition");
-		IUniform* constantAttenuation = state->FindUniform("ConstantAttenuation");
-		IUniform* linearAttenuation = state->FindUniform("LinearAttenuation");
-		IUniform* quadraticAttenuation = state->FindUniform("QuadraticAttenuation");
-		IUniform* lightCutoff = state->FindUniform("LightCutoff");
-		IUniform* cosLightCutoff = state->FindUniform("CosLightCutoff");
-		IUniform* spotDirection = state->FindUniform("SpotDirection");
-		IUniform* spotExponent = state->FindUniform("SpotExponent");
+		auto lightColor = state->FindUniform("LightColor");
+		auto lightPosition = state->FindUniform("LightPosition");
+		auto constantAttenuation = state->FindUniform("ConstantAttenuation");
+		auto linearAttenuation = state->FindUniform("LinearAttenuation");
+		auto quadraticAttenuation = state->FindUniform("QuadraticAttenuation");
+		auto cosLightCutoff = state->FindUniform("CosLightCutoff");
+		auto spotDirection = state->FindUniform("SpotDirection");
+		auto spotExponent = state->FindUniform("SpotExponent");
 
 		LightSourceResultSet::Iterator it = mSpotLightsResultSet.GetIterator();
 		LightSourceResultSet::Type block;
@@ -216,7 +215,6 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 			lightColor->SetColorRGB(block->color);
 			lightPosition->SetVector3(block->position);
 
-			lightCutoff->SetFloat(block->radius);
 			cosLightCutoff->SetFloat(cosf(block->radius * ANG2RAD));
 			spotDirection->SetVector3(block->direction);
 
@@ -252,14 +250,11 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* camera)
 {
 	RenderState* state = RenderContext::Activate(mDebugEffect);
-	//state->SetDepthRenderTarget(mDepthRenderTarget);
-	//state->SetDepthMask(false);
 
 	state->FindUniform("ProjectionMatrix")->SetMatrix(camera->GetProjectionMatrix());
 	state->FindUniform("ViewMatrix")->SetMatrix(camera->GetViewMatrix());
 	auto modelMatrix = state->FindUniform("ModelMatrix");
 	auto color = state->FindUniform("Color");
-	//auto objectPosition = state->FindUniform("ObjectPosition");
 
 	LightSourceResultSet::Iterator it = mPointLightsResultSet.GetIterator();
 	LightSourceResultSet::Type block;
