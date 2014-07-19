@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Effect>
-	<DepthTest>true</DepthTest>
+	<DepthTest>false</DepthTest>
+	<DepthMask>false</DepthMask>
 	<FrontFace>CCW</FrontFace>
 	<CullFace>FRONT</CullFace>
 	<VertexShader>
