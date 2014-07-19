@@ -150,7 +150,6 @@ namespace core
 #endif
 
 #ifndef ANG2RAD
-// 2.0 * M_PI / 360.0
 #define ANG2RAD 0.01745329251994329576922
 #endif
 
