@@ -15,16 +15,13 @@
 		uniform mat4 ViewMatrix;
 
 		// Light properties
-		uniform float LightRadius;
 		uniform vec3 LightPosition;
 		uniform vec3 SpotDirection;
 
 		// Light Vertex information
 		layout(location = 0) in vec3 in_Position;
-		layout(location = 2) in vec2 in_texCoord;
 
 		// Data to fragment shader
-		out vec2 vs_TexCoords;
 		out vec3 vs_ViewSpacePosition;
 		out vec3 vs_ViewSpaceLightPosition;
 		out vec3 vs_ViewSpaceSpotDirection;
@@ -44,9 +41,6 @@
 			// View-space spot direction
 			mat4 normalMatrix = transpose(inverse(ViewMatrix * ModelMatrix));
 			vs_ViewSpaceSpotDirection = normalize(vec3(normalMatrix * vec4(SpotDirection, 1.0)));
-			
-			// Send the texture coordinates to the fragment shader
-			vs_TexCoords = in_texCoord;
 			
 			// Render the vertices at the projected position
 			gl_Position = ProjectionMatrix * Vp;
@@ -85,7 +79,6 @@
 		uniform float SpotExponent;
 
 		// Position of the pixel
-		in vec2 vs_TexCoords;
 		in vec3 vs_ViewSpacePosition;
 		in vec3 vs_ViewSpaceLightPosition;
 		in vec3 vs_ViewSpaceSpotDirection;
@@ -107,10 +100,6 @@
 		
 		void main()
 		{
-			vec4 color = texture2D(LightTexture, vs_TexCoords) * vec4(LightColor, 1.0);
-			if(color.a == 0)
-				discard;
-				
 			// Calculate the screen texture coordinates based on the screen size
 			vec2 screenCoords = gl_FragCoord.xy / ScreenSize;
 				
@@ -127,7 +116,11 @@
 			float clampedCosine = dot(-L, vs_ViewSpaceSpotDirection);
 			if (clampedCosine < CosLightCutoff)
 				discard;
-				
+									
+			// Light color
+			//vec4 color = texture2D(LightTexture, projectTexCoord) * vec4(LightColor, 1.0);
+			vec4 color = vec4(LightColor, 1.0);
+			
 			float atten = smoothstep(0.0, CosLightCutoff, clampedCosine);
 			float spotIntensity = pow(abs(smoothstep(CosLightCutoff, 1, clampedCosine)), SpotExponent); 
 			gl_FragColor = color * spotIntensity;
