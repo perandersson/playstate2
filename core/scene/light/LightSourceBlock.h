@@ -41,10 +41,10 @@ namespace core
 		/* Texture, if we want to project a texture onto the screen from the spotlight's point of view*/
 		const Texture2D* texture;
 
-		/* Spotlight cone mesh vertices */
+		/* The light source vertices, if available */
 		const VertexBuffer* vertexBuffer;
 
-		/* Spotlight cone mesh indices */
+		/* The light source indices, if available */
 		const IndexBuffer* indexBuffer;
 	};
 }
