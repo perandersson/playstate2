@@ -60,14 +60,17 @@
 		in vec3 vs_ViewSpaceNormal;
 		in vec2 vs_TexCoords;
 		in vec4 vs_ViewSpacePosition;
+		
+		layout(location = 0) out vec3 albedo;
+		layout(location = 1) out vec4 geometry;
 
 		void main()
 		{
 			// Color
-			gl_FragData[0] = vec4(texture2D(DiffuseTexture, vs_TexCoords).rgb, 0);
+			albedo = texture(DiffuseTexture, vs_TexCoords).rgb;
 			
 			// Put the normal and the linearized depth value
-			gl_FragData[1] = vec4(normalize(vs_ViewSpaceNormal) * 0.5 + 0.5, -vs_ViewSpacePosition.z / FarClipDistance);
+			geometry = vec4(normalize(vs_ViewSpaceNormal) * 0.5 + 0.5, -vs_ViewSpacePosition.z / FarClipDistance);
 		}
 	]]>
 	</FragmentShader>

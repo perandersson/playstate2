@@ -16,16 +16,6 @@ MagFilter::Enum MagFilter::Parse(const std::string& s, MagFilter::Enum defaultVa
 	}
 }
 
-GLenum MagFilter::Parse(MagFilter::Enum e)
-{
-	static const GLenum enums[MagFilter::SIZE] = {
-		GL_NEAREST,
-		GL_LINEAR
-	};
-
-	return enums[(uint32)e];
-}
-
 std::hash_map<std::string, int32> MagFilter::GetValues()
 {
 	std::hash_map<std::string, int32> enums;

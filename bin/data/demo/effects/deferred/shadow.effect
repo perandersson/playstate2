@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Effect>
+	<DepthTest>true</DepthTest>
+	<FrontFace>CCW</FrontFace>
+	<CullFace>BACK</CullFace>
+	<DepthFunc>LEQUAL</DepthFunc>
+	<VertexShader>
+	<![CDATA[
+		#version 330
+		
+		uniform mat4 ModelMatrix;
+		uniform mat4 ProjectionMatrix;
+		uniform mat4 ViewMatrix;
+
+		// Vertex information
+		layout(location = 0) in vec3 position;
+
+		// Data to fragment shader
+		out vec4 vs_ViewSpacePosition;
+
+		void main()
+		{
+			// Calculate the view-space position
+			vs_ViewSpacePosition = ViewMatrix * ModelMatrix * vec4(position, 1.0);
+			
+			// Render the vertices at the projected position
+			gl_Position = ProjectionMatrix * vs_ViewSpacePosition;
+		}
+	]]>
+	</VertexShader>
+	<FragmentShader>
+	<![CDATA[
+		#version 330
+
+		// Screen information
+		uniform float FarClipDistance;
+
+		// Data from vertex shader
+		in vec4 vs_ViewSpacePosition;
+
+		void main()
+		{
+			// Vertex edges and the linearized depth value
+			gl_FragData[0] = vec4(vs_ViewSpacePosition.xyz, -vs_ViewSpacePosition.z / FarClipDistance);
+		}
+	]]>
+	</FragmentShader>
+</Effect>

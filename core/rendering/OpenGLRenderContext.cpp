@@ -5,6 +5,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "RenderState.h"
+#include "OpenGLEnum.h"
 #include "exception/RenderingException.h"
 #include "effect/Effect.h"
 using namespace core;
@@ -63,7 +64,7 @@ IndexBuffer* OpenGLRenderContext::CreateBuffer(const uint32* indices, uint32 num
 	const GLuint bufferID = GenBufferID();
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(uint32), indices, GetBufferUsageAsEnum(usage));
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(uint32), indices, OpenGLEnum::Convert(usage));
 	glFlush();
 
 	GetRenderState()->UnbindIndexBuffer();
@@ -100,7 +101,7 @@ VertexBuffer* OpenGLRenderContext::CreateBuffer(const void* vertices, uint32 siz
 	const GLuint bufferID = GenBufferID();
 
 	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
-	glBufferData(GL_ARRAY_BUFFER, numVertices * sizeOfOneVertex, vertices, GetBufferUsageAsEnum(usage));
+	glBufferData(GL_ARRAY_BUFFER, numVertices * sizeOfOneVertex, vertices, OpenGLEnum::Convert(usage));
 	glFlush();
 
 	GetRenderState()->UnbindVertexBuffer();
@@ -121,9 +122,9 @@ RenderTarget2D* OpenGLRenderContext::CreateRenderTarget2D(const Size& size, Text
 	GLenum _minMag = GL_LINEAR;
 	const GLenum _format = GetTextureFormatAsEnum(format);
 	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
-	const GLenum minFilter = GetMinFilterAsEnum(MinFilter::DEFAULT);
-	const GLenum magFilter = GetMagFilterAsEnum(MagFilter::DEFAULT);
-	const GLenum textureWrap = GetTextureWrapAsEnum(TextureWrap::DEFAULT);
+	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
+	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
+	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
 
 	switch (format)
 	{
@@ -169,9 +170,9 @@ Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat:
 
 	const GLenum _format = GetTextureFormatAsEnum(format);
 	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
-	const GLenum minFilter = GetMinFilterAsEnum(MinFilter::DEFAULT);
-	const GLenum magFilter = GetMagFilterAsEnum(MagFilter::DEFAULT);
-	const GLenum textureWrap = GetTextureWrapAsEnum(TextureWrap::DEFAULT);
+	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
+	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
+	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
 
 	const GLuint textureID = GenTextureID();
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -240,9 +241,9 @@ RenderTargetCube* OpenGLRenderContext::CreateRenderTargetCube(const Size& size, 
 	GLenum _minMag = GL_LINEAR;
 	const GLenum _format = GetTextureFormatAsEnum(format);
 	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
-	const GLenum minFilter = GetMinFilterAsEnum(MinFilter::DEFAULT);
-	const GLenum magFilter = GetMagFilterAsEnum(MagFilter::DEFAULT);
-	const GLenum textureWrap = GetTextureWrapAsEnum(TextureWrap::DEFAULT);
+	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
+	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
+	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
 
 	switch (format)
 	{
@@ -301,9 +302,9 @@ TextureCube* OpenGLRenderContext::CreateTextureCube(const Size& size, TextureFor
 
 	const GLenum _format = GetTextureFormatAsEnum(format);
 	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
-	const GLenum minFilter = GetMinFilterAsEnum(MinFilter::DEFAULT);
-	const GLenum magFilter = GetMagFilterAsEnum(MagFilter::DEFAULT);
-	const GLenum textureWrap = GetTextureWrapAsEnum(TextureWrap::DEFAULT);
+	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
+	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
+	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
 
 	const GLuint textureID = GenTextureID();
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -353,6 +354,15 @@ GLenum OpenGLRenderContext::GetTextureFormatAsEnum(TextureFormat::Enum format)
 	switch (format)
 	{
 	case TextureFormat::RGB:
+		_format = GL_RGB;
+		break;
+	case TextureFormat::RGB8:
+		_format = GL_RGB;
+		break;
+	case TextureFormat::RGB12:
+		_format = GL_RGB;
+		break;
+	case TextureFormat::RGB16:
 		_format = GL_RGB;
 		break;
 	case TextureFormat::RGBA:
@@ -411,6 +421,15 @@ GLenum OpenGLRenderContext::GetInternalTextureFormatAsEnum(TextureFormat::Enum f
 	case TextureFormat::RGB:
 		_internalFormat = GL_RGB;
 		break;
+	case TextureFormat::RGB8:
+		_internalFormat = GL_RGB8;
+		break;
+	case TextureFormat::RGB12:
+		_internalFormat = GL_RGB12;
+		break;
+	case TextureFormat::RGB16:
+		_internalFormat = GL_RGB16;
+		break;
 	case TextureFormat::RGBA:
 		break;
 	case TextureFormat::RGBA8:
@@ -457,26 +476,6 @@ GLenum OpenGLRenderContext::GetInternalTextureFormatAsEnum(TextureFormat::Enum f
 		break;
 	}
 	return _internalFormat;
-}
-
-GLenum OpenGLRenderContext::GetMinFilterAsEnum(MinFilter::Enum minFilter)
-{
-	return MinFilter::Parse(minFilter);
-}
-
-GLenum OpenGLRenderContext::GetMagFilterAsEnum(MagFilter::Enum magFilter)
-{
-	return MagFilter::Parse(magFilter);
-}
-
-GLenum OpenGLRenderContext::GetTextureWrapAsEnum(TextureWrap::Enum textureWrap)
-{
-	return TextureWrap::Parse(textureWrap);
-}
-
-GLenum OpenGLRenderContext::GetBufferUsageAsEnum(BufferUsage::Enum bufferUsage)
-{
-	return BufferUsage::Parse(bufferUsage);
 }
 
 GLuint OpenGLRenderContext::GenTextureID() const

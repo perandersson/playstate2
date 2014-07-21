@@ -15,6 +15,7 @@ namespace core
 			SIZE,
 		};
 
+		/* Default cull face used by the rendering engine */
 		static const Enum DEFAULT = DISABLED;
 		
 		/*!

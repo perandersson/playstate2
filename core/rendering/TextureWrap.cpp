@@ -16,18 +16,6 @@ TextureWrap::Enum TextureWrap::Parse(const std::string& s, TextureWrap::Enum def
 	}
 }
 
-GLenum TextureWrap::Parse(TextureWrap::Enum e)
-{
-	static const GLenum enums[TextureWrap::SIZE] = {
-		GL_CLAMP_TO_EDGE,
-		GL_CLAMP_TO_BORDER,
-		GL_MIRRORED_REPEAT,
-		GL_REPEAT
-	};
-
-	return enums[(uint32)e];
-}
-
 std::hash_map<std::string, int32> TextureWrap::GetValues()
 {
 	std::hash_map<std::string, int32> enums;

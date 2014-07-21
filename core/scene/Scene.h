@@ -5,6 +5,7 @@
 #include "rendering/RenderBlockResultSet.h"
 #include "light/LightSourceResultSet.h"
 #include "Event.h"
+#include "../camera/Camera.h"
 
 namespace core
 {

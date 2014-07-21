@@ -16,20 +16,6 @@ MinFilter::Enum MinFilter::Parse(const std::string& s, MinFilter::Enum defaultVa
 	}
 }
 
-GLenum MinFilter::Parse(MinFilter::Enum e)
-{
-	static const GLenum enums[MinFilter::SIZE] = {
-		GL_NEAREST,
-		GL_LINEAR,
-		GL_NEAREST_MIPMAP_NEAREST,
-		GL_LINEAR_MIPMAP_NEAREST,
-		GL_NEAREST_MIPMAP_LINEAR,
-		GL_LINEAR_MIPMAP_LINEAR
-	};
-
-	return enums[(uint32)e];
-}
-
 std::hash_map<std::string, int32> MinFilter::GetValues()
 {
 	std::hash_map<std::string, int32> enums;

@@ -89,12 +89,32 @@ void DefaultUniform::SetTexture(const RenderTargetCube* texture)
 	assert(false && "Invalid component type");
 }
 
-void DefaultUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)
+void DefaultUniform::SetMinFilter(MinFilter::Enum minFilter)
 {
 	assert(false && "Invalid component type");
 }
 
-void DefaultUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr)
+void DefaultUniform::SetMagFilter(MagFilter::Enum magFilter)
+{
+	assert(false && "Invalid component type");
+}
+
+void DefaultUniform::SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t)
+{
+	assert(false && "Invalid component type");
+}
+
+void DefaultUniform::SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t, TextureWrap::Enum r)
+{
+	assert(false && "Invalid component type");
+}
+
+void DefaultUniform::SetTextureCompareFunc(CompareFunc::Enum compareFunc)
+{
+	assert(false && "Invalid component type");
+}
+
+void DefaultUniform::SetTextureCompareMode(CompareMode::Enum compareMode)
 {
 	assert(false && "Invalid component type");
 }

@@ -52,7 +52,7 @@
     <ClCompile Include="..\..\core_tests\test\TestException.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\core_tests\camera\Camera_test.cpp">
+    <ClCompile Include="..\..\core_tests\camera\CameraUtils_test.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
   </ItemGroup>

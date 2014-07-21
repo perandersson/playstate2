@@ -15,15 +15,11 @@ namespace core
 			INT,
 			UNSIGNED_INT,
 			FLOAT,
-			DOUBLE,
-
-			SIZE
+			DOUBLE
 		};
-		
-		/*!
-			\brief Convert the supplied enum into a OpenGL enum
-		*/
-		static GLenum Parse(Enum e);
+
+		/* Number of enums available */
+		static const uint32 SIZE = DOUBLE + 1;
 	};
 
 	//

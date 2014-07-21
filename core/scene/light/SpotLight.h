@@ -2,6 +2,7 @@
 #include "LightSource.h"
 #include "../../rendering/Texture2D.h"
 #include "../../rendering/shape/Cone.h"
+#include "../../camera/Projector.h"
 
 namespace core
 {
@@ -37,9 +38,7 @@ namespace core
 			\param cutoff
 						The angle in degrees
 		*/
-		inline void SetCutoff(float32 cutoff) {
-			mCutoff = cutoff;
-		}
+		void SetCutoff(float32 cutoff);
 
 		/*!
 			\brief Retrieves this spotlight's cutoff angle
@@ -99,13 +98,6 @@ namespace core
 			return mTexture;
 		}
 
-		/*!
-			\brief Retrieves the spotlight cone
-		*/
-		inline const Cone* GetSpotLightCone() const {
-			return mSpotLightCone;
-		}
-
 	public:
 		virtual void OnAddedToSceneGroup();
 		virtual void CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const;
@@ -123,5 +115,6 @@ namespace core
 		Vector3 mSpotDirection;
 		Cone* mSpotLightCone;
 		Resource<Texture2D> mTexture;
+		Projector mProjector;
 	};
 }

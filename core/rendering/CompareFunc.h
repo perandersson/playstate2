@@ -3,7 +3,7 @@
 
 namespace core
 {
-	class DepthFunc
+	class CompareFunc
 	{
 	public:
 		enum Enum {
@@ -17,22 +17,22 @@ namespace core
 			ALWAYS
 		};
 
-		/* Default depth function used by the rendering engine */
+		/* Default compare function used by the rendering engine */
 		static const Enum DEFAULT = LEQUAL;
 
 		/* The number of enums available */
 		static const uint32 SIZE = ALWAYS + 1;
-		
+
 		/*!
 			\brief Parse the supplied string and return the enum representing it
 
 			\param s
-						The name of the enum
+					The name of the enum
 			\param defaultValue
-						Value if the supplied string does not map to an enum
+					Value if the supplied string does not map to an enum
 		*/
 		static Enum Parse(const std::string& s, Enum defaultValue);
-		
+
 		/*!
 			\brief Retrieves the values available in this enum
 

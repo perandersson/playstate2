@@ -1,5 +1,6 @@
 #include "../Memory.h"
 #include "Camera.h"
+#include "CameraUtils.h"
 #include <string>
 #include <cmath>
 using namespace core;
@@ -11,7 +12,7 @@ Camera::Camera()
 
 Camera::Camera(const Camera& camera)
 : ScriptObject(),
-mViewFrustum(camera.mViewFrustum), mViewMatrix(camera.mViewMatrix), mProjectionMatrix(camera.mProjectionMatrix),
+mFrustum(camera.mFrustum), mViewMatrix(camera.mViewMatrix), mProjectionMatrix(camera.mProjectionMatrix),
 mPosition(camera.mPosition), mCenter(camera.mCenter), mUp(camera.mUp), mNearPlane(0), mFarPlane(0)
 {
 
@@ -23,8 +24,8 @@ Camera::~Camera()
 
 void Camera::SetPerspective(float32 near, float32 far, float32 fov, float32 ratio)
 {
-	mProjectionMatrix = GetPerspective(near, far, fov, ratio);
-	mViewFrustum.SetPerspective(near, far, fov, ratio);
+	CameraUtils::GetPerspective(mProjectionMatrix, near, far, fov, ratio);
+	mFrustum.SetPerspective(near, far, fov, ratio);
 
 	mNearPlane = near;
 	mFarPlane = far;
@@ -32,7 +33,7 @@ void Camera::SetPerspective(float32 near, float32 far, float32 fov, float32 rati
 
 void Camera::SetOrtho2D(float32 left, float32 right, float32 bottom, float32 top)
 {
-	mProjectionMatrix = GetOrtho2D(left, right, bottom, top);
+	CameraUtils::GetOrtho2D(mProjectionMatrix, left, right, bottom, top);
 }
 
 void Camera::Move(const Vector3& direction)
@@ -42,82 +43,11 @@ void Camera::Move(const Vector3& direction)
 
 void Camera::LookAt(const Vector3& eye, const Vector3& center, const Vector3& up)
 {
+	CameraUtils::GetLookAt(mViewMatrix, eye, center, up);
 	mPosition = eye;
 	mCenter = center;
-	mUp = up.GetNormalized();
+	mUp = up;
+	mViewDirection = (center - eye).GetNormalized();
 
-	// http://www.opengl.org/wiki/GluLookAt_code
-
-	const Vector3 forward = (mCenter - mPosition).GetNormalized();
-	mLookingAtDirection = forward;
-
-	const Vector3 side = (forward.CrossProduct(mUp)).GetNormalized();
-	const Vector3 newUp = side.CrossProduct(forward);
-
-	mViewMatrix = Matrix4x4(
-		side.x, side.y, side.z, 0.0f,
-		newUp.x, newUp.y, newUp.z, 0.0f,
-		-forward.x, -forward.y, -forward.z, 0.0f,
-		0.f, 0.f, 0.f, 1.0f);
-	mViewMatrix.Translate(mPosition * -1.0f);
-	mViewFrustum.LookAt(mPosition, mCenter, mUp);
-}
-
-Matrix4x4 Camera::GetOrtho2D(float32 left, float32 right, float32 bottom, float32 top)
-{
-	// http://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
-
-	const float32 near = -1;
-	const float32 far = 1;
-
-	const float32 tx = -((right + left) / (right - left));
-	const float32 ty = -((top + bottom) / (top - bottom));
-	const float32 tz = -((far + near) / (far - near));
-
-	Matrix4x4 projection;
-	projection._11 = 2.0f / (right - left);
-	projection._14 = tx;
-	projection._22 = 2.0f / (top - bottom);
-	projection._24 = ty;
-	projection._33 = -2.0f / (far - near);
-	projection._34 = tz;
-	projection._44 = 1.0f;
-	return projection;
-}
-
-Matrix4x4 Camera::GetPerspective(float32 near, float32 far, float32 fov, float32 ratio)
-{
-	// http://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
-
-	const float32 top = near * tanf(fov * (float32)(M_PI / 360.0));
-	const float32 bottom = -top;
-	const float32 right = top * ratio;
-	const float32 left = -right;
-
-	Matrix4x4 matrix = Matrix4x4::ZERO;
-	matrix._11 = (2.0f * near) / (right - left);
-	matrix._13 = (right + left) / (right - left);
-	matrix._22 = (2.0f * near) / (top - bottom);
-	matrix._23 = (top + bottom) / (top - bottom);
-	matrix._33 = -((far + near) / (far - near));
-	matrix._34 = -((2.0f * far * near) / (far - near));
-	matrix._43 = -1.0f;
-
-	return matrix;
-}
-
-Matrix4x4 Camera::GetLookAt(const Vector3& eye, const Vector3& center, const Vector3& up)
-{
-	// http://www.opengl.org/wiki/GluLookAt_code
-	const Vector3 forward = (center - eye).GetNormalized();
-	const Vector3 u = up.GetNormalized();
-
-	const Vector3 side = (forward.CrossProduct(u)).GetNormalized();
-	const Vector3 newUp = side.CrossProduct(forward);
-
-	return Matrix4x4(
-		side.x, side.y, side.z, 0.0f,
-		newUp.x, newUp.y, newUp.z, 0.0f,
-		-forward.x, -forward.y, -forward.z, 0.0f,
-		0.f, 0.f, 0.f, 1.0f);
+	mFrustum.LookAt(eye, mViewDirection, mUp);
 }

@@ -9,12 +9,15 @@ namespace core
 		enum Enum {
 			POINT = 0,
 			LINE,
-			FILL,
-
-			SIZE
+			FILL
 		};
 
+		/* Default polygon mode used by the rendering engine */
 		static const Enum DEFAULT = FILL;
+
+		/* Number of enums */
+		static const uint32 SIZE = FILL + 1;
+
 		
 		/*!
 			\brief Parse the supplied string and return the enum representing it

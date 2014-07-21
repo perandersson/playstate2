@@ -16,7 +16,11 @@ namespace core
 		virtual void Apply();
 		virtual void SetTexture(const Texture2D* texture);
 		virtual void SetTexture(const RenderTarget2D* texture);
-		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt);
+		virtual void SetMinFilter(MinFilter::Enum minFilter);
+		virtual void SetMagFilter(MagFilter::Enum magFilter);
+		virtual void SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t);
+		virtual void SetTextureCompareFunc(CompareFunc::Enum compareFunc);
+		virtual void SetTextureCompareMode(CompareMode::Enum compareMode);
 
 	private:
 		const Texture2D* mTexture;

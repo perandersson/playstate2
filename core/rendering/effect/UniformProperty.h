@@ -3,6 +3,8 @@
 #include "../MagFilter.h"
 #include "../MinFilter.h"
 #include "../TextureWrap.h"
+#include "../CompareFunc.h"
+#include "../CompareMode.h"
 #include "../GLEWMX.h"
 
 namespace core
@@ -26,12 +28,21 @@ namespace core
 		TextureWrap::Enum wrapt;
 		TextureWrap::Enum wrapr;
 
+		//
+		// Texture comparison modes
+		//
+
+		CompareFunc::Enum compareFunc;
+		CompareMode::Enum compareMode;
+
 		UniformProperty() {
 			minFilter = MinFilter::DEFAULT;
 			magFilter = MagFilter::DEFAULT;
 			wraps = TextureWrap::DEFAULT;
 			wrapt = TextureWrap::DEFAULT;
 			wrapr = TextureWrap::DEFAULT;
+			compareFunc = CompareFunc::LEQUAL;
+			compareMode = CompareMode::NONE;
 		}
 	};
 

@@ -788,6 +788,21 @@
     <ClInclude Include="..\..\core\rendering\PolygonMode.h">
       <Filter>Source Files\rendering</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\rendering\CompareMode.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\CompareFunc.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\camera\Projector.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\camera\CameraUtils.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\rendering\OpenGLEnum.h">
+      <Filter>Source Files\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1265,6 +1280,21 @@
       <Filter>Source Files\rendering\effect</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\PolygonMode.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\CompareMode.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\CompareFunc.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\camera\Projector.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\OpenGLEnum.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\rendering\TextureFormat.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
   </ItemGroup>

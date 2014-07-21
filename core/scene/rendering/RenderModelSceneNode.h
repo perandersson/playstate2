@@ -29,9 +29,7 @@ namespace core
 		void SetModel(Resource<Model> model);
 
 	public:
-		//
-		// Perform's a pre-render stage
-		virtual void PreRender(const FindQuery& state, RenderBlockResultSet* resultSet);
+		virtual void PreRender(const FindQuery& query, RenderBlockResultSet* resultSet);
 
 	private:
 		Resource<Model> mModel;

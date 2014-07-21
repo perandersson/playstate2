@@ -13,6 +13,7 @@ namespace core
 			SIZE
 		};
 
+		/* Default front face used by the rendering engine */
 		static const Enum DEFAULT = CCW;
 
 		/*!

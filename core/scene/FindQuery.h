@@ -1,5 +1,5 @@
 #pragma once
-#include "../camera/camera.h"
+#include "../camera/Frustum.h"
 #include "FindQueryFilter.h"
 
 namespace core
@@ -16,7 +16,7 @@ namespace core
 	struct FindQuery
 	{
 		/* Search for items from the supplied cameras perspective */
-		const Camera* camera;
+		const Frustum* frustum;
 
 		/* Specifies what we want to receive from the find query */
 		typemask filter;

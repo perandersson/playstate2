@@ -39,6 +39,12 @@ bool SamplerStateXmlVisitor::VisitEnter(const tinyxml2::XMLElement& element, con
 	else if (name == TAG_WRAP_R) {
 		mSamplerState->wrapr = TextureWrap::Parse(GetLowerCaseValue(element), TextureWrap::DEFAULT);
 	}
+	else if (name == TAG_TEXTURE_COMPARE_FUNC) {
+		mSamplerState->compareFunc = CompareFunc::Parse(GetLowerCaseValue(element), CompareFunc::DEFAULT);
+	}
+	else if (name == TAG_TEXTURE_COMPARE_MODE) {
+		mSamplerState->compareMode = CompareMode::Parse(GetLowerCaseValue(element), CompareMode::DEFAULT);
+	}
 
 	return true;
 }

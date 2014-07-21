@@ -21,8 +21,6 @@ namespace core
 		*/
 		std::shared_ptr<UniformProperty> GetSamplerState();
 
-	// XMLVisitor
-	public:
 		virtual bool VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* firstAttribute);
 
 	private:

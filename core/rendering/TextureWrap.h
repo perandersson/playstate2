@@ -1,6 +1,5 @@
 #pragma once
 #include "../typedefs.h"
-#include "GLEWMX.h"
 
 namespace core
 {
@@ -11,12 +10,14 @@ namespace core
 			CLAMP_TO_EDGE = 0,
 			CLAMP_TO_BORDER,
 			MIRRORED_REPEAT,
-			REPEAT,
-
-			SIZE
+			REPEAT
 		};
 
+		/* Default texture wrap used by the rendering engine */
 		static const Enum DEFAULT = REPEAT;
+
+		/* Number enums available */
+		static const uint32 SIZE = REPEAT + 1;
 		
 		/*!
 			\brief Parse the supplied string and return the enum representing it
@@ -27,12 +28,6 @@ namespace core
 						Value if the supplied string does not map to an enum
 		*/
 		static Enum Parse(const std::string& s, Enum defaultValue);
-
-		//
-		// Convert the supplied enum into a OpenGL enum
-		//
-		// @param e
-		static GLenum Parse(Enum e);
 		
 		/*!
 			\brief Retrieves the values available in this enum

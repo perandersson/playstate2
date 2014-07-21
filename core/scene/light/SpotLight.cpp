@@ -1,5 +1,6 @@
 #include "../../Memory.h"
 #include "SpotLight.h"
+#include "../../camera/Camera.h"
 using namespace core;
 
 SpotLight::SpotLight()
@@ -16,6 +17,12 @@ SpotLight::~SpotLight()
 	}
 }
 
+void SpotLight::SetCutoff(float32 cutoff)
+{
+	mCutoff = cutoff;
+	UpdateShape();
+}
+
 void SpotLight::SetSpotDirection(const Vector3& spotDirection)
 {
 	mSpotDirection = spotDirection;
@@ -24,10 +31,6 @@ void SpotLight::SetSpotDirection(const Vector3& spotDirection)
 
 void SpotLight::OnAddedToSceneGroup()
 {
-	// Create a point-light buffer matching the radius of the object
-	//if (mPointLightBuffer == nullptr)
-	//	mPointLightBuffer = VertexBufferUtils::CreateSphere(70, 0, 0, 0, BufferUsage::DYNAMIC);	
-
 	// TODO: Create a formula for calculating the bounding box based on the radius and light intensity.
 	SetBoundingBox(AABB(Vector3::ZERO, mCutoff * 2, mCutoff * 2, mCutoff * 2));
 	LightSource::OnAddedToSceneGroup();
@@ -37,18 +40,26 @@ void SpotLight::OnAddedToSceneGroup()
 	float32 height = direction.Length();
 	direction /= height;
 	mSpotLightCone = Cone::Create(Vector3::ZERO, direction, height, mCutoff, 30U, BufferUsage::DYNAMIC);
+
+	// Update light projector's view perspective
+	mProjector.SetPerspective(1.f, height, mCutoff * 2.0f, 1.0f);
+	mProjector.LookAt(mAbsolutePosition, direction, Vector3(0, 1, 0));
 }
 
 void SpotLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const
 {
 	if (BIT_ISSET(query.filter, FindQueryFilter::SPOT_LIGHTS)) {
 		auto block = _out_resultSet->Create();
-		block->position = GetAbsolutePosition();
+		block->position = mAbsolutePosition;
 		block->color = mColor;
 		block->direction = mSpotLightCone->GetDirection();
 		block->spotExponent = mSpotExponent;
 		block->radius = mCutoff;
-		block->texture = mTexture.Get();
+		block->projector = &mProjector;
+
+		if (BIT_ISSET(query.filter, FindQueryFilter::TEXTURES)) {
+			block->texture = mTexture.Get();
+		}
 
 		if (BIT_ISSET(query.filter, FindQueryFilter::GEOMETRY)) {
 			block->vertexBuffer = mSpotLightCone->GetVertexBuffer();
@@ -84,5 +95,9 @@ void SpotLight::UpdateShape()
 		direction /= height;
 
 		mSpotLightCone->Update(Vector3::ZERO, direction, height, mCutoff, 30U);
+
+		// Update light projector's view perspective
+		mProjector.SetPerspective(1.f, height, mCutoff * 2.0f, 1.0f);
+		mProjector.LookAt(mAbsolutePosition, direction, Vector3(0, 1, 0));
 	}
 }

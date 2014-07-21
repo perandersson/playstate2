@@ -17,7 +17,13 @@ namespace core
 			POINT_LIGHTS = BIT(3),
 			SPOT_LIGHTS = BIT(4),
 
-			DEBUG_INFO = BIT(5),
+			//
+			// SHADOW
+			//
+
+			SHADOW_CASTER = BIT(5),
+
+			DEBUG_INFO = BIT(6),
 		};
 
 		static const uint32 DEFAULT = GEOMETRY | TEXTURES;

@@ -36,7 +36,7 @@ namespace core
 		//
 		// @param frustum
 		// @param visitor
-		virtual void Find(const Frustum& frustum, ISpatialTreeVisitor* visitor) const = 0;
+		virtual void Find(const Frustum* frustum, ISpatialTreeVisitor* visitor) const = 0;
 		//
 		// Search for nodes based on the supplied boudingBox. The visitor will be called for each found item.
 		//

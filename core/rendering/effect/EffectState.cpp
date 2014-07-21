@@ -9,6 +9,7 @@
 #include "MatrixUniform.h"
 #include "Sampler2DUniform.h"
 #include "SamplerCubeUniform.h"
+#include "../OpenGLEnum.h"
 #include "../exception/RenderingException.h"
 using namespace core;
 
@@ -94,13 +95,15 @@ SamplerObject* EffectState::GenSamplerObject(std::shared_ptr<UniformProperty> pr
 	if (error != GL_NO_ERROR)
 		THROW_EXCEPTION(RenderingException, "Could create a new SamplerObject from effect file. Reason: %d", error);
 
-	SamplerObject* samplerObject = new SamplerObject(samplerID, property->minFilter, property->magFilter, property->wraps, property->wrapt, property->wrapr);
+	SamplerObject* samplerObject = new SamplerObject(samplerID);
 
-	glSamplerParameteri(samplerID, GL_TEXTURE_MIN_FILTER, MinFilter::Parse(property->minFilter));
-	glSamplerParameteri(samplerID, GL_TEXTURE_MAG_FILTER, MagFilter::Parse(property->magFilter));
-	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_S, TextureWrap::Parse(property->wraps));
-	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_T, TextureWrap::Parse(property->wrapt));
-	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_R, TextureWrap::Parse(property->wrapr));
+	glSamplerParameteri(samplerID, GL_TEXTURE_MIN_FILTER, OpenGLEnum::Convert(property->minFilter));
+	glSamplerParameteri(samplerID, GL_TEXTURE_MAG_FILTER, OpenGLEnum::Convert(property->magFilter));
+	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_S, OpenGLEnum::Convert(property->wraps));
+	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_T, OpenGLEnum::Convert(property->wrapt));
+	glSamplerParameteri(samplerID, GL_TEXTURE_WRAP_R, OpenGLEnum::Convert(property->wrapr));
+	glSamplerParameteri(samplerID, GL_TEXTURE_COMPARE_FUNC, OpenGLEnum::Convert(property->compareFunc));
+	glSamplerParameteri(samplerID, GL_TEXTURE_COMPARE_MODE, OpenGLEnum::Convert(property->compareMode));
 
 	error = glGetError();
 	if (error != GL_NO_ERROR) {

@@ -16,8 +16,12 @@ namespace core
 		virtual void Apply();
 		virtual void SetTexture(const TextureCube* texture);
 		virtual void SetTexture(const RenderTargetCube* texture);
-		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt);
-		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr);
+		virtual void SetMinFilter(MinFilter::Enum minFilter);
+		virtual void SetMagFilter(MagFilter::Enum magFilter);
+		virtual void SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t);
+		virtual void SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t, TextureWrap::Enum r);
+		virtual void SetTextureCompareFunc(CompareFunc::Enum compareFunc);
+		virtual void SetTextureCompareMode(CompareMode::Enum compareMode);
 
 	private:
 		const TextureCube* mTexture;

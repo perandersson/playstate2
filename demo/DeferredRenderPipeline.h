@@ -14,30 +14,34 @@ public:
 	void DrawLighting(const Scene& scene, const Camera* camera);
 	bool DrawPointLights(const Scene& scene, const Camera* camera, bool clear);
 	bool DrawSpotLights(const Scene& scene, const Camera* camera, bool clear);
+	void DrawSpotLightShadows(const Scene& scene, const Camera* camera);
 
 	void DrawFinalResultToScreen(const Scene& scene, const Camera* camera);
 	void DrawDebugInfo(const Scene& scene, const Camera* camera);
 
 private:
 	Resource<Effect> mGeometryEffect;
-	Resource<Effect> mResultEffect;
 	Resource<Effect> mDebugEffect;
+
+	Resource<Effect> mResultEffect;
+	Matrix4x4 mUniformProjectionMatrix;
 	VertexBuffer* mFullscreenQuad;
 
 	Resource<Effect> mPointLightEffect;
-	Resource<Effect> mSpotLightEffect;
 	Sphere* mSphere;
+
+	Resource<Effect> mSpotLightEffect;
 
 	Resource<Texture2D> mWhiteTexture;
 
-
 	RenderTarget2D* mDiffuseRenderTarget;
-	//RenderTarget2D* mMaterialsRenderTarget;
 	RenderTarget2D* mNormalsRenderTarget;
 	RenderTarget2D* mDepthRenderTarget;
 	RenderTarget2D* mLightRenderTarget;
 
-	RenderTargetCube* mCubeShadowMap;
+	Resource<Effect> mShadowMapEffect;
+	RenderTarget2D* mShadowMapRenderTarget;
+	RenderTarget2D* mShadowDepthRenderTarget;
 
 	RenderBlockResultSet mRenderBlockResultSet;
 	LightSourceResultSet mPointLightsResultSet;

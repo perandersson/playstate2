@@ -14,11 +14,6 @@ PointLight::~PointLight()
 {
 }
 
-void PointLight::SetOffset(const Vector3& offset)
-{
-	mOffset = offset;
-}
-
 void PointLight::SetColor(const Color& color)
 {
 	mColor = color;
@@ -54,7 +49,7 @@ void PointLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet
 {
 	if (BIT_ISSET(query.filter, FindQueryFilter::POINT_LIGHTS)) {
 		auto block = _out_resultSet->Create();
-		block->position = GetAbsolutePosition() + mOffset;
+		block->position = mAbsolutePosition;
 		block->color = mColor;
 		block->radius = mRadius;
 		block->constantAttenuation = mConstantAttenuation;

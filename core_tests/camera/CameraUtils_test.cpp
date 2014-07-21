@@ -1,17 +1,17 @@
-#include <core/camera/Camera.h>
+#include <core/camera/CameraUtils.h>
 #include "../test/Test.h"
 using namespace core;
 
 TEST_SUITE(Camera)
 {
-	UNIT_TEST(Camera_GetPerspective)
+	UNIT_TEST(CameraUtils_GetPerspective)
 	{
 		const float32 near = 1.0f;
 		const float32 far = 200.0f;
 		const float32 fov = 45.0f;
 		const float32 ratio = (1024.0f / 768.0f);
 
-		const Matrix4x4 value = Camera::GetPerspective(near, far, fov, ratio);
+		const Matrix4x4 value = CameraUtils::GetPerspective(near, far, fov, ratio);
 
 		const float32 top = near * tanf(fov * (float32)(M_PI / 360.0));
 		const float32 bottom = -top;
@@ -43,7 +43,7 @@ TEST_SUITE(Camera)
 		ASSERT_EQUALS(value[15], expected[15]);
 	}
 
-	UNIT_TEST(Camera_GetOrtho2D) {
+	UNIT_TEST(CameraUtils_GetOrtho2D) {
 		const float32 near = -1;
 		const float32 far = 1;
 
@@ -52,7 +52,7 @@ TEST_SUITE(Camera)
 		const float32 bottom = -1.0f;
 		const float32 top = 1.0f;
 
-		const Matrix4x4 value = Camera::GetOrtho2D(left, right, bottom, top);
+		const Matrix4x4 value = CameraUtils::GetOrtho2D(left, right, bottom, top);
 
 		const float32 expected[16] = {
 			2.0f / (right - left), 0, 0, 0,

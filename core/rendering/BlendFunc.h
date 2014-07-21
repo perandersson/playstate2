@@ -20,12 +20,14 @@ namespace core
 			CONSTANT_COLOR,
 			ONE_MINUS_CONSTANT_COLOR,
 			CONSTANT_ALPHA,
-			ONE_MINUS_CONSTANT_ALPHA,
-
-			SIZE
+			ONE_MINUS_CONSTANT_ALPHA
 		};
 
+		/* Default source factor used by the rendering engine */
 		static const Enum DEFAULT = ONE;
+
+		/* The number of enums available */
+		static const uint32 SIZE = ONE_MINUS_CONSTANT_ALPHA + 1;
 		
 		/*!
 			\brief Parse the supplied string and return the enum representing it
@@ -62,13 +64,15 @@ namespace core
 			CONSTANT_COLOR,
 			ONE_MINUS_CONSTANT_COLOR,
 			CONSTANT_ALPHA,
-			ONE_MINUS_CONSTANT_ALPHA,
-
-			SIZE
+			ONE_MINUS_CONSTANT_ALPHA
 		};
 
+		/* Default destination factor used by the rendering engine */
 		static const Enum DEFAULT = ZERO;
 		
+		/* The number of enums available */
+		static const uint32 SIZE = ONE_MINUS_CONSTANT_ALPHA + 1;
+
 		/*!
 			\brief Parse the supplied string and return the enum representing it
 

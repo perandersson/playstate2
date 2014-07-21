@@ -1,6 +1,7 @@
 #include "../../Memory.h"
 #include "Sampler2DUniform.h"
 #include "Effect.h"
+#include "../OpenGLEnum.h"
 #include "../RenderState.h"
 using namespace core;
 
@@ -46,12 +47,35 @@ void Sampler2DUniform::SetTexture(const RenderTarget2D* texture)
 	SetTexture((Texture2D*)texture);
 }
 
-void Sampler2DUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)
+void Sampler2DUniform::SetMinFilter(MinFilter::Enum minFilter)
+{
+	assert_not_null(mSamplerObject);
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MIN_FILTER, OpenGLEnum::Convert(minFilter));
+}
+
+void Sampler2DUniform::SetMagFilter(MagFilter::Enum magFilter)
+{
+	assert_not_null(mSamplerObject);
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MAG_FILTER, OpenGLEnum::Convert(magFilter));
+}
+
+void Sampler2DUniform::SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t)
+{
+	assert_not_null(mSamplerObject);
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_S, OpenGLEnum::Convert(s));
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_T, OpenGLEnum::Convert(t));
+}
+
+void Sampler2DUniform::SetTextureCompareFunc(CompareFunc::Enum compareFunc)
 {
 	assert_not_null(mSamplerObject);
 
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MIN_FILTER, MinFilter::Parse(minFilter));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MAG_FILTER, MagFilter::Parse(magFilter));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_S, TextureWrap::Parse(wraps));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_T, TextureWrap::Parse(wrapt));
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_COMPARE_FUNC, OpenGLEnum::Convert(compareFunc));
+}
+
+void Sampler2DUniform::SetTextureCompareMode(CompareMode::Enum compareMode)
+{
+	assert_not_null(mSamplerObject);
+
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_COMPARE_MODE, OpenGLEnum::Convert(compareMode));
 }

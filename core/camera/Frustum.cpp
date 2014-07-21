@@ -16,6 +16,14 @@ Frustum::Frustum(const Frustum& frustum)
 	memcpy(mPlanes, frustum.mPlanes, sizeof(mPlanes));
 }
 
+Frustum::Frustum(const Vector3& eye, const Vector3& center, const Vector3& up,
+	float32 nearPlane, float32 farPlane, float32 fov, float32 ratio)
+	: Frustum()
+{
+	SetPerspective(nearPlane, farPlane, fov, ratio);
+	LookAt(eye, center, up);
+}
+
 Frustum::~Frustum()
 {
 }
@@ -40,14 +48,14 @@ void Frustum::SetPerspective(float32 nearPlane, float32 farPlane, float32 fov, f
 	mFW = mFH * ratio;
 }
 
-void Frustum::LookAt(const Vector3& eye, const Vector3& center, const Vector3& up)
+void Frustum::LookAt(const Vector3& eye, const Vector3& direction, const Vector3& up)
 {
 	Vector3 dir, nc, fc, X, Y, Z;
 	
 	// compute the Z axis of camera
 	// this axis points in the opposite direction from
 	// the looking direction
-	Z = (eye - center).GetNormalized();
+	Z = -direction;
 
 	// X axis of camera with given "up" vector and Z axis
 	X = up.CrossProduct(Z).GetNormalized();

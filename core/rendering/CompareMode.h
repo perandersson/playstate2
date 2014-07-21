@@ -3,26 +3,20 @@
 
 namespace core
 {
-	class DepthFunc
+	class CompareMode
 	{
 	public:
 		enum Enum {
-			NEVER = 0,
-			LESS,
-			EQUAL,
-			LEQUAL,
-			GREATER,
-			NOTEQUAL,
-			GEQUAL,
-			ALWAYS
+			COMPARE_R_TO_TEXTURE,
+			NONE
 		};
 
-		/* Default depth function used by the rendering engine */
-		static const Enum DEFAULT = LEQUAL;
+		/* Default compare mode used by the rendering engine */
+		static const Enum DEFAULT = NONE;
 
-		/* The number of enums available */
-		static const uint32 SIZE = ALWAYS + 1;
-		
+		/* The number enums available */
+		static const uint32 SIZE = NONE + 1;
+
 		/*!
 			\brief Parse the supplied string and return the enum representing it
 

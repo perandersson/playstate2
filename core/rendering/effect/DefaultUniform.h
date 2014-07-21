@@ -18,7 +18,7 @@ namespace core
 		virtual void Apply() = 0;
 
 		/*!
-			\brief Checks if the effect for this uniform is active
+			\brief Checks if the effect for this uniform is active for the current render state
 
 			\return TRUE if the effect is active; FALSE otherwise
 		*/
@@ -42,8 +42,12 @@ namespace core
 		virtual void SetTexture(const RenderTarget2D* texture);
 		virtual void SetTexture(const RenderTargetCube* texture);
 
-		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt);
-		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr);
+		virtual void SetMinFilter(MinFilter::Enum minFilter);
+		virtual void SetMagFilter(MagFilter::Enum magFilter);
+		virtual void SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t);
+		virtual void SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t, TextureWrap::Enum r);
+		virtual void SetTextureCompareFunc(CompareFunc::Enum compareFunc);
+		virtual void SetTextureCompareMode(CompareMode::Enum compareMode);
 
 		virtual void SetColorRGBA(const Color& color);
 		virtual void SetColorRGBA(const Color& color, float32 a);

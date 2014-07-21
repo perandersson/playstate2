@@ -1,6 +1,10 @@
 #pragma once
 #include "kernel/Kernel.h"
 
+#include "camera/Camera.h"
+#include "camera/CameraUtils.h"
+#include "camera/Projector.h"
+
 #include "game/StandardGame.h"
 
 #include "rendering/Texture.h"

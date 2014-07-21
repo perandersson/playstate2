@@ -32,7 +32,7 @@ namespace core
 			\param state
 			\param resultSet
 		*/
-		virtual void PreRender(const FindQuery& state, RenderBlockResultSet* resultSet) = 0;
+		virtual void PreRender(const FindQuery& query, RenderBlockResultSet* resultSet) = 0;
 		
 	protected:
 		void UpdateModelMatrix(); 

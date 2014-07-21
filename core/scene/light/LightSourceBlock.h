@@ -8,6 +8,7 @@ namespace core
 	class VertexBuffer;
 	class IndexBuffer;
 	class LightSource;
+	class Projector;
 
 	/*!
 		\brief Struct containing the neccessary parameters to draw the various lights available.
@@ -46,5 +47,8 @@ namespace core
 
 		/* The light source indices, if available */
 		const IndexBuffer* indexBuffer;
+
+		/* Light projector */
+		const Projector* projector;
 	};
 }

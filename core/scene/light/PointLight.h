@@ -15,16 +15,11 @@ namespace core
 		PointLight();
 		virtual ~PointLight();
 
-		void SetOffset(const Vector3& offset);
 		void SetColor(const Color& color);
 		void SetRadius(float32 radius);
 		void SetConstantAttenuation(float32 constantAttenuation);
 		void SetLinearAttenuation(float32 linearAttenuation);
 		void SetQuadricAttenuation(float32 quadricAttenuation);
-		
-		inline const Vector3& GetOffset() const {
-			return mOffset;
-		}
 		
 		inline const Color& GetColor() {
 			return mColor;
@@ -51,7 +46,6 @@ namespace core
 		virtual void CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const;
 
 	private:
-		Vector3 mOffset;
 		Color mColor;
 		float32 mRadius;
 		float32 mConstantAttenuation;

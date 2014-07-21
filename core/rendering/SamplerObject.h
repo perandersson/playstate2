@@ -15,8 +15,7 @@ namespace core
 	class SamplerObject
 	{
 	public:
-		SamplerObject(GLuint samplerID, MinFilter::Enum minFilter, MagFilter::Enum magFilter,
-			TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr);
+		SamplerObject(GLuint samplerID);
 		~SamplerObject();
 
 		inline uint32 GetUID() const {
@@ -30,11 +29,5 @@ namespace core
 	private:
 		uint32 mUID;
 		GLuint mSamplerID;
-
-		MinFilter::Enum mMinFilter;
-		MagFilter::Enum mMagFilter;
-		TextureWrap::Enum mWrapS;
-		TextureWrap::Enum mWrapT;
-		TextureWrap::Enum mWrapR;
 	};
 }

@@ -17,13 +17,10 @@ namespace core
 			POSITIVE_Y,
 			NEGATIVE_Y,
 			POSITIVE_Z,
-			NEGATIVE_Z,
-
-			ALL,
-			NONE,
-
-			SIZE
+			NEGATIVE_Z
 		};
+
+		static const uint32 SIZE = NEGATIVE_Z + 1;
 
 		/*!
 			\brief Retrieves a OpenGL enum value based on the texture cube side

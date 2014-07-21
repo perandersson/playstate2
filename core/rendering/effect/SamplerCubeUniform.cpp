@@ -1,6 +1,7 @@
 #include "../../Memory.h"
 #include "SamplerCubeUniform.h"
 #include "Effect.h"
+#include "../OpenGLEnum.h"
 #include "../RenderState.h"
 using namespace core;
 
@@ -46,23 +47,43 @@ void SamplerCubeUniform::SetTexture(const RenderTargetCube* texture)
 	SetTexture((TextureCube*)texture);
 }
 
-void SamplerCubeUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)
+void SamplerCubeUniform::SetMinFilter(MinFilter::Enum minFilter)
 {
 	assert_not_null(mSamplerObject);
-
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MIN_FILTER, MinFilter::Parse(minFilter));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MAG_FILTER, MagFilter::Parse(magFilter));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_S, TextureWrap::Parse(wraps));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_T, TextureWrap::Parse(wrapt));
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MIN_FILTER, OpenGLEnum::Convert(minFilter));
 }
 
-void SamplerCubeUniform::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr)
+void SamplerCubeUniform::SetMagFilter(MagFilter::Enum magFilter)
+{
+	assert_not_null(mSamplerObject);
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MAG_FILTER, OpenGLEnum::Convert(magFilter));
+}
+
+void SamplerCubeUniform::SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t)
+{
+	assert_not_null(mSamplerObject);
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_S, OpenGLEnum::Convert(s));
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_T, OpenGLEnum::Convert(t));
+}
+
+void SamplerCubeUniform::SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t, TextureWrap::Enum r)
+{
+	assert_not_null(mSamplerObject);
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_S, OpenGLEnum::Convert(s));
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_T, OpenGLEnum::Convert(t));
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_R, OpenGLEnum::Convert(r));
+}
+
+void SamplerCubeUniform::SetTextureCompareFunc(CompareFunc::Enum compareFunc)
 {
 	assert_not_null(mSamplerObject);
 
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MIN_FILTER, MinFilter::Parse(minFilter));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_MAG_FILTER, MagFilter::Parse(magFilter));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_S, TextureWrap::Parse(wraps));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_T, TextureWrap::Parse(wrapt));
-	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_WRAP_R, TextureWrap::Parse(wrapr));
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_COMPARE_FUNC, OpenGLEnum::Convert(compareFunc));
+}
+
+void SamplerCubeUniform::SetTextureCompareMode(CompareMode::Enum compareMode)
+{
+	assert_not_null(mSamplerObject);
+
+	glSamplerParameteri(mSamplerObject->GetSamplerID(), GL_TEXTURE_COMPARE_MODE, OpenGLEnum::Convert(compareMode));
 }

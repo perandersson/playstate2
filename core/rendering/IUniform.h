@@ -13,6 +13,8 @@
 #include "MinFilter.h"
 #include "MagFilter.h"
 #include "TextureWrap.h"
+#include "CompareFunc.h"
+#include "CompareMode.h"
 
 namespace core
 {
@@ -38,8 +40,14 @@ namespace core
 		virtual void SetTexture(const RenderTarget2D* texture) = 0;
 		virtual void SetTexture(const RenderTargetCube* texture) = 0;
 
-		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt) = 0;
-		virtual void SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr) = 0;
+		virtual void SetMinFilter(MinFilter::Enum minFilter) = 0;
+		virtual void SetMagFilter(MagFilter::Enum magFilter) = 0;
+
+		virtual void SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t) = 0;
+		virtual void SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t, TextureWrap::Enum r) = 0;
+
+		virtual void SetTextureCompareFunc(CompareFunc::Enum compareFunc) = 0;
+		virtual void SetTextureCompareMode(CompareMode::Enum compareMode) = 0;
 
 		virtual void SetColorRGBA(const Color& color) = 0;
 		virtual void SetColorRGBA(const Color& color, float32 a) = 0;

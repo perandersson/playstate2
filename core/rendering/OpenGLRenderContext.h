@@ -41,10 +41,6 @@ namespace core
 	public:
 		static GLenum GetTextureFormatAsEnum(TextureFormat::Enum format);
 		static GLenum GetInternalTextureFormatAsEnum(TextureFormat::Enum format);
-		static GLenum GetMinFilterAsEnum(MinFilter::Enum minFilter);
-		static GLenum GetMagFilterAsEnum(MagFilter::Enum magFilter);
-		static GLenum GetTextureWrapAsEnum(TextureWrap::Enum textureWrap);
-		static GLenum GetBufferUsageAsEnum(BufferUsage::Enum bufferUsage);
 
 		GLuint GenTextureID() const;
 		GLuint GenBufferID() const;

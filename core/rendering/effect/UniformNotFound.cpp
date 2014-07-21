@@ -80,12 +80,32 @@ void UniformNotFound::SetTexture(const RenderTargetCube* texture)
 
 }
 
-void UniformNotFound::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt)
+void UniformNotFound::SetMinFilter(MinFilter::Enum minFilter)
 {
 
 }
 
-void UniformNotFound::SetTextureParameters(MinFilter::Enum minFilter, MagFilter::Enum magFilter, TextureWrap::Enum wraps, TextureWrap::Enum wrapt, TextureWrap::Enum wrapr)
+void UniformNotFound::SetMagFilter(MagFilter::Enum magFilter)
+{
+
+}
+
+void UniformNotFound::SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t)
+{
+
+}
+
+void UniformNotFound::SetTextureWrap(TextureWrap::Enum s, TextureWrap::Enum t, TextureWrap::Enum r)
+{
+
+}
+
+void UniformNotFound::SetTextureCompareFunc(CompareFunc::Enum compareFunc)
+{
+
+}
+
+void UniformNotFound::SetTextureCompareMode(CompareMode::Enum compareMode)
 {
 
 }

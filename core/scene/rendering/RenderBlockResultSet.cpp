@@ -3,8 +3,14 @@
 using namespace core;
 
 RenderBlockResultSet::RenderBlockResultSet()
+: RenderBlockResultSet(InitialRenderBlocksCount, RenderBlocksResizeCount)
+{
+}
+
+RenderBlockResultSet::RenderBlockResultSet(uint32 initCount, uint32 resizeCount)
 : mMemoryPool(InitialRenderBlocksCount, RenderBlocksResizeCount), mSortedRenderBlocks(nullptr), mSortedRenderBlocksSize(0)
 {
+
 }
 
 RenderBlockResultSet::~RenderBlockResultSet()

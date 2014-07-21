@@ -13,8 +13,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\core\BitUtils.h" />
     <ClInclude Include="..\..\core\camera\Camera.h" />
+    <ClInclude Include="..\..\core\camera\CameraUtils.h" />
     <ClInclude Include="..\..\core\camera\Frustum.h" />
     <ClInclude Include="..\..\core\camera\FrustumPlanes.h" />
+    <ClInclude Include="..\..\core\camera\Projector.h" />
     <ClInclude Include="..\..\core\collision\AABB.h" />
     <ClInclude Include="..\..\core\collision\CollisionResult.h" />
     <ClInclude Include="..\..\core\configuration\Configuration.h" />
@@ -95,6 +97,8 @@
     <ClInclude Include="..\..\core\playstate.h" />
     <ClInclude Include="..\..\core\rendering\BlendFunc.h" />
     <ClInclude Include="..\..\core\rendering\ClearType.h" />
+    <ClInclude Include="..\..\core\rendering\CompareFunc.h" />
+    <ClInclude Include="..\..\core\rendering\CompareMode.h" />
     <ClInclude Include="..\..\core\rendering\CullFace.h" />
     <ClInclude Include="..\..\core\rendering\effect\ShaderObject.h" />
     <ClInclude Include="..\..\core\rendering\effect\ShaderObjectResourceLoader.h" />
@@ -120,6 +124,7 @@
     <ClInclude Include="..\..\core\rendering\IRenderContext.h" />
     <ClInclude Include="..\..\core\rendering\MagFilter.h" />
     <ClInclude Include="..\..\core\rendering\MinFilter.h" />
+    <ClInclude Include="..\..\core\rendering\OpenGLEnum.h" />
     <ClInclude Include="..\..\core\rendering\PolygonMode.h" />
     <ClInclude Include="..\..\core\rendering\PrimitiveType.h" />
     <ClInclude Include="..\..\core\rendering\OpenGLRenderContext.h" />
@@ -235,6 +240,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp" />
     <ClCompile Include="..\..\core\camera\Frustum.cpp" />
+    <ClCompile Include="..\..\core\camera\Projector.cpp" />
     <ClCompile Include="..\..\core\collision\AABB.cpp" />
     <ClCompile Include="..\..\core\configuration\Configuration.cpp" />
     <ClCompile Include="..\..\core\configuration\lua\LuaConfiguration.cpp" />
@@ -294,6 +300,8 @@
     <ClCompile Include="..\..\core\model\WaveFrontResourceLoader.cpp" />
     <ClCompile Include="..\..\core\rendering\BlendFunc.cpp" />
     <ClCompile Include="..\..\core\rendering\BufferUsage.cpp" />
+    <ClCompile Include="..\..\core\rendering\CompareFunc.cpp" />
+    <ClCompile Include="..\..\core\rendering\CompareMode.cpp" />
     <ClCompile Include="..\..\core\rendering\CullFace.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\ShaderObject.cpp" />
     <ClCompile Include="..\..\core\rendering\effect\ShaderObjectResourceLoader.cpp" />
@@ -316,6 +324,7 @@
     <ClCompile Include="..\..\core\rendering\IndexBuffer.cpp" />
     <ClCompile Include="..\..\core\rendering\MagFilter.cpp" />
     <ClCompile Include="..\..\core\rendering\MinFilter.cpp" />
+    <ClCompile Include="..\..\core\rendering\OpenGLEnum.cpp" />
     <ClCompile Include="..\..\core\rendering\PolygonMode.cpp" />
     <ClCompile Include="..\..\core\rendering\PrimitiveType.cpp" />
     <ClCompile Include="..\..\core\rendering\OpenGLRenderContext.cpp" />
@@ -331,6 +340,7 @@
     <ClCompile Include="..\..\core\rendering\Texture2D.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureCube.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureCubeSide.cpp" />
+    <ClCompile Include="..\..\core\rendering\TextureFormat.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureResourceLoader.cpp" />
     <ClCompile Include="..\..\core\rendering\TextureWrap.cpp" />
     <ClCompile Include="..\..\core\rendering\VertexBuffer.cpp" />

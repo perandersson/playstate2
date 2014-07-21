@@ -1,6 +1,5 @@
 #pragma once
 #include "../typedefs.h"
-#include "GLEWMX.h"
 
 namespace core
 {
@@ -13,12 +12,14 @@ namespace core
 			NEAREST_MIPMAP_NEAREST,
 			LINEAR_MIPMAP_NEAREST,
 			NEAREST_MIPMAP_LINEAR,
-			LINEAR_MIPMAP_LINEAR,
-
-			SIZE
+			LINEAR_MIPMAP_LINEAR
 		};
 
+		/* Default min filter used by the rendering engine */
 		static const Enum DEFAULT = LINEAR;
+
+		/* Number enums available */
+		static const uint32 SIZE = LINEAR_MIPMAP_LINEAR + 1;
 		
 		/*!
 			\brief Parse the supplied string and return the enum representing it
@@ -30,11 +31,6 @@ namespace core
 		*/
 		static Enum Parse(const std::string& s, Enum defaultValue);
 
-		/*!
-			\brief Convert the supplied enum into a OpenGL enum
-		*/
-		static GLenum Parse(Enum e);
-		
 		/*!
 			\brief Retrieves the values available in this enum
 

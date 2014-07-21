@@ -24,6 +24,8 @@ namespace core
 	static const std::string TAG_WRAP_S("wraps");
 	static const std::string TAG_WRAP_T("wrapt");
 	static const std::string TAG_WRAP_R("wrapr");
+	static const std::string TAG_TEXTURE_COMPARE_FUNC("comparefunc");
+	static const std::string TAG_TEXTURE_COMPARE_MODE("comparemode");
 
 	static const std::string ATTRIB_PATH("path");
 	static const std::string ATTRIB_ID("id");

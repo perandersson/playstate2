@@ -15,14 +15,18 @@ namespace core
 	public:
 		Frustum();
 		Frustum(const Frustum& frustum);
+		Frustum(const Vector3& eye, const Vector3& center, const Vector3& up,
+			float32 nearPlane, float32 farPlane, float32 fov, float32 ratio);
 		~Frustum();
 
-		//
-		// 
-		// @param eye
-		// @param center
-		// @param up
-		void LookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
+		/*!
+			\brief Generates the frustums corners based on which direction the frustum is looking at
+
+			\param eye
+			\param direction
+			\param up
+		*/
+		void LookAt(const Vector3& eye, const Vector3& direction, const Vector3& up);
 
 		//
 		// Sets the perspective for this frustum
@@ -33,8 +37,12 @@ namespace core
 		// @param ratio
 		void SetPerspective(float32 nearPlane, float32 farPlane, float32 fov, float32 ratio);
 
-		//
-		// @return
+		/*!
+			\brief Check to see if the supplied axis-align bounding box collides with this frustum
+
+			\param box
+			\return
+		*/
 		CollisionResult::Enum IsColliding(const AABB& box) const;
 
 	private:

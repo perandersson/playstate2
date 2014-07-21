@@ -217,6 +217,12 @@ namespace core
 		*/
 		void SetPolygonMode(PolygonMode::Enum mode);
 
+		/*!
+			\brief Set the line width used when drawing lines onto the screen
+			
+			\param lineWidth
+		*/
+		void SetLineWidth(float32 lineWidth);
 
 		/*!
 			\brief Set the render target at the given index
@@ -256,33 +262,11 @@ namespace core
 
 			\param renderTarget
 						The texture we want to draw our result to
-			\param index
-						The texture index for the render target. Useful if you want to
+			\param startIndex
+						The first index for the render target. The upcomming sides are attached to the next 6 attachments. Useful if you want to
 						render to multiple textures at once.
 		*/
-		void SetRenderTarget(const RenderTargetCube* renderTarget, uint32 index);
-
-		/*!
-			\brief Set the depth render target
-
-			\remark Render targets are not bound until you perform some kind of
-					rendering-action, such as clearing the screen.
-
-			\param renderTarget
-						The texture we want to draw our depth result to
-		*/
-		void SetDepthRenderTarget(const RenderTarget2D* renderTarget);
-		
-		/*!
-			\brief Set the depth render target
-
-			\remark Render targets are not bound until you perform some kind of
-					rendering-action, such as clearing the screen.
-
-			\param renderTarget
-						The texture we want to draw our depth result to
-		*/
-		void SetDepthRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side);
+		void SetRenderTarget(const RenderTargetCube* renderTarget, uint32 startIndex);
 
 		/*!
 			\brief Retrieves a uniform based on it's name in the shader bound to this thread.
@@ -334,6 +318,7 @@ namespace core
 		void ApplyBuffers(const VertexBuffer* buffer, const IndexBuffer* indexBuffer);
 		EffectState* GetEffectState(const Effect* effect);
 		void InvalidateRenderTargets();
+		bool IsDepthOrStencilRenderTarget(const RenderTargetInfo& rti) const;
 		
 		/*!
 			\brief Bind the supplied effect to this rendering state
@@ -461,13 +446,20 @@ namespace core
 		//
 		// Polygon mode
 		//
+
 		PolygonMode::Enum mPolygonMode;
+
+		//
+		// Lines
+		//
+
+		float32 mLineWidth;
 
 		//
 		// Bound render targets
 		//
 		std::vector<RenderTargetInfo> mRenderTargetInfo;
-		RenderTargetInfo mDepthRenderTargetInfo;
+		uint32 mNumRenderTargets;
 		GLuint mFrameBufferID;
 		bool mApplyRenderTarget;
 		bool mFrameBufferApplied;

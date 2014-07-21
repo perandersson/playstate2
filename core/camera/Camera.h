@@ -22,10 +22,13 @@ namespace core
 		void Move(const Vector3& direction);
 		void LookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
 
-		//
-		// @return This camera's view frustum
-		inline const Frustum& GetViewFrustum() const {
-			return mViewFrustum;
+		/*!
+			\brief Retrieves the camera's view frustum
+
+			\return The camera's view frustum
+		*/
+		inline const Frustum* GetFrustum() const {
+			return &mFrustum;
 		}
 
 		//
@@ -40,82 +43,51 @@ namespace core
 			return mProjectionMatrix;
 		}
 
-		//
-		// @return This camera's position
+		/*!
+			\brief Retrieves the camera's position
+		*/
 		inline const Vector3& GetPosition() const {
 			return mPosition;
 		}
 
-		//
-		// @return This camera's up vector (which way is up)
+		/*!
+			\brief Retrieves the up vector for the camera
+		*/
 		inline const Vector3& GetUp() const {
 			return mUp;
 		}
 
-		//
-		// @return The position where this camera is focusing on
+		/*!
+			\brief Retrieves the position where this camera is focusing on
+		*/
 		inline const Vector3& GetCenter() const {
 			return mCenter;
 		}
-
+		
+		/*!
+			\brief Retrieves the near clip distance
+		*/
 		inline float32 GetNearClipDistance() const {
 			return mNearPlane;
 		}
 
 		/*!
-			\brief
+			\brief Retrieves the far clip distance
 		*/
 		inline float32 GetFarClipDistance() const {
 			return mFarPlane;
 		}
 
 		/*!
-		
+			\brief Retrieves the view direction
 		*/
-		inline const Vector3& GetLookingAtDirection() const {
-			return mLookingAtDirection;
+		inline const Vector3& GetViewDirection() const {
+			return mViewDirection;
 		}
 
-	public:
-		/*!
-			\brief Generate a orthographic projection matrix
-
-			\param left
-			\param right
-			\param bottom
-			\param top
-
-			\return
-		*/
-		static Matrix4x4 GetOrtho2D(float32 left, float32 right, float32 bottom, float32 top);
-
-		/*!
-			\brief Generates a perspective projection matrix
-
-			\param near
-			\param far
-			\param fov
-			\param ratio
-
-			\return
-		*/
-		static Matrix4x4 GetPerspective(float32 near, float32 far, float32 fov, float32 ratio);
-
-		/*!
-			\brief Generates a look-at view matrix
-
-			\param eye
-			\param center
-			\param up
-			\return
-		*/
-		static Matrix4x4 GetLookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
-
 	private:
-		void CalculateLookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
-		
-	private:
-		Frustum mViewFrustum;
+		Frustum mFrustum;
+
 		Matrix4x4 mViewMatrix;
 		Matrix4x4 mProjectionMatrix;
 
@@ -126,6 +98,6 @@ namespace core
 		float32 mNearPlane;
 		float32 mFarPlane; 
 
-		Vector3 mLookingAtDirection;
+		Vector3 mViewDirection;
 	};
 }

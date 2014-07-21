@@ -232,11 +232,16 @@ void QuadTree::Invalidate(SpatialSceneNode* node)
 	mParent->AddToRoot(node);
 }
 
-void QuadTree::Find(const Frustum& frustum, ISpatialTreeVisitor* visitor) const
+void QuadTree::Find(const Frustum* frustum, ISpatialTreeVisitor* visitor) const
+{
+	_Find(frustum, visitor);
+}
+
+void QuadTree::_Find(const Frustum* frustum, ISpatialTreeVisitor* visitor) const
 {
 	assert_not_null(visitor);
 
-	CollisionResult::Enum result = frustum.IsColliding(mBoundingBox);
+	CollisionResult::Enum result = frustum->IsColliding(mBoundingBox);
 	if (result == CollisionResult::OUTSIDE)
 		return;
 
@@ -246,16 +251,16 @@ void QuadTree::Find(const Frustum& frustum, ISpatialTreeVisitor* visitor) const
 	}
 
 	if (!IsLeafNode()) {
-		mCorners[TOP_LEFT]->Find(frustum, visitor);
-		mCorners[TOP_RIGHT]->Find(frustum, visitor);
-		mCorners[BOTTOM_LEFT]->Find(frustum, visitor);
-		mCorners[BOTTOM_RIGHT]->Find(frustum, visitor);
+		mCorners[TOP_LEFT]->_Find(frustum, visitor);
+		mCorners[TOP_RIGHT]->_Find(frustum, visitor);
+		mCorners[BOTTOM_LEFT]->_Find(frustum, visitor);
+		mCorners[BOTTOM_RIGHT]->_Find(frustum, visitor);
 	}
 
 	SpatialSceneNode* node = mChildren.First();
 	while (node != NULL) {
 		SpatialSceneNode* next = node->SpatialSceneNodeLink.Tail;
-		if (frustum.IsColliding(node->GetBoundingBox()) != CollisionResult::OUTSIDE)
+		if (frustum->IsColliding(node->GetBoundingBox()) != CollisionResult::OUTSIDE)
 			visitor->Visit(node);
 		node = next;
 	}
@@ -279,6 +284,11 @@ void QuadTree::IterateAndVisit(ISpatialTreeVisitor* visitor) const
 }
 
 void QuadTree::Find(const AABB& boundingBox, ISpatialTreeVisitor* visitor) const
+{
+	_Find(boundingBox, visitor);
+}
+
+void QuadTree::_Find(const AABB& boundingBox, ISpatialTreeVisitor* visitor) const
 {
 	assert_not_null(visitor);
 	assert_not_implemented();

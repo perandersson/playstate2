@@ -1,6 +1,5 @@
 #pragma once
 #include "../typedefs.h"
-#include "GLEWMX.h"
 
 namespace core
 {
@@ -9,12 +8,14 @@ namespace core
 	public:
 		enum Enum {
 			NEAREST = 0,
-			LINEAR,
-
-			SIZE
+			LINEAR
 		};
 
+		/* Default mag filter used by the rendering engine */
 		static const Enum DEFAULT = LINEAR;
+
+		/* Number of enums available */
+		static const uint32 SIZE = LINEAR + 1;
 		
 		/*!
 			\brief Parse the supplied string and return the enum representing it
@@ -25,13 +26,7 @@ namespace core
 						Value if the supplied string does not map to an enum
 		*/
 		static Enum Parse(const std::string& s, Enum defaultValue);
-
-		//
-		// Convert the supplied enum into a OpenGL enum
-		//
-		// @param e
-		static GLenum Parse(Enum e);
-		
+				
 		/*!
 			\brief Retrieves the values available in this enum
 

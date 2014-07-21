@@ -24,6 +24,7 @@ namespace core
 
 	public:
 		RenderBlockResultSet();
+		RenderBlockResultSet(uint32 initCount, uint32 resizeCount);
 		virtual ~RenderBlockResultSet();
 
 		/*!

@@ -97,8 +97,12 @@ namespace core
 		virtual bool Add(SpatialSceneNode* node);
 		virtual void Remove(SpatialSceneNode* node);
 		virtual void Invalidate(SpatialSceneNode* node);
-		virtual void Find(const Frustum& frustum, ISpatialTreeVisitor* visitor) const;
+		virtual void Find(const Frustum* frustum, ISpatialTreeVisitor* visitor) const;
 		virtual void Find(const AABB& boundingBox, ISpatialTreeVisitor* visitor) const;
+
+	private:
+		void _Find(const Frustum* frustum, ISpatialTreeVisitor* visitor) const;
+		void _Find(const AABB& boundingBox, ISpatialTreeVisitor* visitor) const;
 
 	private:
 		QuadTree* mParent;

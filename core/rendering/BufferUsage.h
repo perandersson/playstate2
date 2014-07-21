@@ -1,6 +1,5 @@
 #pragma once
 #include "../typedefs.h"
-#include "GLEWMX.h"
 
 namespace core
 {
@@ -12,14 +11,24 @@ namespace core
 			DYNAMIC
 		};
 
+		/* The size of this enum */
+		static const uint32 SIZE = DYNAMIC + 1;
+		
 		/*!
-			\brief The size of this enum
-		*/
-		static const uint32 SIZE = Enum::DYNAMIC + 1;
+			\brief Parse the supplied string and return the enum representing it
 
-		/*!
-			\brief Converts this enum into a GLenum
+			\param s
+						The name of the enum
+			\param defaultValue
+						Value if the supplied string does not map to an enum
 		*/
-		static GLenum Parse(Enum e);
+		static Enum Parse(const std::string& s, Enum defaultValue);
+		
+		/*!
+			\brief Retrieves the values available in this enum
+
+			\return A map matching name with enum value
+		*/
+		static std::hash_map<std::string, int32> GetValues();
 	};
 }
