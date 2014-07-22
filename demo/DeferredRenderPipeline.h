@@ -21,6 +21,7 @@ public:
 	virtual void OnSceneGroupAdded(SceneGroup* group);
 	virtual void OnSceneGroupRemoved(SceneGroup* group);
 
+	void DrawGeometry(const Scene& scene, const Camera* camera);
 	void DrawLighting(const Scene& scene, const Camera* camera);
 	bool DrawPointLights(const Scene& scene, const Camera* camera, bool clear);
 	bool DrawSpotLights(const Scene& scene, const Camera* camera, bool clear);

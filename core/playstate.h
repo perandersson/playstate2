@@ -5,6 +5,8 @@
 #include "camera/CameraUtils.h"
 #include "camera/Projector.h"
 
+#include "configuration/Configuration.h"
+
 #include "game/StandardGame.h"
 
 #include "rendering/Texture.h"

@@ -31,16 +31,31 @@ namespace core
 			return &mFrustum;
 		}
 
-		//
-		// @return This camera's view matrix
+		/*!
+			\brief Retrieves the camera's view matrix
+
+			\return This camera's view matrix 
+		*/
 		inline const Matrix4x4& GetViewMatrix() const {
 			return mViewMatrix;
 		}
 
-		//
-		// @return This camera's projection matrix
+		/*!
+			\brief Retrieves the camera's projection matrix
+
+			\return This camera's projection matrix 
+		*/
 		inline const Matrix4x4& GetProjectionMatrix() const {
 			return mProjectionMatrix;
+		}
+
+		/*!
+			\brief Retreives the projection view matrix
+
+			\return The projection view matrix
+		*/
+		inline Matrix4x4 GetProjectionViewMatrix() const {
+			return mProjectionMatrix * mViewMatrix;
 		}
 
 		/*!

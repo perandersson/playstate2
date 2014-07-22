@@ -44,6 +44,15 @@ namespace core
 		}
 		
 		/*!
+			\brief Retreives the projection view matrix
+
+			\return The projection view matrix
+		*/
+		inline Matrix4x4 GetProjectionViewMatrix() const {
+			return mProjectionMatrix * mViewMatrix;
+		}
+
+		/*!
 			\brief Retrieves the near clip distance
 		*/
 		inline float32 GetNearClipDistance() const {

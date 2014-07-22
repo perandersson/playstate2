@@ -8,9 +8,8 @@
 	<![CDATA[
 		#version 330
 		
-		uniform mat4 ModelMatrix;
 		uniform mat4 ProjectionMatrix;
-		uniform mat4 ViewMatrix;
+		uniform mat4 ViewModelMatrix;
 
 		// Vertex information
 		layout(location = 0) in vec3 position;
@@ -25,10 +24,10 @@
 		void main()
 		{
 			// Calculate the view-space position
-			vs_ViewSpacePosition = ViewMatrix * ModelMatrix * vec4(position, 1.0);
+			vs_ViewSpacePosition = ViewModelMatrix * vec4(position, 1.0);
 			
 			// Supply the view-space normal matrix to the fragment shader
-			mat4 normalMatrix = transpose(inverse(ViewMatrix * ModelMatrix));
+			mat4 normalMatrix = transpose(inverse(ViewModelMatrix));
 			vs_ViewSpaceNormal = normalize(vec3(normalMatrix * vec4(normal, 1.0)));
 			
 			// Send the texture coordinates to the fragment shader

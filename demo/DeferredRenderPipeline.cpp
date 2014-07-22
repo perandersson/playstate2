@@ -54,6 +54,9 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 	mNormalsRenderTarget = nullptr;
 }
 
+static const std::string PROJECTION_VIEW_MODEL_MATRIX("ProjectionViewModelMatrix");
+static const std::string PROJECTION_VIEW_MATRIX("ProjectionViewMatrix");
+static const std::string VIEW_MODEL_MATRIX("ViewModelMatrix");
 static const std::string PROJECTION_MATRIX("ProjectionMatrix");
 static const std::string VIEW_MATRIX("ViewMatrix");
 static const std::string MODEL_MATRIX("ModelMatrix");
@@ -64,7 +67,6 @@ static const std::string FAR_CLIP_DISTANCE("FarClipDistance");
 static const std::string DIFFUSE_TEXTURE("DiffuseTexture");
 static const std::string DIFFUSE_COLOR("DiffuseColor");
 
-
 void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 {
 	FindQuery query = { camera->GetFrustum(), FindQueryFilter::DEFAULT };
@@ -72,33 +74,16 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 	// This is not how it should be in the end. Purpose for this is to verify that
 	// threaded rendering works as intended
 	if (scene.Find(query, &mRenderBlockResultSet)) {
-		auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
-			RenderState* state = RenderContext::Activate(mGeometryEffect);
-			state->SetRenderTarget(mDiffuseRenderTarget, 0);
-			state->SetRenderTarget(mNormalsRenderTarget, 1);
-			state->SetRenderTarget(mDepthRenderTarget, 2);
-			state->Clear(ClearType::COLOR_AND_DEPTH);
-
-			// Set camera properties
-			state->FindUniform(PROJECTION_MATRIX)->SetMatrix(camera->GetProjectionMatrix());
-			state->FindUniform(VIEW_MATRIX)->SetMatrix(camera->GetViewMatrix());
-			state->FindUniform(FAR_CLIP_DISTANCE)->SetFloat(camera->GetFarClipDistance());
-
-			auto modelMatrix = state->FindUniform(MODEL_MATRIX);
-			auto diffuseTexture = state->FindUniform(DIFFUSE_TEXTURE);
-			auto diffuseColor = state->FindUniform(DIFFUSE_COLOR);
-
-			RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
-			RenderBlockResultSet::Type block;
-			while (block = it.Next()) {
-				diffuseTexture->SetTexture(block->diffuseTexture);
-				diffuseColor->SetColorRGB(block->diffuseColor);
-				modelMatrix->SetMatrix(block->modelMatrix);
-				state->Render(block->vertexBuffer, block->indexBuffer);
-			}
-			return true;
-		});
-		fut.get();
+		if (Configuration::ToBool("graphics.multithreading", true)) {
+			auto fut = RenderContext::Async<bool>([this, &scene, &camera] {
+				DrawGeometry(scene, camera);
+				return true;
+			});
+			fut.get();
+		}
+		else {
+			DrawGeometry(scene, camera);
+		}
 	}
 
 	DrawLighting(scene, camera);
@@ -107,6 +92,33 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	DrawDebugInfo(scene, camera);
 #endif
+}
+
+void DeferredRenderPipeline::DrawGeometry(const Scene& scene, const Camera* camera)
+{
+	RenderState* state = RenderContext::Activate(mGeometryEffect);
+	state->SetRenderTarget(mDiffuseRenderTarget, 0);
+	state->SetRenderTarget(mNormalsRenderTarget, 1);
+	state->SetRenderTarget(mDepthRenderTarget, 2);
+	state->Clear(ClearType::COLOR_AND_DEPTH);
+
+	// Set camera properties
+	state->FindUniform(PROJECTION_MATRIX)->SetMatrix(camera->GetProjectionMatrix());
+	state->FindUniform(FAR_CLIP_DISTANCE)->SetFloat(camera->GetFarClipDistance());
+
+	auto viewModelMatrix = state->FindUniform(VIEW_MODEL_MATRIX);
+	auto diffuseTexture = state->FindUniform(DIFFUSE_TEXTURE);
+	auto diffuseColor = state->FindUniform(DIFFUSE_COLOR);
+
+	const Matrix4x4& viewMatrix = camera->GetViewMatrix();
+	RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
+	RenderBlockResultSet::Type block;
+	while (block = it.Next()) {
+		diffuseTexture->SetTexture(block->diffuseTexture);
+		diffuseColor->SetColorRGB(block->diffuseColor);
+		viewModelMatrix->SetMatrix(viewMatrix * block->modelMatrix);
+		state->Render(block->vertexBuffer, block->indexBuffer);
+	}
 }
 
 void DeferredRenderPipeline::PrepareSceneGroup(Scene* scene, SceneGroup* group)
@@ -131,7 +143,7 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 	// Collect all spotlights in the scene group
 	LightSourceResultSet spotLightResultSet;
 	FindQuery query = { nullptr, FindQueryFilter::SPOT_LIGHTS };
-	std::vector<ShadowMap*> newShadowMaps;
+	std::vector<ShadowMap*> shadowMapsToBlur;
 	if (group->Find(query, &spotLightResultSet)) {
 		RenderState* state = RenderContext::Activate(mShadowMapEffect);
 
@@ -156,44 +168,43 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 			state->SetRenderTarget(depthRenderTarget.get(), 1);
 			state->Clear(ClearType::COLOR_AND_DEPTH);
 
-			// Collect the non-dynamic shadow casters and generate a shadow map it
+			// Collect the non-dynamic shadow casters and generate a shadow map with them in it
 			DefaultRenderBlockResultSetSorter sorter;
 			RenderBlockResultSet renderBlocks(100, 5);
 			FindQuery renderBlocksQuery = { lightCamera->GetFrustum(), FindQueryFilter::STATIC_SHADOW_CASTER | FindQueryFilter::GEOMETRY };
 			if (group->Find(renderBlocksQuery, &renderBlocks)) {
 				renderBlocks.Sort(&sorter);
-				auto projectionMatrix = state->FindUniform(PROJECTION_MATRIX);
-				auto viewMatrix = state->FindUniform(VIEW_MATRIX);
-				auto modelMatrix = state->FindUniform(MODEL_MATRIX);
-				auto farClipDistance = state->FindUniform(FAR_CLIP_DISTANCE);
-
-				projectionMatrix->SetMatrix(lightCamera->GetProjectionMatrix());
-				viewMatrix->SetMatrix(lightCamera->GetViewMatrix());
-				farClipDistance->SetFloat(lightCamera->GetFarClipDistance());
+				auto projectionViewModelMatrix = state->FindUniform(PROJECTION_VIEW_MODEL_MATRIX);
+				
+				// Supply the far clip distance so that we can create a linearized depth value
+				state->FindUniform(FAR_CLIP_DISTANCE)->SetFloat(lightCamera->GetFarClipDistance());
 
 				RenderBlockResultSet::Iterator renderBlocksIterator = renderBlocks.GetIterator();
 				RenderBlockResultSet::Type renderBlock;
 				while (renderBlock = renderBlocksIterator.Next()) {
-					modelMatrix->SetMatrix(renderBlock->modelMatrix);
+					projectionViewModelMatrix->SetMatrix(lightCamera->GetProjectionViewMatrix() * renderBlock->modelMatrix);
 					state->Render(renderBlock->vertexBuffer, renderBlock->indexBuffer, renderBlock->startIndex, renderBlock->count);
 				}
 			}
+			
+			// Make sure that the opengl rendering queue is emptied
+			state->Flush();
 
-			newShadowMaps.push_back(shadowMap);
+			shadowMapsToBlur.push_back(shadowMap);
 		}
 	}
 
 	// Blur the newly generated shadow maps
-	if (!newShadowMaps.empty()) {
+	if (!shadowMapsToBlur.empty()) {
 		RenderState* state = RenderContext::Activate(mBlurEffect);
 		state->FindUniform(PROJECTION_MATRIX)->SetMatrix(mUniformProjectionMatrix);
 		auto textureToBlur = state->FindUniform("TextureToBlur");
 		auto scaleU = state->FindUniform("ScaleU");
 		static const float32 shadowCoef = 0.25f;
 
-		size_t size = newShadowMaps.size();
+		size_t size = shadowMapsToBlur.size();
 		for (size_t i = 0; i < size; ++i) {
-			ShadowMap* shadowMap = newShadowMaps[i];
+			ShadowMap* shadowMap = shadowMapsToBlur[i];
 			const Size size = shadowMap->renderTarget->GetSize();
 			std::shared_ptr<RenderTarget2D> temp(RenderContext::CreateRenderTarget2D(Size(size.width * shadowCoef, size.height * shadowCoef), shadowMap->renderTarget->GetTextureFormat()));
 			

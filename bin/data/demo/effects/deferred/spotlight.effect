@@ -83,6 +83,7 @@
 		uniform mat4 ShadowMapMatrix;
 		uniform float LightFarClipDistance;
 		uniform sampler2D ShadowMapTexture;
+		const float ShadowBias = 0.0007; // TODO: Make sure that this value is supplied from the light source
 
 		// Variables used by the spotlight
 		uniform float CosLightCutoff;
@@ -109,7 +110,6 @@
 			return viewRay * depth;
 		}
 		
-
 		float chebyshevUpperBound(in vec2 shadowTexCoords, in float distance)
 		{
 			vec2 moments = texture2D(ShadowMapTexture, shadowTexCoords).rg;
@@ -121,7 +121,7 @@
 			// The fragment is either in shadow or penumbra. We now use chebyshev's upperBound to check
 			// How likely this pixel is to be lit (p_max)
 			float variance = moments.y - (moments.x * moments.x);
-			variance = max(variance, 0.0002);
+			variance = max(variance, ShadowBias);
 
 			float d = distance - moments.x;
 			float p_max = variance / (variance + d*d);
@@ -129,7 +129,6 @@
 			return p_max;
 		}
 
-		
 		void main()
 		{
 			// Calculate the screen texture coordinates based on the screen size

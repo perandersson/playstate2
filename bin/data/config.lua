@@ -16,6 +16,7 @@ config.camera.up = {0, 1, 0}
 -- Development mode (will prevent crashes on bad shader code)
 config.graphics = {}
 config.graphics.developmentmode = true
+config.graphics.multithreading = true
 
 -- Development mode
 config.resources = {}

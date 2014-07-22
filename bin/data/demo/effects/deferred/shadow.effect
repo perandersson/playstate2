@@ -8,10 +8,9 @@
 	<![CDATA[
 		#version 330
 		
-		uniform mat4 ModelMatrix;
-		uniform mat4 ProjectionMatrix;
-		uniform mat4 ViewMatrix;
-
+		// Coordinate system matrices
+		uniform mat4 ProjectionViewModelMatrix;
+		
 		// Vertex information
 		layout(location = 0) in vec3 position;
 
@@ -21,7 +20,7 @@
 		void main()
 		{
 			// Calculate the screen-space position
-			vs_ScreenSpacePosition = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(position, 1.0);
+			vs_ScreenSpacePosition = ProjectionViewModelMatrix * vec4(position, 1.0);
 			
 			// Render the vertices at the projected position
 			gl_Position = vs_ScreenSpacePosition;
@@ -38,6 +37,11 @@
 		// Data from vertex shader
 		in vec4 vs_ScreenSpacePosition;
 
+		/*!
+			\brief Calculate the fragment color for the variance shadow map buffer.
+			
+			Code based on: http://fabiensanglard.net/shadowmappingVSM/index.php
+		*/
 		void main()
 		{
 			// Calculate the linearized depth
