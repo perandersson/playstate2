@@ -42,6 +42,23 @@ math.randomseed( os.time() )
 	end
 end]]--
 
+-- Add spotlights
+for i=-10, 9 do
+	for j=-10, 9 do
+		local spotlightNode = SpotLight()
+		local position = { (i * 20), 20.0, (j * 20) }
+		spotlightNode:SetPosition(position)
+		spotlightNode:SetColor({1.0, 1.0, 1.0})
+		spotlightNode:SetSpotDirection({ position[1] + 35.0, -20.0, position[3] + 35.0 })
+		spotlightNode:SetCutoff(20.0)
+		spotlightNode:SetSpotExponent(7)
+		--spotlightNode:SetTexture(Resource.Load("/demo/effects/cross_light.png"))
+		--local rotateLightBehaviour = RotateLightBehaviour()
+		--rotateLightBehaviour:SetRadius(40.0)
+		--spotlightNode:AddComponent(rotateLightBehaviour)
+		level1:AddSceneNode(spotlightNode)
+	end
+end
 -- Add ground
 local ground1 = Resource.Load("/demo/models/ground1/ground1.obj")
 for i=-10, 9 do
@@ -53,18 +70,5 @@ for i=-10, 9 do
 		level1:AddSceneNode(node)
 	end
 end
-
--- Add a spotlight
-local spotlightNode = SpotLight()
-spotlightNode:SetPosition({0.0, 20.0, -10.0})
-spotlightNode:SetColor({1.0, 1.0, 1.0})
-spotlightNode:SetSpotDirection({30.0, -20.0, 20.0})
-spotlightNode:SetCutoff(20.0)
-spotlightNode:SetSpotExponent(5)
---spotlightNode:SetTexture(Resource.Load("/demo/effects/cross_light.png"))
---local rotateLightBehaviour = RotateLightBehaviour()
---rotateLightBehaviour:SetRadius(40.0)
---spotlightNode:AddComponent(rotateLightBehaviour)
-level1:AddSceneNode(spotlightNode)
 
 return level1
