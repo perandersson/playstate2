@@ -341,10 +341,11 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 		shadowMapTexture->SetTextureCompareMode(CompareMode::COMPARE_R_TO_TEXTURE);
 		shadowMapTexture->SetTextureCompareFunc(CompareFunc::LEQUAL);
 		auto shadowMapMatrix = state->FindUniform("ShadowMapMatrix");
-		//static const Matrix4x4 bias(0.5f, 0.0f, 0.0f, 0.5f,
-		//							0.0f, 0.5f, 0.0f, 0.5f,
-		//							0.0f, 0.0f, 0.5f, 0.5f,
-		//							0.0f, 0.0f, 0.0f, 1.0f);
+		auto lightFarClipDistance = state->FindUniform("LightFarClipDistance");
+		static const Matrix4x4 bias(0.5f, 0.0f, 0.0f, 0.5f,
+									0.0f, 0.5f, 0.0f, 0.5f,
+									0.0f, 0.0f, 0.5f, 0.5f,
+									0.0f, 0.0f, 0.0f, 1.0f);
 		LightSourceResultSet::Iterator it = mSpotLightsResultSet.GetIterator();
 		LightSourceResultSet::Type block;
 		while (block = it.Next()) {
@@ -357,8 +358,8 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 				shadowMapTexture->SetTexture(mWhiteTexture);
 			}
 			const Matrix4x4 invViewMatrix(camera->GetViewMatrix().GetInverted());
-			shadowMapMatrix->SetMatrix(block->projector->GetProjectionMatrix() * block->projector->GetViewMatrix() * invViewMatrix);
-
+			shadowMapMatrix->SetMatrix(bias * block->projector->GetProjectionMatrix() * block->projector->GetViewMatrix() * invViewMatrix);
+			lightFarClipDistance->SetFloat(block->projector->GetFarClipDistance());
 			modelMatrix->SetMatrix(Matrix4x4::Translation(block->position));
 
 			lightColor->SetColorRGB(block->color);

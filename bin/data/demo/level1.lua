@@ -56,15 +56,15 @@ end
 
 -- Add a spotlight
 local spotlightNode = SpotLight()
-spotlightNode:SetPosition({0.0, 20.0, 0.0})
+spotlightNode:SetPosition({0.0, 20.0, 10.0})
 spotlightNode:SetColor({1.0, 1.0, 1.0})
-spotlightNode:SetSpotDirection({0.0, -20.0, -1.0})
+spotlightNode:SetSpotDirection({30.0, -20.0, -10.0})
 spotlightNode:SetCutoff(20.0)
 spotlightNode:SetSpotExponent(2.5)
-spotlightNode:SetTexture(Resource.Load("/demo/effects/cross_light.png"))
-local rotateLightBehaviour = RotateLightBehaviour()
-rotateLightBehaviour:SetRadius(40.0)
-spotlightNode:AddComponent(rotateLightBehaviour)
+--spotlightNode:SetTexture(Resource.Load("/demo/effects/cross_light.png"))
+--local rotateLightBehaviour = RotateLightBehaviour()
+--rotateLightBehaviour:SetRadius(40.0)
+--spotlightNode:AddComponent(rotateLightBehaviour)
 level1:AddSceneNode(spotlightNode)
 
 return level1

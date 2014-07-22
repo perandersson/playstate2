@@ -80,9 +80,8 @@
 		uniform sampler2D LightTexture;
 		
 		// Shadow uniforms
-		uniform mat4 ProjectionMatrix;
-		uniform mat4 ViewMatrix;
 		uniform mat4 ShadowMapMatrix;
+		uniform float LightFarClipDistance;
 		uniform sampler2D ShadowMapTexture;
 
 		// Variables used by the spotlight
@@ -122,7 +121,7 @@
 			// The fragment is either in shadow or penumbra. We now use chebyshev's upperBound to check
 			// How likely this pixel is to be lit (p_max)
 			float variance = moments.y - (moments.x * moments.x);
-			variance = max(variance,0.00002);
+			variance = max(variance, 0.00002);
 
 			float d = distance - moments.x;
 			float p_max = variance / (variance + d*d);
@@ -151,14 +150,12 @@
 				discard;
 				
 			vec4 positionInLightSpace = ShadowMapMatrix * vec4(P, 1.0);
-			vec2 projectTexCoord = 0.5 * positionInLightSpace.xy / positionInLightSpace.w + vec2( 0.5, 0.5 );
+			vec3 projectTexCoord = positionInLightSpace.xyz / positionInLightSpace.w;
+			float linearizeDepth = positionInLightSpace.z / LightFarClipDistance;
+			float shadow = chebyshevUpperBound(projectTexCoord.st, linearizeDepth);
 				
-			float shadow = 1.0;
-			//float shadow = chebyshevUpperBound(projectTexCoord.xy, positionInLightSpace.z);
-							
 			// Light color
-			vec4 color = texture2D(LightTexture, projectTexCoord) * vec4(LightColor, 1.0);
-			//vec4 color = vec4(LightColor, 1.0);
+			vec4 color = texture2D(LightTexture, projectTexCoord.st) * vec4(LightColor, 1.0);
 			
 			float atten = smoothstep(0.0, CosLightCutoff, clampedCosine);
 			float spotIntensity = pow(abs(smoothstep(CosLightCutoff, 1, clampedCosine)), SpotExponent); 
