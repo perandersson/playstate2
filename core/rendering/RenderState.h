@@ -134,6 +134,16 @@ namespace core
 		void SetDepthMask(bool mask);
 
 		/*!
+			\brief Enable and disable writing of frame buffer color components
+
+			\param r
+			\param g
+			\param b
+			\param a
+		*/
+		void SetColorMask(bool r, bool g, bool b, bool a);
+
+		/*!
 			\brief Enable- or disable stencil testing for vertices
 
 			\param enable
@@ -286,6 +296,14 @@ namespace core
 		*/
 		IUniform* FindUniform(const std::string& name);
 
+		/*
+			\brief Flush the current states render queue. 
+
+			This is neccessary if you want to be completely sure that the rendering is complete after this
+			method is complete
+		*/
+		void Flush();
+
 		/*!
 			\brief Check to see if the supplied effect UID is the one bound to the current rendering state
 		*/
@@ -326,13 +344,6 @@ namespace core
 			\param effect
 		*/
 		void BindEffect(const Effect* effect);
-
-		static GLenum GetDepthFuncAsEnum(DepthFunc::Enum depthFunc);
-		static GLenum GetSrcFactorAsEnum(SrcFactor::Enum sfactor);
-		static GLenum GetDestFactorAsEnum(DestFactor::Enum dfactor);
-		static GLenum GetFrontFaceAsEnum(FrontFace::Enum frontFace);
-		static GLenum GetCullFaceAsEnum(CullFace::Enum cullFace);
-		static GLenum GetPolygonModeAsEnum(PolygonMode::Enum mode);
 
 
 	friend class OpenGLRenderContext;
@@ -405,6 +416,17 @@ namespace core
 		bool mDepthTest;
 		DepthFunc::Enum mDepthFunc;
 		bool mDepthMask;
+
+		//
+		// Color mask
+		//
+
+		struct {
+			bool red;
+			bool green;
+			bool blue;
+			bool alpha;
+		} mColorMask;
 
 		//
 		// Stencil test

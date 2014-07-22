@@ -18,7 +18,6 @@ namespace core
 		/* Number of enums */
 		static const uint32 SIZE = FILL + 1;
 
-		
 		/*!
 			\brief Parse the supplied string and return the enum representing it
 

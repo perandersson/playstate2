@@ -42,6 +42,7 @@
 #include "../integration/InputDevices_script.h"
 #include "../integration/MouseDevice_script.h"
 #include "../integration/KeyboardDevice_script.h"
+#include "../integration/Renderable_script.h"
 #include "../integration/RenderModelSceneNode_script.h"
 #include "../integration/PointLight_script.h"
 #include "../integration/SpotLight_script.h"
@@ -150,7 +151,7 @@ bool StandardGame::Initialize()
 	
 	classLoader->GetType("SceneNode").AddFunctions(SceneNode_Methods).Build(); 
 	classLoader->GetType("SpatialSceneNode").InheritFrom("SceneNode").Build();
-	classLoader->GetType("Renderable").InheritFrom("SpatialSceneNode").Build();
+	classLoader->GetType("Renderable").InheritFrom("SpatialSceneNode").AddFunctions(Renderable_Methods).Build();
 	classLoader->GetType("RenderModelSceneNode").InheritFrom("Renderable").AddFunctions(RenderModelSceneNode_Methods).Build();
 	classLoader->GetType("LightSource").InheritFrom("SpatialSceneNode").Build();
 	classLoader->GetType("PointLight").InheritFrom("LightSource").AddFunctions(PointLight_Methods).Build();

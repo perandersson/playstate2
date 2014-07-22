@@ -68,6 +68,13 @@ void EffectState::ApplyUniforms()
 	for (; it != end; ++it) {
 		it->second->Apply();
 	}
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not apply uniforms");
+#endif
+
 }
 
 IUniform* EffectState::FindUniform(const char* name)

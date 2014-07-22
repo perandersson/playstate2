@@ -2,7 +2,7 @@
 <Effect>
 	<DepthTest>true</DepthTest>
 	<FrontFace>CCW</FrontFace>
-	<CullFace>BACK</CullFace>
+	<CullFace>FRONT</CullFace>
 	<DepthFunc>LEQUAL</DepthFunc>
 	<VertexShader>
 	<![CDATA[
@@ -40,8 +40,16 @@
 
 		void main()
 		{
-			// Vertex edges and the linearized depth value
-			gl_FragData[0] = vec4(vs_ViewSpacePosition.xyz, -vs_ViewSpacePosition.z / FarClipDistance);
+			float depth = -vs_ViewSpacePosition.z / FarClipDistance;
+			float moment1 = depth;
+			float moment2 = depth * depth;
+		
+			// Adjusting moments (this is sort of bias per pixel) using derivative
+			float dx = dFdx(depth);
+			float dy = dFdy(depth);
+			moment2 += 0.25*(dx*dx + dy*dy);
+			
+			gl_FragColor = vec4(moment1, moment2, depth, 0.0);
 		}
 	]]>
 	</FragmentShader>

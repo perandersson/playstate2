@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Effect>
+	<DepthTest>false</DepthTest>
+	<DepthMask>false</DepthMask>
+	<VertexShader>
+	<![CDATA[
+		#version 330
+		
+		uniform mat4 ProjectionMatrix;
+
+		// Vertex information
+		layout(location = 0) in vec3 position;
+		layout(location = 2) in vec2 texCoord;
+
+		// Data to fragment shader
+		out vec2 vs_TexCoord;
+		
+		void main()
+		{
+			// Render the vertices at the projected position
+			gl_Position = ProjectionMatrix * vec4(position.x, position.y, -1.0, 1.0);
+			
+			// Send the texture coordinates to the fragment shader
+			vs_TexCoord = texCoord;
+		}
+	]]>
+	</VertexShader>
+	<FragmentShader>
+	<![CDATA[
+		#version 330
+
+		uniform sampler2D TextureToBlur;
+		uniform vec2 ScaleU;
+
+		// Data from vertex shader
+		in vec2 vs_TexCoord;
+
+		void main()
+		{
+			vec4 color = vec4(0.0);
+			
+			color += texture2D(TextureToBlur, vs_TexCoord.st + vec2(-3.0 * ScaleU.x, -3.0 *ScaleU.y)) * 0.015625;
+			color += texture2D(TextureToBlur, vs_TexCoord.st + vec2(-2.0 * ScaleU.x, -2.0 *ScaleU.y)) * 0.09375;
+			color += texture2D(TextureToBlur, vs_TexCoord.st + vec2(-1.0 * ScaleU.x, -1.0 *ScaleU.y)) * 0.234375;
+			color += texture2D(TextureToBlur, vs_TexCoord.st + vec2(0.0 , 0.0) )*0.3125;
+			color += texture2D(TextureToBlur, vs_TexCoord.st + vec2(1.0 * ScaleU.x,  1.0 * ScaleU.y)) * 0.234375;
+			color += texture2D(TextureToBlur, vs_TexCoord.st + vec2(2.0 * ScaleU.x,  2.0 * ScaleU.y)) * 0.09375;
+			color += texture2D(TextureToBlur, vs_TexCoord.st + vec2(3.0 * ScaleU.x, -3.0 * ScaleU.y)) * 0.015625;
+
+			gl_FragColor = color;
+
+		}
+	]]>
+	</FragmentShader>
+</Effect>

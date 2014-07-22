@@ -187,14 +187,15 @@ namespace core
 		// Update the internal tickable objects
 		virtual void UpdateTickables();
 
-		//
-		// Search for renderable blocks in on this scene group
-		//
-		// @param query
-		//			Query parameters used when searching for renderable blocks
-		// @param _out_resultSet
-		//			Where we put the result
-		// @return TRUE if we found renderable blocks; FALSE otherwise
+		/*!
+			\brief Search for renderable blocks in on this scene group
+
+			\param query
+					Query parameters used when searching for renderable blocks
+			\param _out_resultSet
+					Where we put the result
+			\return TRUE if we found renderable blocks; FALSE otherwise
+		*/
 		virtual bool Find(const FindQuery& query, RenderBlockResultSet* _out_resultSet) const;
 
 		//

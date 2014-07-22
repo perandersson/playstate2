@@ -21,6 +21,7 @@ mBlend(false), mBlendFunc({ SrcFactor::DEFAULT, DestFactor::DEFAULT }),
 mStencilTest(false), mStencilMask(BIT_ALL),
 mFrontFace(FrontFace::DEFAULT), mCullFace(CullFace::DEFAULT),
 mClearColor(Color::NOTHING), mClearDepth(1.0f),
+mColorMask({ true, true, true, true }),
 mActiveTextureIndex(0),
 mPolygonMode(PolygonMode::DEFAULT),
 mLineWidth(1.0f),
@@ -383,7 +384,7 @@ void RenderState::SetDepthFunc(DepthFunc::Enum func)
 	if (mDepthFunc == func)
 		return;
 
-	glDepthFunc(GetDepthFuncAsEnum(func));
+	glDepthFunc(OpenGLEnum::Convert(func));
 	mDepthFunc = func;
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
@@ -400,6 +401,25 @@ void RenderState::SetDepthMask(bool depthMask)
 
 	glDepthMask(depthMask ? GL_TRUE : GL_FALSE);
 	mDepthMask = depthMask;
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not set the depth mask used when render faces on the screen");
+#endif
+}
+
+void RenderState::SetColorMask(bool r, bool g, bool b, bool a)
+{
+	if (mColorMask.red == r && mColorMask.green == g && mColorMask.blue == b && mColorMask.alpha == a) {
+		return;
+	}
+
+	glColorMask(r, g, b, a);
+	mColorMask.red = r;
+	mColorMask.green = g;
+	mColorMask.blue = b;
+	mColorMask.alpha = a;
+
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
@@ -463,7 +483,7 @@ void RenderState::SetBlendFunc(SrcFactor::Enum sfactor, DestFactor::Enum dfactor
 	if (mBlendFunc.sfactor == sfactor && mBlendFunc.dfactor == dfactor)
 		return;
 
-	glBlendFunc(GetSrcFactorAsEnum(sfactor), GetDestFactorAsEnum(dfactor));
+	glBlendFunc(OpenGLEnum::Convert(sfactor), OpenGLEnum::Convert(dfactor));
 	mBlendFunc.sfactor = sfactor;
 	mBlendFunc.dfactor = dfactor;
 
@@ -479,7 +499,7 @@ void RenderState::SetFrontFace(FrontFace::Enum frontFace)
 	if (mFrontFace == frontFace)
 		return;
 
-	glFrontFace(GetFrontFaceAsEnum(frontFace));
+	glFrontFace(OpenGLEnum::Convert(frontFace));
 	mFrontFace = frontFace;
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
@@ -499,7 +519,7 @@ void RenderState::SetCullFace(CullFace::Enum cullFace)
 	else
 	{
 		glEnable(GL_CULL_FACE);
-		glCullFace(GetCullFaceAsEnum(cullFace));
+		glCullFace(OpenGLEnum::Convert(cullFace));
 	}
 	mCullFace = cullFace;
 
@@ -595,7 +615,7 @@ void RenderState::SetPolygonMode(PolygonMode::Enum mode)
 		return;
 
 	// Only GL_FRONT_AND_BACK works. Everything else is deprecated
-	glPolygonMode(GL_FRONT_AND_BACK, GetPolygonModeAsEnum(mode));
+	glPolygonMode(GL_FRONT_AND_BACK, OpenGLEnum::Convert(mode));
 	mPolygonMode = mode;
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
@@ -707,6 +727,17 @@ IUniform* RenderState::FindUniform(const std::string& name)
 {
 	assert_not_null(mEffectState);
 	return mEffectState->FindUniform(name);
+}
+
+void RenderState::Flush()
+{
+	glFlush();
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could not flush the OpenGL draw queue. Reason: %d", err);
+#endif
 }
 
 bool RenderState::IsRenderTargetsEnabled() const
@@ -869,99 +900,6 @@ EffectState* RenderState::GetEffectState(const Effect* effect)
 	}
 
 	return it->second.get();
-}
-
-GLenum RenderState::GetDepthFuncAsEnum(DepthFunc::Enum depthFunc)
-{
-	static const GLenum enums[DepthFunc::SIZE] = {
-		GL_NEVER,
-		GL_LESS,
-		GL_EQUAL,
-		GL_LEQUAL,
-		GL_GREATER,
-		GL_NOTEQUAL,
-		GL_GEQUAL,
-		GL_ALWAYS
-	};
-
-	return enums[(uint32)depthFunc];
-}
-
-GLenum RenderState::GetSrcFactorAsEnum(SrcFactor::Enum sfactor)
-{
-	static const GLenum enums[SrcFactor::SIZE] = {
-		GL_ZERO,
-		GL_ONE,
-		GL_SRC_COLOR,
-		GL_ONE_MINUS_SRC_COLOR,
-		GL_SRC_ALPHA,
-		GL_ONE_MINUS_SRC_ALPHA,
-		GL_DST_ALPHA,
-		GL_ONE_MINUS_DST_ALPHA,
-		GL_DST_COLOR,
-		GL_ONE_MINUS_DST_COLOR,
-		GL_CONSTANT_COLOR,
-		GL_ONE_MINUS_CONSTANT_COLOR,
-		GL_CONSTANT_ALPHA,
-		GL_ONE_MINUS_CONSTANT_ALPHA
-	};
-
-	return enums[(uint32)sfactor];
-}
-
-GLenum RenderState::GetDestFactorAsEnum(DestFactor::Enum dfactor)
-{
-	static const GLenum enums[DestFactor::SIZE] = {
-		GL_ZERO,
-		GL_ONE,
-		GL_SRC_COLOR,
-		GL_ONE_MINUS_SRC_COLOR,
-		GL_SRC_ALPHA,
-		GL_ONE_MINUS_SRC_ALPHA,
-		GL_DST_ALPHA,
-		GL_ONE_MINUS_DST_ALPHA,
-		GL_DST_COLOR,
-		GL_ONE_MINUS_DST_COLOR,
-		GL_CONSTANT_COLOR,
-		GL_ONE_MINUS_CONSTANT_COLOR,
-		GL_CONSTANT_ALPHA,
-		GL_ONE_MINUS_CONSTANT_ALPHA
-	};
-
-	return enums[(uint32)dfactor];
-}
-
-GLenum RenderState::GetFrontFaceAsEnum(FrontFace::Enum frontFace)
-{
-	static const GLenum enums[FrontFace::SIZE] = {
-		GL_CW,
-		GL_CCW
-	};
-
-	return enums[(uint32)frontFace];
-}
-
-GLenum RenderState::GetCullFaceAsEnum(CullFace::Enum cullFace)
-{
-	static const GLenum enums[CullFace::SIZE] = {
-		0,
-		GL_FRONT,
-		GL_BACK,
-		GL_FRONT_AND_BACK,
-	};
-
-	return enums[(uint32)cullFace];
-}
-
-GLenum RenderState::GetPolygonModeAsEnum(PolygonMode::Enum mode)
-{
-	static const GLenum enums[PolygonMode::SIZE] = {
-		GL_POINT,
-		GL_LINE,
-		GL_FILL
-	};
-
-	return enums[(uint32)mode];
 }
 
 void RenderState::UnbindIndexBuffer()

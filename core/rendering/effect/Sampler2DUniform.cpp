@@ -27,6 +27,12 @@ void Sampler2DUniform::Apply()
 	mRenderState->BindTexture(mTexture, mTextureIndex);
 	mRenderState->BindSampler(mSamplerObject, mTextureIndex);
 	glUniform1i(mComponentID, mTextureIndex);
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could assign the sampler2D uniform variable");
+#endif
 }
 
 void Sampler2DUniform::SetTexture(const Texture2D* texture)

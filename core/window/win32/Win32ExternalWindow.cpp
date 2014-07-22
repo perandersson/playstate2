@@ -44,22 +44,22 @@ const std::string& Win32ExternalWindow::GetTitle() const
 	return title;
 }
 
-void Win32ExternalWindow::AddWindowClosedListener(IWindowClosedListener* listener)
+void Win32ExternalWindow::AddWindowClosedListener(WindowClosedListener* listener)
 {
 
 }
 
-void Win32ExternalWindow::RemoveWindowClosedListener(IWindowClosedListener* listener)
+void Win32ExternalWindow::RemoveWindowClosedListener(WindowClosedListener* listener)
 {
 
 }
 
-void Win32ExternalWindow::AddWindowResizedListener(IWindowResizedListener* listener)
+void Win32ExternalWindow::AddWindowResizedListener(WindowResizedListener* listener)
 {
 
 }
 
-void Win32ExternalWindow::RemoveWindowResizedListener(IWindowResizedListener* listener)
+void Win32ExternalWindow::RemoveWindowResizedListener(WindowResizedListener* listener)
 {
 
 }

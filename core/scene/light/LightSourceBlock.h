@@ -15,6 +15,9 @@ namespace core
 	*/
 	struct LightSourceBlock
 	{
+		/* A unique ID for the light source instance */
+		uint32 uid;
+
 		/* Position of the spotlight */
 		Vector3 position;
 

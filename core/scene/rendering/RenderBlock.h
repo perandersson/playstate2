@@ -13,7 +13,7 @@ namespace core
 	*/
 	struct RenderBlock
 	{
-		/* A generated ID based on the parameters available for this render block */
+		/* A generated ID based on the non- Renderable unique parameters available for this render block */
 		uint32 id;
 
 		const VertexBuffer* vertexBuffer;

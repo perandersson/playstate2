@@ -7,6 +7,8 @@ local playerGroup = LinkedListSceneGroup()
 -- player
 local player = RenderModelSceneNode()
 player:SetScale({2.0, 2.0, 2.0})
+player:SetID("PLAYER")
+player:SetDynamicShadowCaster(true)
 -- player:EnableEventDispatching(false)
 local player_MovePlayerComponent = MovePlayerBehaviour()
 player_MovePlayerComponent:SetSpeed(10.0)

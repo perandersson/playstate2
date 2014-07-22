@@ -19,10 +19,10 @@ namespace core
 		virtual const Size& GetSize() const;
 		virtual void SetTitle(const std::string& title);
 		virtual const std::string& GetTitle() const;
-		virtual void AddWindowClosedListener(IWindowClosedListener* listener);
-		virtual void RemoveWindowClosedListener(IWindowClosedListener* listener);
-		virtual void AddWindowResizedListener(IWindowResizedListener* listener);
-		virtual void RemoveWindowResizedListener(IWindowResizedListener* listener);
+		virtual void AddWindowClosedListener(WindowClosedListener* listener);
+		virtual void RemoveWindowClosedListener(WindowClosedListener* listener);
+		virtual void AddWindowResizedListener(WindowResizedListener* listener);
+		virtual void RemoveWindowResizedListener(WindowResizedListener* listener);
 		virtual void SetFullscreen(bool fullscreen);
 		virtual void Alert(const std::string& title, const std::string& text, AlertType::Enum type);
 		virtual void Alert(const std::string& title, const Exception& e, AlertType::Enum type);

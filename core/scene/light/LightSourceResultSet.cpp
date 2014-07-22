@@ -11,9 +11,10 @@ LightSourceResultSet::~LightSourceResultSet()
 {
 }
 
-LightSourceBlock* LightSourceResultSet::Create()
+LightSourceBlock* LightSourceResultSet::Create(uint32 uid)
 {
 	auto block = mMemoryPool.Allocate();
+	block->uid = uid;
 	return block;
 }
 

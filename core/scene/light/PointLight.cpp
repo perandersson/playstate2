@@ -48,7 +48,7 @@ void PointLight::OnAddedToSceneGroup()
 void PointLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const
 {
 	if (BIT_ISSET(query.filter, FindQueryFilter::POINT_LIGHTS)) {
-		auto block = _out_resultSet->Create();
+		auto block = _out_resultSet->Create(GetUID());
 		block->position = mAbsolutePosition;
 		block->color = mColor;
 		block->radius = mRadius;

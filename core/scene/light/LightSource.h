@@ -16,6 +16,13 @@ namespace core
 		virtual ~LightSource();
 
 		/*!
+			\brief Retrieves a unique ID for this light source
+		*/
+		inline uint32 GetUID() const {
+			return mUID;
+		}
+
+		/*!
 			\brief Method called whenever we are trying to collect light source information to be drawn
 
 			\param query
@@ -25,5 +32,8 @@ namespace core
 
 		virtual void OnAddedToSceneGroup();
 		virtual void OnRemovedFromSceneGroup();
+
+	private:
+		uint32 mUID;
 	};
 }

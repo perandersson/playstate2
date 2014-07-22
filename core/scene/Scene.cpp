@@ -6,16 +6,19 @@
 #include "../game/Game.h"
 #include "../Singleton.h"
 #include "rendering/DefaultRenderBlockResultSetSorter.h"
+#include <algorithm>
 using namespace core;
 
 Scene::Scene()
-: mSceneGroups(offsetof(SceneGroup, SceneLink)), mTimeSinceLastTick(0), mActiveCamera(nullptr), mAmbientLight(Color::WHITE)
+: mSceneGroups(offsetof(SceneGroup, SceneLink)), mTimeSinceLastTick(0), mActiveCamera(nullptr), mAmbientLight(Color::WHITE),
+mSceneGroupListeners(offsetof(SceneGroupListener, SceneGroupListenerLink))
 {
 }
 
 Scene::~Scene()
 {
 	mSceneGroups.DeleteAll();
+	mSceneGroupListeners.DeleteAll();
 }
 
 void Scene::AddSceneGroup(SceneGroup* group)
@@ -23,13 +26,37 @@ void Scene::AddSceneGroup(SceneGroup* group)
 	assert_not_null(group);
 	mSceneGroups.AddLast(group);
 	group->AttachedToScene();
+
+	auto listener = mSceneGroupListeners.First();
+	while (listener != nullptr) {
+		auto next = listener->SceneGroupListenerLink.Tail;
+		listener->OnSceneGroupAdded(group);
+		listener = next;
+	}
 }
 
-void Scene::DetachSceneGroup(SceneGroup* group)
+void Scene::RemoveSceneGroup(SceneGroup* group)
 {
 	assert_not_null(group);
 	mSceneGroups.Remove(group);
 	group->DetachedFromScene();
+
+	auto listener = mSceneGroupListeners.First();
+	while (listener != nullptr) {
+		auto next = listener->SceneGroupListenerLink.Tail;
+		listener->OnSceneGroupRemoved(group);
+		listener = next;
+	}
+}
+
+void Scene::AddSceneGroupListener(SceneGroupListener* listener)
+{
+	mSceneGroupListeners.AddLast(listener);
+}
+
+void Scene::RemoveSceneGroupListener(SceneGroupListener* listener)
+{
+	mSceneGroupListeners.Remove(listener);
 }
 
 void Scene::Update()

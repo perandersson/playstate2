@@ -53,7 +53,13 @@
 		<WrapS>CLAMP_TO_EDGE</WrapS>
 		<WrapT>CLAMP_TO_EDGE</WrapT>
 	</SamplerState>
-	<SamplerState Id="NormalsTexture">
+	<SamplerState Id="GeometryTexture">
+		<MinFilter>LINEAR</MinFilter>
+		<MagFilter>LINEAR</MagFilter>
+		<WrapS>CLAMP_TO_EDGE</WrapS>
+		<WrapT>CLAMP_TO_EDGE</WrapT>
+	</SamplerState>
+	<SamplerState Id="ShadowMapTexture">
 		<MinFilter>LINEAR</MinFilter>
 		<MagFilter>LINEAR</MagFilter>
 		<WrapS>CLAMP_TO_EDGE</WrapS>
@@ -64,7 +70,7 @@
 		#version 330
 				
 		// Texture samples to decide if the light should be rendered
-		uniform sampler2D NormalsTexture;
+		uniform sampler2D GeometryTexture;
 		
 		// Screen information
 		uniform vec2 ScreenSize;
@@ -72,6 +78,12 @@
 
 		// How the texture looks like
 		uniform sampler2D LightTexture;
+		
+		// Shadow uniforms
+		uniform mat4 ProjectionMatrix;
+		uniform mat4 ViewMatrix;
+		uniform mat4 ShadowMapMatrix;
+		uniform sampler2D ShadowMapTexture;
 
 		// Variables used by the spotlight
 		uniform float CosLightCutoff;
@@ -89,7 +101,7 @@
 			\param screenCoords
 			\param depth
 		*/
-		vec3 CalculateVSpacePosition(vec2 screenCoords, float depth)
+		vec3 CalculateVSpacePosition(in vec2 screenCoords, in float depth)
 		{
 			// Normalize the view ray
 			vec3 viewRay = vec3(vs_ViewSpacePosition.xy * (-FarClipDistance / vs_ViewSpacePosition.z), -FarClipDistance);
@@ -98,13 +110,34 @@
 			return viewRay * depth;
 		}
 		
+
+		float chebyshevUpperBound(in vec2 shadowTexCoords, in float distance)
+		{
+			vec2 moments = texture2D(ShadowMapTexture, shadowTexCoords).rg;
+			
+			// Surface is fully lit. as the current fragment is before the light occluder
+			if (distance <= moments.x)
+				return 1.0 ;
+
+			// The fragment is either in shadow or penumbra. We now use chebyshev's upperBound to check
+			// How likely this pixel is to be lit (p_max)
+			float variance = moments.y - (moments.x * moments.x);
+			variance = max(variance,0.00002);
+
+			float d = distance - moments.x;
+			float p_max = variance / (variance + d*d);
+
+			return p_max;
+		}
+
+		
 		void main()
 		{
 			// Calculate the screen texture coordinates based on the screen size
 			vec2 screenCoords = gl_FragCoord.xy / ScreenSize;
 				
 			// Retrieves the fragment normal
-			vec4 geometry = texture2D(NormalsTexture, screenCoords);
+			vec4 geometry = texture2D(GeometryTexture, screenCoords);
 			vec3 N = normalize(geometry.xyz * 2.0 - 1.0);
 			
 			// Get view-space position from the depth value
@@ -116,14 +149,20 @@
 			float clampedCosine = dot(-L, vs_ViewSpaceSpotDirection);
 			if (clampedCosine < CosLightCutoff)
 				discard;
-									
+				
+			vec4 positionInLightSpace = ShadowMapMatrix * vec4(P, 1.0);
+			vec2 projectTexCoord = 0.5 * positionInLightSpace.xy / positionInLightSpace.w + vec2( 0.5, 0.5 );
+				
+			float shadow = 1.0;
+			//float shadow = chebyshevUpperBound(projectTexCoord.xy, positionInLightSpace.z);
+							
 			// Light color
-			//vec4 color = texture2D(LightTexture, projectTexCoord) * vec4(LightColor, 1.0);
-			vec4 color = vec4(LightColor, 1.0);
+			vec4 color = texture2D(LightTexture, projectTexCoord) * vec4(LightColor, 1.0);
+			//vec4 color = vec4(LightColor, 1.0);
 			
 			float atten = smoothstep(0.0, CosLightCutoff, clampedCosine);
 			float spotIntensity = pow(abs(smoothstep(CosLightCutoff, 1, clampedCosine)), SpotExponent); 
-			gl_FragColor = color * spotIntensity;
+			gl_FragColor = color * spotIntensity * shadow;
 		}
 	]]>
 	</FragmentShader>

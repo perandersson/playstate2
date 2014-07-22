@@ -1,5 +1,6 @@
 #include "../../Memory.h"
 #include "FloatUniform.h"
+#include "../exception/RenderingException.h"
 using namespace core;
 
 FloatUniform::FloatUniform(const Effect* effect, RenderState* state, GLint componentID)
@@ -62,6 +63,12 @@ void FloatUniform::Apply()
 	default:
 		return;
 	}
+
+#if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+		THROW_EXCEPTION(RenderingException, "Could assign the float uniform variable");
+#endif
 }
 
 void FloatUniform::SetFloat(float32 a)

@@ -2,15 +2,11 @@
 #include "Win32GLActiveWindow.h"
 #include "../../input/win32/Win32InputDevices.h"
 #include "../../configuration/IConfiguration.h"
-#include <vector>
 
 namespace core
 {
 	class Win32ActiveWindow : public Win32GLActiveWindow
 	{
-		typedef std::vector<IWindowResizedListener*> WindowResizedListeners;
-		typedef std::vector<IWindowClosedListener*> WindowClosedListeners;
-
 	public:
 		Win32ActiveWindow(HINSTANCE applicationHandle, IConfiguration* configuration, Win32InputDevices* inputDevices);
 		virtual ~Win32ActiveWindow();
@@ -35,10 +31,10 @@ namespace core
 		virtual const Size& GetSize() const;
 		virtual void SetTitle(const std::string& title);
 		virtual const std::string& GetTitle() const;
-		virtual void AddWindowClosedListener(IWindowClosedListener* listener);
-		virtual void RemoveWindowClosedListener(IWindowClosedListener* listener);
-		virtual void AddWindowResizedListener(IWindowResizedListener* listener);
-		virtual void RemoveWindowResizedListener(IWindowResizedListener* listener);
+		virtual void AddWindowClosedListener(WindowClosedListener* listener);
+		virtual void RemoveWindowClosedListener(WindowClosedListener* listener);
+		virtual void AddWindowResizedListener(WindowResizedListener* listener);
+		virtual void RemoveWindowResizedListener(WindowResizedListener* listener);
 		virtual void SetFullscreen(bool fullscreen);
 		virtual void Alert(const std::string& title, const std::string& text, AlertType::Enum type);
 		virtual void Alert(const std::string& title, const Exception& e, AlertType::Enum type);
@@ -51,8 +47,8 @@ namespace core
 		HWND mWindowHandle;
 		MSG mMessageQueue;
 
-		WindowResizedListeners mWindowResizeListeners;
-		WindowClosedListeners mWindowClosedListeners;
+		LinkedList<WindowResizedListener> mWindowResizeListeners;
+		LinkedList<WindowClosedListener> mWindowClosedListeners;
 
 		std::string mTitle;
 

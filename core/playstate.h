@@ -37,6 +37,7 @@
 #include "scene/light/PointLight.h"
 #include "scene/light/LightSourceResultSet.h"
 #include "scene/Component.h"
+#include "scene/rendering/DefaultRenderBlockResultSetSorter.h"
 
 #include "sound/SoundEngine.h"
 

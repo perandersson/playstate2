@@ -89,3 +89,96 @@ GLenum OpenGLEnum::Convert(VertexElementType::Enum e)
 
 	return enums[(uint32)e];
 }
+
+GLenum OpenGLEnum::Convert(DepthFunc::Enum depthFunc)
+{
+	static const GLenum enums[DepthFunc::SIZE] = {
+		GL_NEVER,
+		GL_LESS,
+		GL_EQUAL,
+		GL_LEQUAL,
+		GL_GREATER,
+		GL_NOTEQUAL,
+		GL_GEQUAL,
+		GL_ALWAYS
+	};
+
+	return enums[(uint32)depthFunc];
+}
+
+GLenum OpenGLEnum::Convert(SrcFactor::Enum sfactor)
+{
+	static const GLenum enums[SrcFactor::SIZE] = {
+		GL_ZERO,
+		GL_ONE,
+		GL_SRC_COLOR,
+		GL_ONE_MINUS_SRC_COLOR,
+		GL_SRC_ALPHA,
+		GL_ONE_MINUS_SRC_ALPHA,
+		GL_DST_ALPHA,
+		GL_ONE_MINUS_DST_ALPHA,
+		GL_DST_COLOR,
+		GL_ONE_MINUS_DST_COLOR,
+		GL_CONSTANT_COLOR,
+		GL_ONE_MINUS_CONSTANT_COLOR,
+		GL_CONSTANT_ALPHA,
+		GL_ONE_MINUS_CONSTANT_ALPHA
+	};
+
+	return enums[(uint32)sfactor];
+}
+
+GLenum OpenGLEnum::Convert(DestFactor::Enum dfactor)
+{
+	static const GLenum enums[DestFactor::SIZE] = {
+		GL_ZERO,
+		GL_ONE,
+		GL_SRC_COLOR,
+		GL_ONE_MINUS_SRC_COLOR,
+		GL_SRC_ALPHA,
+		GL_ONE_MINUS_SRC_ALPHA,
+		GL_DST_ALPHA,
+		GL_ONE_MINUS_DST_ALPHA,
+		GL_DST_COLOR,
+		GL_ONE_MINUS_DST_COLOR,
+		GL_CONSTANT_COLOR,
+		GL_ONE_MINUS_CONSTANT_COLOR,
+		GL_CONSTANT_ALPHA,
+		GL_ONE_MINUS_CONSTANT_ALPHA
+	};
+
+	return enums[(uint32)dfactor];
+}
+
+GLenum OpenGLEnum::Convert(FrontFace::Enum frontFace)
+{
+	static const GLenum enums[FrontFace::SIZE] = {
+		GL_CW,
+		GL_CCW
+	};
+
+	return enums[(uint32)frontFace];
+}
+
+GLenum OpenGLEnum::Convert(CullFace::Enum cullFace)
+{
+	static const GLenum enums[CullFace::SIZE] = {
+		0,
+		GL_FRONT,
+		GL_BACK,
+		GL_FRONT_AND_BACK,
+	};
+
+	return enums[(uint32)cullFace];
+}
+
+GLenum OpenGLEnum::Convert(PolygonMode::Enum mode)
+{
+	static const GLenum enums[PolygonMode::SIZE] = {
+		GL_POINT,
+		GL_LINE,
+		GL_FILL
+	};
+
+	return enums[(uint32)mode];
+}

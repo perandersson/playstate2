@@ -293,3 +293,8 @@ void QuadTree::_Find(const AABB& boundingBox, ISpatialTreeVisitor* visitor) cons
 	assert_not_null(visitor);
 	assert_not_implemented();
 }
+
+void QuadTree::Collect(ISpatialTreeVisitor* visitor) const
+{
+	IterateAndVisit(visitor);
+}

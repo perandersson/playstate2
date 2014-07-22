@@ -99,6 +99,7 @@ namespace core
 		virtual void Invalidate(SpatialSceneNode* node);
 		virtual void Find(const Frustum* frustum, ISpatialTreeVisitor* visitor) const;
 		virtual void Find(const AABB& boundingBox, ISpatialTreeVisitor* visitor) const;
+		virtual void Collect(ISpatialTreeVisitor* visitor) const;
 
 	private:
 		void _Find(const Frustum* frustum, ISpatialTreeVisitor* visitor) const;

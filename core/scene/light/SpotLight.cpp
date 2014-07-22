@@ -49,7 +49,7 @@ void SpotLight::OnAddedToSceneGroup()
 void SpotLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const
 {
 	if (BIT_ISSET(query.filter, FindQueryFilter::SPOT_LIGHTS)) {
-		auto block = _out_resultSet->Create();
+		auto block = _out_resultSet->Create(GetUID());
 		block->position = mAbsolutePosition;
 		block->color = mColor;
 		block->direction = mSpotLightCone->GetDirection();

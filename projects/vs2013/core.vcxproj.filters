@@ -392,12 +392,6 @@
     <ClInclude Include="..\..\core\xml\TagsAndAttributes.h">
       <Filter>Source Files\xml</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\window\IWindowResizedListener.h">
-      <Filter>Source Files\window</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\window\IWindowClosedListener.h">
-      <Filter>Source Files\window</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\window\IActiveWindow.h">
       <Filter>Source Files\window</Filter>
     </ClInclude>
@@ -802,6 +796,18 @@
     </ClInclude>
     <ClInclude Include="..\..\core\rendering\OpenGLEnum.h">
       <Filter>Source Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\integration\Renderable_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\scene\SceneGroupListener.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\WindowClosedListener.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\window\WindowResizedListener.h">
+      <Filter>Source Files\window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1296,6 +1302,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\rendering\TextureFormat.cpp">
       <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\Renderable_script.cpp">
+      <Filter>Source Files\integration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

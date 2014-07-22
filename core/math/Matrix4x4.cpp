@@ -235,3 +235,256 @@ float32 Matrix4x4::operator[](uint32 index) const
 {
 	return _array[index];
 }
+
+void Matrix4x4::Invert()
+{
+	// http://stackoverflow.com/questions/1148309/inverting-a-4x4-matrix
+
+	float32 temp[16];
+
+	temp[0] = _array[5] * _array[10] * _array[15] -
+			_array[5] * _array[11] * _array[14] -
+			_array[9] * _array[6] * _array[15] +
+			_array[9] * _array[7] * _array[14] +
+			_array[13] * _array[6] * _array[11] -
+			_array[13] * _array[7] * _array[10];
+
+	temp[4] = -_array[4] * _array[10] * _array[15] +
+		_array[4] * _array[11] * _array[14] +
+		_array[8] * _array[6] * _array[15] -
+		_array[8] * _array[7] * _array[14] -
+		_array[12] * _array[6] * _array[11] +
+		_array[12] * _array[7] * _array[10];
+
+	temp[8] = _array[4] * _array[9] * _array[15] -
+		_array[4] * _array[11] * _array[13] -
+		_array[8] * _array[5] * _array[15] +
+		_array[8] * _array[7] * _array[13] +
+		_array[12] * _array[5] * _array[11] -
+		_array[12] * _array[7] * _array[9];
+
+	temp[12] = -_array[4] * _array[9] * _array[14] +
+		_array[4] * _array[10] * _array[13] +
+		_array[8] * _array[5] * _array[14] -
+		_array[8] * _array[6] * _array[13] -
+		_array[12] * _array[5] * _array[10] +
+		_array[12] * _array[6] * _array[9];
+
+	temp[1] = -_array[1] * _array[10] * _array[15] +
+		_array[1] * _array[11] * _array[14] +
+		_array[9] * _array[2] * _array[15] -
+		_array[9] * _array[3] * _array[14] -
+		_array[13] * _array[2] * _array[11] +
+		_array[13] * _array[3] * _array[10];
+
+	temp[5] = _array[0] * _array[10] * _array[15] -
+		_array[0] * _array[11] * _array[14] -
+		_array[8] * _array[2] * _array[15] +
+		_array[8] * _array[3] * _array[14] +
+		_array[12] * _array[2] * _array[11] -
+		_array[12] * _array[3] * _array[10];
+
+	temp[9] = -_array[0] * _array[9] * _array[15] +
+		_array[0] * _array[11] * _array[13] +
+		_array[8] * _array[1] * _array[15] -
+		_array[8] * _array[3] * _array[13] -
+		_array[12] * _array[1] * _array[11] +
+		_array[12] * _array[3] * _array[9];
+
+	temp[13] = _array[0] * _array[9] * _array[14] -
+		_array[0] * _array[10] * _array[13] -
+		_array[8] * _array[1] * _array[14] +
+		_array[8] * _array[2] * _array[13] +
+		_array[12] * _array[1] * _array[10] -
+		_array[12] * _array[2] * _array[9];
+
+	temp[2] = _array[1] * _array[6] * _array[15] -
+		_array[1] * _array[7] * _array[14] -
+		_array[5] * _array[2] * _array[15] +
+		_array[5] * _array[3] * _array[14] +
+		_array[13] * _array[2] * _array[7] -
+		_array[13] * _array[3] * _array[6];
+
+	temp[6] = -_array[0] * _array[6] * _array[15] +
+		_array[0] * _array[7] * _array[14] +
+		_array[4] * _array[2] * _array[15] -
+		_array[4] * _array[3] * _array[14] -
+		_array[12] * _array[2] * _array[7] +
+		_array[12] * _array[3] * _array[6];
+
+	temp[10] = _array[0] * _array[5] * _array[15] -
+		_array[0] * _array[7] * _array[13] -
+		_array[4] * _array[1] * _array[15] +
+		_array[4] * _array[3] * _array[13] +
+		_array[12] * _array[1] * _array[7] -
+		_array[12] * _array[3] * _array[5];
+
+	temp[14] = -_array[0] * _array[5] * _array[14] +
+		_array[0] * _array[6] * _array[13] +
+		_array[4] * _array[1] * _array[14] -
+		_array[4] * _array[2] * _array[13] -
+		_array[12] * _array[1] * _array[6] +
+		_array[12] * _array[2] * _array[5];
+
+	temp[3] = -_array[1] * _array[6] * _array[11] +
+		_array[1] * _array[7] * _array[10] +
+		_array[5] * _array[2] * _array[11] -
+		_array[5] * _array[3] * _array[10] -
+		_array[9] * _array[2] * _array[7] +
+		_array[9] * _array[3] * _array[6];
+
+	temp[7] = _array[0] * _array[6] * _array[11] -
+		_array[0] * _array[7] * _array[10] -
+		_array[4] * _array[2] * _array[11] +
+		_array[4] * _array[3] * _array[10] +
+		_array[8] * _array[2] * _array[7] -
+		_array[8] * _array[3] * _array[6];
+
+	temp[11] = -_array[0] * _array[5] * _array[11] +
+		_array[0] * _array[7] * _array[9] +
+		_array[4] * _array[1] * _array[11] -
+		_array[4] * _array[3] * _array[9] -
+		_array[8] * _array[1] * _array[7] +
+		_array[8] * _array[3] * _array[5];
+
+	temp[15] = _array[0] * _array[5] * _array[10] -
+		_array[0] * _array[6] * _array[9] -
+		_array[4] * _array[1] * _array[10] +
+		_array[4] * _array[2] * _array[9] +
+		_array[8] * _array[1] * _array[6] -
+		_array[8] * _array[2] * _array[5];
+
+	float32 det = _array[0] * temp[0] + _array[1] * temp[4] + _array[2] * temp[8] + _array[3] * temp[12];
+	assert(FLOAT_NEQUALS(det, 0));
+	det = 1.0 / det;
+	for (uint32 i = 0; i < 16; i++)
+		_array[i] = temp[i] * det;
+}
+
+Matrix4x4 Matrix4x4::GetInverted() const
+{
+	// http://stackoverflow.com/questions/1148309/inverting-a-4x4-matrix
+
+	float32 temp[16];
+
+	temp[0] = _array[5] * _array[10] * _array[15] -
+		_array[5] * _array[11] * _array[14] -
+		_array[9] * _array[6] * _array[15] +
+		_array[9] * _array[7] * _array[14] +
+		_array[13] * _array[6] * _array[11] -
+		_array[13] * _array[7] * _array[10];
+
+	temp[4] = -_array[4] * _array[10] * _array[15] +
+		_array[4] * _array[11] * _array[14] +
+		_array[8] * _array[6] * _array[15] -
+		_array[8] * _array[7] * _array[14] -
+		_array[12] * _array[6] * _array[11] +
+		_array[12] * _array[7] * _array[10];
+
+	temp[8] = _array[4] * _array[9] * _array[15] -
+		_array[4] * _array[11] * _array[13] -
+		_array[8] * _array[5] * _array[15] +
+		_array[8] * _array[7] * _array[13] +
+		_array[12] * _array[5] * _array[11] -
+		_array[12] * _array[7] * _array[9];
+
+	temp[12] = -_array[4] * _array[9] * _array[14] +
+		_array[4] * _array[10] * _array[13] +
+		_array[8] * _array[5] * _array[14] -
+		_array[8] * _array[6] * _array[13] -
+		_array[12] * _array[5] * _array[10] +
+		_array[12] * _array[6] * _array[9];
+
+	temp[1] = -_array[1] * _array[10] * _array[15] +
+		_array[1] * _array[11] * _array[14] +
+		_array[9] * _array[2] * _array[15] -
+		_array[9] * _array[3] * _array[14] -
+		_array[13] * _array[2] * _array[11] +
+		_array[13] * _array[3] * _array[10];
+
+	temp[5] = _array[0] * _array[10] * _array[15] -
+		_array[0] * _array[11] * _array[14] -
+		_array[8] * _array[2] * _array[15] +
+		_array[8] * _array[3] * _array[14] +
+		_array[12] * _array[2] * _array[11] -
+		_array[12] * _array[3] * _array[10];
+
+	temp[9] = -_array[0] * _array[9] * _array[15] +
+		_array[0] * _array[11] * _array[13] +
+		_array[8] * _array[1] * _array[15] -
+		_array[8] * _array[3] * _array[13] -
+		_array[12] * _array[1] * _array[11] +
+		_array[12] * _array[3] * _array[9];
+
+	temp[13] = _array[0] * _array[9] * _array[14] -
+		_array[0] * _array[10] * _array[13] -
+		_array[8] * _array[1] * _array[14] +
+		_array[8] * _array[2] * _array[13] +
+		_array[12] * _array[1] * _array[10] -
+		_array[12] * _array[2] * _array[9];
+
+	temp[2] = _array[1] * _array[6] * _array[15] -
+		_array[1] * _array[7] * _array[14] -
+		_array[5] * _array[2] * _array[15] +
+		_array[5] * _array[3] * _array[14] +
+		_array[13] * _array[2] * _array[7] -
+		_array[13] * _array[3] * _array[6];
+
+	temp[6] = -_array[0] * _array[6] * _array[15] +
+		_array[0] * _array[7] * _array[14] +
+		_array[4] * _array[2] * _array[15] -
+		_array[4] * _array[3] * _array[14] -
+		_array[12] * _array[2] * _array[7] +
+		_array[12] * _array[3] * _array[6];
+
+	temp[10] = _array[0] * _array[5] * _array[15] -
+		_array[0] * _array[7] * _array[13] -
+		_array[4] * _array[1] * _array[15] +
+		_array[4] * _array[3] * _array[13] +
+		_array[12] * _array[1] * _array[7] -
+		_array[12] * _array[3] * _array[5];
+
+	temp[14] = -_array[0] * _array[5] * _array[14] +
+		_array[0] * _array[6] * _array[13] +
+		_array[4] * _array[1] * _array[14] -
+		_array[4] * _array[2] * _array[13] -
+		_array[12] * _array[1] * _array[6] +
+		_array[12] * _array[2] * _array[5];
+
+	temp[3] = -_array[1] * _array[6] * _array[11] +
+		_array[1] * _array[7] * _array[10] +
+		_array[5] * _array[2] * _array[11] -
+		_array[5] * _array[3] * _array[10] -
+		_array[9] * _array[2] * _array[7] +
+		_array[9] * _array[3] * _array[6];
+
+	temp[7] = _array[0] * _array[6] * _array[11] -
+		_array[0] * _array[7] * _array[10] -
+		_array[4] * _array[2] * _array[11] +
+		_array[4] * _array[3] * _array[10] +
+		_array[8] * _array[2] * _array[7] -
+		_array[8] * _array[3] * _array[6];
+
+	temp[11] = -_array[0] * _array[5] * _array[11] +
+		_array[0] * _array[7] * _array[9] +
+		_array[4] * _array[1] * _array[11] -
+		_array[4] * _array[3] * _array[9] -
+		_array[8] * _array[1] * _array[7] +
+		_array[8] * _array[3] * _array[5];
+
+	temp[15] = _array[0] * _array[5] * _array[10] -
+		_array[0] * _array[6] * _array[9] -
+		_array[4] * _array[1] * _array[10] +
+		_array[4] * _array[2] * _array[9] +
+		_array[8] * _array[1] * _array[6] -
+		_array[8] * _array[2] * _array[5];
+
+	float32 det = _array[0] * temp[0] + _array[1] * temp[4] + _array[2] * temp[8] + _array[3] * temp[12];
+	assert(FLOAT_NEQUALS(det, 0));
+	det = 1.0 / det;
+	Matrix4x4 mat;
+	for (uint32 i = 0; i < 16; i++)
+		mat._array[i] = temp[i] * det;
+	return mat;
+}
+

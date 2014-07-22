@@ -7,6 +7,11 @@
 #include "TextureFormat.h"
 #include "BufferUsage.h"
 #include "VertexType.h"
+#include "DepthFunc.h"
+#include "BlendFunc.h"
+#include "FrontFace.h"
+#include "CullFace.h"
+#include "PolygonMode.h"
 #include "GLEWMX.h"
 
 namespace core
@@ -21,5 +26,12 @@ namespace core
 		static GLenum Convert(TextureWrap::Enum e);
 		static GLenum Convert(BufferUsage::Enum e);
 		static GLenum Convert(VertexElementType::Enum e);
+
+		static GLenum Convert(DepthFunc::Enum e);
+		static GLenum Convert(SrcFactor::Enum e);
+		static GLenum Convert(DestFactor::Enum e);
+		static GLenum Convert(FrontFace::Enum e);
+		static GLenum Convert(CullFace::Enum e);
+		static GLenum Convert(PolygonMode::Enum e);
 	};
 }

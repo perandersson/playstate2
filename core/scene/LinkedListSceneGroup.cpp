@@ -95,14 +95,24 @@ bool LinkedListSceneGroup::Find(const FindQuery& query, RenderBlockResultSet* _o
 	uint32 count = 0;
 	const Frustum* frustum = query.frustum;
 	auto renderable = mRenderables.First();
-	while (renderable != nullptr) {
-		auto next = renderable->RenderableLink.Tail;
-		CollisionResult::Enum result = frustum->IsColliding(renderable->GetBoundingBox());
-		if (result != CollisionResult::OUTSIDE) {
+	if (frustum != nullptr) {
+		while (renderable != nullptr) {
+			auto next = renderable->RenderableLink.Tail;
+			CollisionResult::Enum result = frustum->IsColliding(renderable->GetBoundingBox());
+			if (result != CollisionResult::OUTSIDE) {
+				renderable->PreRender(query, _out_resultSet);
+				count++;
+			}
+			renderable = next;
+		}
+	}
+	else {
+		while (renderable != nullptr) {
+			auto next = renderable->RenderableLink.Tail;
 			renderable->PreRender(query, _out_resultSet);
 			count++;
+			renderable = next;
 		}
-		renderable = next;
 	}
 
 	return count > 0;
@@ -113,15 +123,24 @@ bool LinkedListSceneGroup::Find(const FindQuery& query, LightSourceResultSet* _o
 	uint32 count = 0;
 	const Frustum* frustum = query.frustum;
 	auto lightSource = mLightSources.First();
-	while (lightSource != nullptr) {
-		auto next = lightSource->LightSourceLink.Tail;
-		CollisionResult::Enum result = frustum->IsColliding(lightSource->GetBoundingBox());
-		if (result != CollisionResult::OUTSIDE) {
+	if (frustum != nullptr) {
+		while (lightSource != nullptr) {
+			auto next = lightSource->LightSourceLink.Tail;
+			CollisionResult::Enum result = frustum->IsColliding(lightSource->GetBoundingBox());
+			if (result != CollisionResult::OUTSIDE) {
+				lightSource->CollectLightBlocks(query, _out_resultSet);
+				count++;
+			}
+			lightSource = next;
+		}
+	}
+	else {
+		while (lightSource != nullptr) {
+			auto next = lightSource->LightSourceLink.Tail;
 			lightSource->CollectLightBlocks(query, _out_resultSet);
 			count++;
+			lightSource = next;
 		}
-		lightSource = next;
 	}
-
 	return count > 0;
 }

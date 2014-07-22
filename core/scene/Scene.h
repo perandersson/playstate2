@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneGroup.h"
+#include "SceneGroupListener.h"
 #include "FindQuery.h"
 #include "../math/Color.h"
 #include "rendering/RenderBlockResultSet.h"
@@ -15,18 +16,34 @@ namespace core
 		Scene();
 		~Scene();
 
-		//
-		// Adds a new scene group to the current scene
-		//
-		// @param group
-		//			The group we want to add to the scene manager
+		/*!
+			\brief Adds a new scene group to the current scene
+
+			\param group
+					The group we want to add to the scene manager
+		*/
 		void AddSceneGroup(SceneGroup* group);
 
-		//
-		// Remove the supplied scene group from this scene
-		//
-		// @param group
-		void DetachSceneGroup(SceneGroup* group);
+		/*!
+			\brief Remove the supplied scene group from this scene
+
+			\param group
+		*/
+		void RemoveSceneGroup(SceneGroup* group);
+		
+		/*!
+			\brief Add a scene group listener
+
+			\param listener
+		*/
+		void AddSceneGroupListener(SceneGroupListener* listener);
+
+		/*!
+			\brief Remove a scene group listener
+
+			\param listener
+		*/
+		void RemoveSceneGroupListener(SceneGroupListener* listener);
 
 		//
 		// Update the scene
@@ -117,5 +134,6 @@ namespace core
 		float32 mTimeSinceLastTick;
 		Camera* mActiveCamera;
 		Color mAmbientLight;
+		LinkedList<SceneGroupListener> mSceneGroupListeners;
 	};
 }

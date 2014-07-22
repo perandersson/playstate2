@@ -142,7 +142,10 @@ private:
 bool QuadTreeSceneGroup::Find(const FindQuery& query, RenderBlockResultSet* _out_resultSet) const
 {
 	QuadTreeRenderableEventHandlerVisitor visitor(query, _out_resultSet);
-	mQuadTree->Find(query.frustum, &visitor);
+	if (query.frustum != nullptr)
+		mQuadTree->Find(query.frustum, &visitor);
+	else
+		mQuadTree->Collect(&visitor);
 	return visitor.HasFoundResults();
 }
 
@@ -151,14 +154,24 @@ bool QuadTreeSceneGroup::Find(const FindQuery& query, LightSourceResultSet* _out
 	uint32 count = 0;
 	const Frustum* frustum = query.frustum;
 	auto lightSource = mLightSources.First();
-	while (lightSource != nullptr) {
-		auto next = lightSource->LightSourceLink.Tail;
-		CollisionResult::Enum result = frustum->IsColliding(lightSource->GetBoundingBox());
-		if (result != CollisionResult::OUTSIDE) {
+	if (frustum != nullptr) {
+		while (lightSource != nullptr) {
+			auto next = lightSource->LightSourceLink.Tail;
+			CollisionResult::Enum result = frustum->IsColliding(lightSource->GetBoundingBox());
+			if (result != CollisionResult::OUTSIDE) {
+				lightSource->CollectLightBlocks(query, _out_resultSet);
+				count++;
+			}
+			lightSource = next;
+		}
+	}
+	else {
+		while (lightSource != nullptr) {
+			auto next = lightSource->LightSourceLink.Tail;
 			lightSource->CollectLightBlocks(query, _out_resultSet);
 			count++;
+			lightSource = next;
 		}
-		lightSource = next;
 	}
 
 	return count > 0;

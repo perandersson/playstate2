@@ -6,6 +6,13 @@
 
 namespace core
 {
+	/*!
+		\brief Base class for renderable scene nodes
+
+		A renderable scene node are able to generate RenderBlock, which is used by the rendering pipeline to draw the vertices onto the scene.
+
+		Renderable instances are static shadow casters (They will generate a shadow map only once) by default, but not dynamic shadow casters.
+	*/
 	class Renderable : public SpatialSceneNode
 	{
 	public:
@@ -21,6 +28,22 @@ namespace core
 		*/
 		inline const Matrix4x4& GetModelMatrix() const {
 			return mModelMatrix;
+		}
+
+		void SetStaticShadowCaster(bool b);
+
+		void SetDynamicShadowCaster(bool b);
+
+		inline bool GetStaticShadowCaster() const {
+			return mStaticShadowCaster;
+		}
+
+		inline bool GetDynamicShadowCaster() const {
+			return mDynamicShadowCaster;
+		}
+
+		inline bool IsShadowCaster() const {
+			return mStaticShadowCaster || mDynamicShadowCaster;
 		}
 
 		/*!
@@ -44,5 +67,7 @@ namespace core
 
 	protected:
 		Matrix4x4 mModelMatrix;
+		bool mStaticShadowCaster;
+		bool mDynamicShadowCaster;
 	};
 }

@@ -10,7 +10,14 @@ namespace core
 		You can create a default query using a structure like this:
 
 		{@code 
-			FindQuery query = { camera, FindQueryFilter::DEFAULT };
+			auto frustum = camera->GetFrustum();
+			FindQuery query = { frustum, FindQueryFilter::DEFAULT };
+		}
+
+		It's also possible to search for all items that matches a specific query, and ignoring frustum culling completely:
+
+		{@code
+			FindQuery query = { nullptr, FindQueryFilter::DEFAULT };
 		}
 	*/
 	struct FindQuery

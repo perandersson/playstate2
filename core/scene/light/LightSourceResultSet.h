@@ -22,9 +22,11 @@ namespace core
 		/*!
 			\brief Creates a new light-source block and return a pointer to it
 
+			\param uid
+
 			\return A pointer to a block where we can put the information needed to draw a light-source onto the scene.
 		*/
-		LightSourceBlock* Create();
+		LightSourceBlock* Create(uint32 uid);
 		
 		/*!
 			\brief Retrieves the number of LightSource blocks put into this result-set

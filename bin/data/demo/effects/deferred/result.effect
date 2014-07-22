@@ -62,7 +62,7 @@
 		void main()
 		{
 			vec4 image = texture(DiffuseTexture, uvCoords);
-			float depth = texture(ShadowMapTexture, uvCoords).a;
+			float depth = texture(ShadowMapTexture, uvCoords).b;
 			vec3 edges = texture(ShadowMapTexture, uvCoords).rgb;
 			
 			vec3 N = normalize(texture(NormalsTexture, uvCoords).xyz  * 2.0 - 1.0);

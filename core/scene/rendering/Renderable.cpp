@@ -5,12 +5,23 @@
 using namespace core;
 
 Renderable::Renderable()
-: SpatialSceneNode()
+: SpatialSceneNode(), mStaticShadowCaster(true), mDynamicShadowCaster(false)
 {
 }
 
 Renderable::~Renderable()
 {
+}
+
+void Renderable::SetStaticShadowCaster(bool b)
+{
+	mStaticShadowCaster = b;
+}
+
+
+void Renderable::SetDynamicShadowCaster(bool b)
+{
+	mDynamicShadowCaster = b;
 }
 
 void Renderable::UpdateModelMatrix()

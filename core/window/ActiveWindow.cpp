@@ -28,22 +28,22 @@ const std::string& ActiveWindow::GetTitle()
 	return Kernel::GetActiveWindow()->GetTitle();
 }
 
-void ActiveWindow::AddWindowClosedListener(IWindowClosedListener* listener)
+void ActiveWindow::AddWindowClosedListener(WindowClosedListener* listener)
 {
 	Kernel::GetActiveWindow()->AddWindowClosedListener(listener);
 }
 
-void ActiveWindow::RemoveWindowClosedListener(IWindowClosedListener* listener)
+void ActiveWindow::RemoveWindowClosedListener(WindowClosedListener* listener)
 {
 	Kernel::GetActiveWindow()->RemoveWindowClosedListener(listener);
 }
 
-void ActiveWindow::AddWindowResizedListener(IWindowResizedListener* listener)
+void ActiveWindow::AddWindowResizedListener(WindowResizedListener* listener)
 {
 	Kernel::GetActiveWindow()->AddWindowResizedListener(listener);
 }
 
-void ActiveWindow::RemoveWindowResizedListener(IWindowResizedListener* listener)
+void ActiveWindow::RemoveWindowResizedListener(WindowResizedListener* listener)
 {
 	Kernel::GetActiveWindow()->RemoveWindowResizedListener(listener);
 }

@@ -14,13 +14,14 @@ for i=-10, 9 do
 		local node = RenderModelSceneNode()
 		node:SetPosition({i * 20, 0, j * 20})
 		node:SetModel(chinalampModel)
+		node:SetID("CHINALAMPMODEL")
 		level1:AddSceneNode(node)
 	end
 end
 
 -- Add lighting using random positions
 math.randomseed( os.time() )
-for i=-10, 9 do
+--[[for i=-10, 9 do
 	for j=-10, 9 do
 		local color = {math.random(0, 100) / 100.0, math.random(0, 100) / 100.0, math.random(0, 100) / 100.0}
 		local radius = 10.0
@@ -39,7 +40,7 @@ for i=-10, 9 do
 		pointLight:AddComponent(lightBehavior)
 		level1:AddSceneNode(pointLight)
 	end
-end
+end]]--
 
 -- Add ground
 local ground1 = Resource.Load("/demo/models/ground1/ground1.obj")
@@ -48,6 +49,7 @@ for i=-10, 9 do
 		local node = RenderModelSceneNode()
 		node:SetPosition({i * 20, 0, j * 20})
 		node:SetModel(ground1)
+		node:SetID("ground1")
 		level1:AddSceneNode(node)
 	end
 end
@@ -56,10 +58,10 @@ end
 local spotlightNode = SpotLight()
 spotlightNode:SetPosition({0.0, 20.0, 0.0})
 spotlightNode:SetColor({1.0, 1.0, 1.0})
-spotlightNode:SetSpotDirection({0.0, -20.0, 0.0})
+spotlightNode:SetSpotDirection({0.0, -20.0, -1.0})
 spotlightNode:SetCutoff(20.0)
 spotlightNode:SetSpotExponent(2.5)
---spotlightNode:SetTexture(Resource.Load("/demo/effects/cross_light.png"))
+spotlightNode:SetTexture(Resource.Load("/demo/effects/cross_light.png"))
 local rotateLightBehaviour = RotateLightBehaviour()
 rotateLightBehaviour:SetRadius(40.0)
 spotlightNode:AddComponent(rotateLightBehaviour)

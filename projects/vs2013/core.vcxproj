@@ -61,6 +61,7 @@
     <ClInclude Include="..\..\core\integration\Music_script.h" />
     <ClInclude Include="..\..\core\integration\PointLight_script.h" />
     <ClInclude Include="..\..\core\integration\QuadTreeSceneGroup_script.h" />
+    <ClInclude Include="..\..\core\integration\Renderable_script.h" />
     <ClInclude Include="..\..\core\integration\RenderModelSceneNode_script.h" />
     <ClInclude Include="..\..\core\integration\Resource_script.h" />
     <ClInclude Include="..\..\core\integration\SceneGroup_script.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\..\core\scene\Event.h" />
     <ClInclude Include="..\..\core\scene\FindQuery.h" />
     <ClInclude Include="..\..\core\scene\FindQueryFilter.h" />
+    <ClInclude Include="..\..\core\scene\SceneGroupListener.h" />
     <ClInclude Include="..\..\core\scene\light\LightSource.h" />
     <ClInclude Include="..\..\core\scene\light\LightSourceBlock.h" />
     <ClInclude Include="..\..\core\scene\light\LightSourceResultSet.h" />
@@ -232,8 +234,8 @@
     <ClInclude Include="..\..\core\window\win32\Win32GLActiveWindow.h" />
     <ClInclude Include="..\..\core\window\win32\Win32ActiveWindow.h" />
     <ClInclude Include="..\..\core\window\win32\Win32ExternalWindow.h" />
-    <ClInclude Include="..\..\core\window\IWindowClosedListener.h" />
-    <ClInclude Include="..\..\core\window\IWindowResizedListener.h" />
+    <ClInclude Include="..\..\core\window\WindowClosedListener.h" />
+    <ClInclude Include="..\..\core\window\WindowResizedListener.h" />
     <ClInclude Include="..\..\core\xml\TagsAndAttributes.h" />
     <ClInclude Include="..\..\core\xml\XMLDefaultVisitor.h" />
   </ItemGroup>
@@ -272,6 +274,7 @@
     <ClCompile Include="..\..\core\integration\Music_script.cpp" />
     <ClCompile Include="..\..\core\integration\PointLight_script.cpp" />
     <ClCompile Include="..\..\core\integration\QuadTreeSceneGroup_script.cpp" />
+    <ClCompile Include="..\..\core\integration\Renderable_script.cpp" />
     <ClCompile Include="..\..\core\integration\RenderModelSceneNode_script.cpp" />
     <ClCompile Include="..\..\core\integration\Resource_script.cpp" />
     <ClCompile Include="..\..\core\integration\SceneGroup_script.cpp" />

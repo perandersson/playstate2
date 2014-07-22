@@ -35,6 +35,8 @@ bool DemoGame::Initialize()
 
 	mRenderPipeline = new DeferredRenderPipeline();
 	SetRenderPipeline(mRenderPipeline);
+	GetScene()->AddSceneGroupListener(mRenderPipeline);
+
 
 	return true;
 }

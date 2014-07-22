@@ -1,6 +1,5 @@
 #include "../../Memory.h"
 #include "Win32ActiveWindow.h"
-#include <algorithm>
 using namespace core;
 
 // Anonymouse code
@@ -15,7 +14,10 @@ namespace {
 static const char* PLAYSTATE_CLASS_NAME = "playstate";
 
 Win32ActiveWindow::Win32ActiveWindow(HINSTANCE applicationHandle, IConfiguration* configuration, Win32InputDevices* inputDevices)
-: Win32GLActiveWindow(configuration), mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL), mResizingWindow(false),
+: Win32GLActiveWindow(configuration), 
+mInputDevices(inputDevices), mConfiguration(configuration), mApplicationHandle(applicationHandle), mWindowHandle(NULL), 
+mWindowResizeListeners(offsetof(WindowResizedListener, WindowResizedListenerLink)), mWindowClosedListeners(offsetof(WindowClosedListener, WindowClosedListenerLink)),
+mResizingWindow(false),
 mFullscreen(false)
 {
 	_window = this;
@@ -25,8 +27,8 @@ mFullscreen(false)
 
 Win32ActiveWindow::~Win32ActiveWindow()
 {
-	mWindowResizeListeners.clear();
-	mWindowClosedListeners.clear();
+	mWindowResizeListeners.DeleteAll();
+	mWindowClosedListeners.DeleteAll();
 
 	Win32GLActiveWindow::ReleaseDrivers();
 
@@ -149,9 +151,15 @@ void Win32ActiveWindow::SetSize(const Size& size)
 	SetWindowPos(mWindowHandle, NULL, 0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, SWP_NOMOVE);
 
 	// Notify listeners
-	WindowResizedListeners::size_type numListeners = mWindowResizeListeners.size();
-	for (WindowResizedListeners::size_type i = 0; i < numListeners; ++i) {
-		mWindowResizeListeners[i]->OnWindowResized(mSize);
+	auto listener = mWindowResizeListeners.First();
+	while (listener != nullptr) {
+		auto next = listener->WindowResizedListenerLink.Tail;
+		bool resizeOk = listener->OnWindowResized(mSize);
+		if (!resizeOk) {
+			// TODO: Implement
+			assert_not_implemented();
+		}
+		listener = next;
 	}
 
 	mPrevSize = mSize;
@@ -229,11 +237,12 @@ bool Win32ActiveWindow::ProcessEvents()
 {
 	while (PeekMessage(&mMessageQueue, NULL, 0, 0, PM_REMOVE)) {
 		if (mMessageQueue.message == WM_QUIT) {
-			WindowClosedListeners::size_type size = mWindowClosedListeners.size();
-			for (WindowClosedListeners::size_type i = 0; i < size; ++i) {
-				mWindowClosedListeners[i]->OnWindowClosing();
+			auto listener = mWindowClosedListeners.First();
+			while (listener != nullptr) {
+				auto next = listener->WindowClosedListenerLink.Tail;
+				listener->OnWindowClosing();
+				listener = next;
 			}
-
 			return false;;
 		}
 
@@ -241,13 +250,20 @@ bool Win32ActiveWindow::ProcessEvents()
 		DispatchMessage(&mMessageQueue);
 	}
 
-	// Dispatch resize events if a resize has occured.
+	// Dispatch resize events if a resize has occured from the OS events queue.
 	if (mSize != mPrevSize) {
-		mPrevSize = mSize;
-		WindowResizedListeners::size_type size = mWindowResizeListeners.size();
-		for (WindowResizedListeners::size_type i = 0; i < size; ++i) {
-			mWindowResizeListeners[i]->OnWindowResized(mSize);
+		auto listener = mWindowResizeListeners.First();
+		while (listener != nullptr) {
+			auto next = listener->WindowResizedListenerLink.Tail;
+			bool resizeOk = listener->OnWindowResized(mSize);
+			if (!resizeOk) {
+				// TODO: Implement
+				assert_not_implemented();
+			}
+			listener = next;
 		}
+
+		mPrevSize = mSize;
 	}
 
 	mInputDevices->ProcessDevices(this);	
@@ -255,28 +271,24 @@ bool Win32ActiveWindow::ProcessEvents()
 }
 
 
-void Win32ActiveWindow::AddWindowResizedListener(IWindowResizedListener* listener)
+void Win32ActiveWindow::AddWindowResizedListener(WindowResizedListener* listener)
 {
-	mWindowResizeListeners.push_back(listener);
+	mWindowResizeListeners.AddLast(listener);
 }
 
-void Win32ActiveWindow::RemoveWindowResizedListener(IWindowResizedListener* listener)
+void Win32ActiveWindow::RemoveWindowResizedListener(WindowResizedListener* listener)
 {
-	WindowResizedListeners::iterator it = std::find(mWindowResizeListeners.begin(), mWindowResizeListeners.end(), listener);
-	if (it != mWindowResizeListeners.end())
-		mWindowResizeListeners.erase(it);
+	mWindowResizeListeners.Remove(listener);
 }
 
-void Win32ActiveWindow::AddWindowClosedListener(IWindowClosedListener* listener)
+void Win32ActiveWindow::AddWindowClosedListener(WindowClosedListener* listener)
 {
-	mWindowClosedListeners.push_back(listener);
+	mWindowClosedListeners.AddLast(listener);
 }
 
-void Win32ActiveWindow::RemoveWindowClosedListener(IWindowClosedListener* listener)
+void Win32ActiveWindow::RemoveWindowClosedListener(WindowClosedListener* listener)
 {
-	WindowClosedListeners::iterator it = std::find(mWindowClosedListeners.begin(), mWindowClosedListeners.end(), listener);
-	if (it != mWindowClosedListeners.end())
-		mWindowClosedListeners.erase(it);
+	mWindowClosedListeners.Remove(listener);
 }
 
 void Win32ActiveWindow::SetFullscreen(bool fullscreen)

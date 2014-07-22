@@ -35,6 +35,8 @@ namespace core
 		Matrix4x4(const Matrix4x4& mat);
 
 		void Translate(const Vector3& vec);
+		void Invert();
+		Matrix4x4 GetInverted() const;
 
 		Matrix4x4 operator * (const Matrix4x4& rhs) const;
 
