@@ -16,15 +16,15 @@
 		layout(location = 0) in vec3 position;
 
 		// Data to fragment shader
-		out vec4 vs_ViewSpacePosition;
+		out vec4 vs_ScreenSpacePosition;
 
 		void main()
 		{
-			// Calculate the view-space position
-			vs_ViewSpacePosition = ViewMatrix * ModelMatrix * vec4(position, 1.0);
+			// Calculate the screen-space position
+			vs_ScreenSpacePosition = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(position, 1.0);
 			
 			// Render the vertices at the projected position
-			gl_Position = ProjectionMatrix * vs_ViewSpacePosition;
+			gl_Position = vs_ScreenSpacePosition;
 		}
 	]]>
 	</VertexShader>
@@ -36,11 +36,12 @@
 		uniform float FarClipDistance;
 
 		// Data from vertex shader
-		in vec4 vs_ViewSpacePosition;
+		in vec4 vs_ScreenSpacePosition;
 
 		void main()
 		{
-			float depth = -vs_ViewSpacePosition.z / FarClipDistance;
+			// Calculate the linearized depth
+			float depth = vs_ScreenSpacePosition.z / FarClipDistance;
 			float moment1 = depth;
 			float moment2 = depth * depth;
 		
