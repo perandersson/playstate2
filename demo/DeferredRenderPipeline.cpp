@@ -133,20 +133,20 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 	FindQuery query = { nullptr, FindQueryFilter::SPOT_LIGHTS };
 	std::vector<ShadowMap*> newShadowMaps;
 	if (group->Find(query, &spotLightResultSet)) {
-		std::shared_ptr<RenderTarget2D> depthRenderTarget(RenderContext::CreateRenderTarget2D(Size(256, 256), TextureFormat::DEPTH32F));
 		RenderState* state = RenderContext::Activate(mShadowMapEffect);
 
 		LightSourceResultSet::Iterator it = spotLightResultSet.GetIterator();
 		LightSourceResultSet::Type block;
 		while (block = it.Next()) {
 			auto lightCamera = block->projector;
+			std::shared_ptr<RenderTarget2D> depthRenderTarget(RenderContext::CreateRenderTarget2D(GetShadowSize(lightCamera->GetFarClipDistance()), TextureFormat::DEPTH32F));
 
 			// Create a shadow map container if non exist for the current SpotLight
 			ShadowMap* shadowMap;
 			auto it = mShadowMaps.find(block->uid);
 			if (it == mShadowMaps.end()) {
 				shadowMap = new ShadowMap();
-				shadowMap->renderTarget = RenderContext::CreateRenderTarget2D(Size(256, 256), TextureFormat::RGBA16F);
+				shadowMap->renderTarget = RenderContext::CreateRenderTarget2D(GetShadowSize(lightCamera->GetFarClipDistance()), TextureFormat::RGBA16F);
 				mShadowMaps.insert(std::make_pair(block->uid, shadowMap));
 			}
 			else
@@ -338,8 +338,8 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 		auto spotDirection = state->FindUniform("SpotDirection");
 		auto spotExponent = state->FindUniform("SpotExponent");
 		auto shadowMapTexture = state->FindUniform("ShadowMapTexture");
-		shadowMapTexture->SetTextureCompareMode(CompareMode::COMPARE_R_TO_TEXTURE);
-		shadowMapTexture->SetTextureCompareFunc(CompareFunc::LEQUAL);
+		//shadowMapTexture->SetTextureCompareMode(CompareMode::COMPARE_R_TO_TEXTURE);
+		//shadowMapTexture->SetTextureCompareFunc(CompareFunc::LEQUAL);
 		auto shadowMapMatrix = state->FindUniform("ShadowMapMatrix");
 		auto lightFarClipDistance = state->FindUniform("LightFarClipDistance");
 		static const Matrix4x4 bias(0.5f, 0.0f, 0.0f, 0.5f,
@@ -467,4 +467,10 @@ void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* cam
 		state->Render(block->vertexBuffer, block->indexBuffer);
 
 	}
+}
+
+Size DeferredRenderPipeline::GetShadowSize(float32 farClipDistance) const
+{
+	// TODO: Implement support fur customized shadow texture sizes
+	return Size(512, 512);
 }

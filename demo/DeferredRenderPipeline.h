@@ -29,6 +29,16 @@ public:
 	void DrawFinalResultToScreen(const Scene& scene, const Camera* camera);
 	void DrawDebugInfo(const Scene& scene, const Camera* camera);
 
+	/*!
+		\brief Retrieves the default shadow texture size
+
+		\param farClipDistance
+				The far clip distance for a point light projector
+		\return
+				The size of the shadow
+	*/
+	Size GetShadowSize(float32 farClipDistance) const;
+
 private:
 	Resource<Effect> mGeometryEffect;
 	Resource<Effect> mDebugEffect;
