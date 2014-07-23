@@ -154,7 +154,7 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 			auto it = mShadowMaps.find(block->uid);
 			if (it == mShadowMaps.end()) {
 				shadowMap = new ShadowMap();
-				shadowMap->renderTarget = RenderContext::CreateRenderTarget2D(GetShadowSize(lightCamera->GetFarClipDistance()), TextureFormat::RGBA16F);
+				shadowMap->renderTarget = RenderContext::CreateRenderTarget2D(GetShadowSize(lightCamera->GetFarClipDistance()), TextureFormat::RGBA32F);
 				mShadowMaps.insert(std::make_pair(block->uid, shadowMap));
 			}
 			else

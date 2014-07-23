@@ -33,6 +33,7 @@ std::hash_map<std::string, int32> TextureFormat::GetValues()
 	ENUM_STRING(enums, TextureFormat, RGBA16);
 	ENUM_STRING(enums, TextureFormat, RGB10_A2);
 	ENUM_STRING(enums, TextureFormat, RGBA16F);
+	ENUM_STRING(enums, TextureFormat, RGBA32F);
 	ENUM_STRING(enums, TextureFormat, BGR);
 	ENUM_STRING(enums, TextureFormat, BGRA);
 	ENUM_STRING(enums, TextureFormat, DEPTH24);

@@ -382,6 +382,9 @@ GLenum OpenGLRenderContext::GetTextureFormatAsEnum(TextureFormat::Enum format)
 	case TextureFormat::RGBA16F:
 		_format = GL_RGBA;
 		break;
+	case TextureFormat::RGBA32F:
+		_format = GL_RGBA;
+		break;
 	case TextureFormat::DEPTH24:
 		_format = GL_DEPTH_COMPONENT;
 		break;
@@ -446,6 +449,9 @@ GLenum OpenGLRenderContext::GetInternalTextureFormatAsEnum(TextureFormat::Enum f
 		break;
 	case TextureFormat::RGBA16F:
 		_internalFormat = GL_RGBA16F;
+		break;
+	case TextureFormat::RGBA32F:
+		_internalFormat = GL_RGBA32F;
 		break;
 	case TextureFormat::DEPTH24:
 		_internalFormat = GL_DEPTH_COMPONENT24;

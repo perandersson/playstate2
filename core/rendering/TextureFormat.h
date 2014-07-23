@@ -21,6 +21,7 @@ namespace core
 			RGBA16,
 			RGB10_A2,
 			RGBA16F,
+			RGBA32F,
 			BGR,
 			BGRA,
 			DEPTH24,
