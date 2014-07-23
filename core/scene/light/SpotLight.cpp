@@ -48,6 +48,24 @@ void SpotLight::OnAddedToSceneGroup()
 
 void SpotLight::CollectLightBlocks(const FindQuery& query, LightSourceResultSet* _out_resultSet) const
 {
+	const uint32 filter = query.filter;
+	if (BIT_ISSET(filter, FindQueryFilter::STATIC_SHADOW_CASTER) || BIT_ISSET(filter, FindQueryFilter::DYNAMIC_SHADOW_CASTER)) {
+		if (BIT_ISSET(filter, FindQueryFilter::STATIC_AND_DYNAMIC_SHADOW_CASTER)) {
+			if (!IsShadowCaster()) {
+				return;
+			}
+		}
+		else if (BIT_ISSET(filter, FindQueryFilter::STATIC_SHADOW_CASTER)) {
+			if (!mStaticShadowCaster || mDynamicShadowCaster) {
+				return;
+			}
+		}
+		else if (BIT_ISSET(filter, FindQueryFilter::DYNAMIC_SHADOW_CASTER)) {
+			if (!mDynamicShadowCaster || mStaticShadowCaster) {
+				return;
+			}
+		}
+	}
 	if (BIT_ISSET(query.filter, FindQueryFilter::SPOT_LIGHTS)) {
 		auto block = _out_resultSet->Create(GetUID());
 		block->position = mAbsolutePosition;

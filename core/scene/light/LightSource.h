@@ -70,6 +70,8 @@ namespace core
 
 	private:
 		uint32 mUID;
+
+	protected:
 		bool mStaticShadowCaster;
 		bool mDynamicShadowCaster;
 	};

@@ -138,7 +138,7 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 
 	// Collect all spotlights in the scene group
 	LightSourceResultSet spotLightResultSet;
-	FindQuery query = { nullptr, FindQueryFilter::SPOT_LIGHTS };
+	FindQuery query = { nullptr, FindQueryFilter::SPOT_LIGHTS | FindQueryFilter::STATIC_AND_DYNAMIC_SHADOW_CASTER };
 	std::vector<ShadowMap*> shadowMapsToBlur;
 	if (group->Find(query, &spotLightResultSet)) {
 		RenderState* state = RenderContext::Activate(mShadowMapEffect);
