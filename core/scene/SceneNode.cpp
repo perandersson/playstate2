@@ -491,7 +491,7 @@ void SceneNode::UpdateRotation(const Vector3& parentRotation)
 
 void SceneNode::UpdateScale(const Vector3& parentScale)
 {
-	mAbsoluteScale = parentScale + mScale;
+	mAbsoluteScale = parentScale * mScale;
 
 	this->OnScaleChanged();
 
