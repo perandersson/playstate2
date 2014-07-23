@@ -13,8 +13,8 @@ Plane::Plane(const Plane& plane)
 
 Plane::Plane(const Vector3& v1, const Vector3& v2, const Vector3& v3)
 {
-	const Vector3 aux1 = (v1 - v2).GetNormalized();
-	const Vector3 aux2 = (v3 - v2).GetNormalized();
+	const Vector3 aux1 = v1 - v2;
+	const Vector3 aux2 = v3 - v2;
 
 	normal = aux2.CrossProduct(aux1);
 	normal.Normalize();
