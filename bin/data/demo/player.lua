@@ -6,7 +6,7 @@ local playerGroup = LinkedListSceneGroup()
 
 -- player
 local player = RenderModelSceneNode()
-player:SetScale({2.0, 2.0, 2.0})
+--player:SetScale({2.0, 2.0, 2.0})
 player:SetID("PLAYER")
 player:SetDynamicShadowCaster(true)
 -- player:EnableEventDispatching(false)
