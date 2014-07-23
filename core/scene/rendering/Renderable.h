@@ -30,18 +30,37 @@ namespace core
 			return mModelMatrix;
 		}
 
-		void SetStaticShadowCaster(bool b);
+		/*!
+			\brief Enables- or Disables if light sources generate static shadows from this renderable node
 
+			\param b
+		*/
+		void SetStaticShadowCaster(bool b);
+		
+		/*!
+			\brief Enables- or Disables if light sources generate dynamic shadows from this renderable node
+
+			\param b
+		*/
 		void SetDynamicShadowCaster(bool b);
 
+		/*!
+			\brief
+		*/
 		inline bool GetStaticShadowCaster() const {
 			return mStaticShadowCaster;
 		}
-
+		
+		/*!
+			\brief
+		*/
 		inline bool GetDynamicShadowCaster() const {
 			return mDynamicShadowCaster;
 		}
-
+		
+		/*!
+			\brief
+		*/
 		inline bool IsShadowCaster() const {
 			return mStaticShadowCaster || mDynamicShadowCaster;
 		}

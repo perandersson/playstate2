@@ -56,6 +56,7 @@
     <ClInclude Include="..\..\core\integration\Game_script.h" />
     <ClInclude Include="..\..\core\integration\InputDevices_script.h" />
     <ClInclude Include="..\..\core\integration\KeyboardDevice_script.h" />
+    <ClInclude Include="..\..\core\integration\LightSource_script.h" />
     <ClInclude Include="..\..\core\integration\LinkedListSceneGroup_script.h" />
     <ClInclude Include="..\..\core\integration\MouseDevice_script.h" />
     <ClInclude Include="..\..\core\integration\Music_script.h" />
@@ -269,6 +270,7 @@
     <ClCompile Include="..\..\core\integration\Game_script.cpp" />
     <ClCompile Include="..\..\core\integration\InputDevices_script.cpp" />
     <ClCompile Include="..\..\core\integration\KeyboardDevice_script.cpp" />
+    <ClCompile Include="..\..\core\integration\LightSource_script.cpp" />
     <ClCompile Include="..\..\core\integration\LinkedListSceneGroup_script.cpp" />
     <ClCompile Include="..\..\core\integration\MouseDevice_script.cpp" />
     <ClCompile Include="..\..\core\integration\Music_script.cpp" />

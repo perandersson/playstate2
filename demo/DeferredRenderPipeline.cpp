@@ -3,15 +3,15 @@
 
 DeferredRenderPipeline::DeferredRenderPipeline()
 : mFullscreenQuad(nullptr), mSphere(nullptr),
-mDiffuseRenderTarget(nullptr), mNormalsRenderTarget(nullptr),
+mAlbedoRenderTarget(nullptr), mGeometryRenderTarget(nullptr),
 mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr)
 {
 	ActiveWindow::AddWindowResizedListener(this);
 
 	const Size& windowSize = ActiveWindow::GetSize();
 
-	mDiffuseRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGB16);
-	mNormalsRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA16F);
+	mAlbedoRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGB16);
+	mGeometryRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA16F);
 	mDepthRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::DEPTH32F);
 	mLightRenderTarget = RenderContext::CreateRenderTarget2D(windowSize, TextureFormat::RGBA16F);
 
@@ -43,15 +43,15 @@ DeferredRenderPipeline::~DeferredRenderPipeline()
 		mFullscreenQuad = nullptr;
 	}
 
-	delete mDiffuseRenderTarget;
-	delete mNormalsRenderTarget;
+	delete mAlbedoRenderTarget;
+	delete mGeometryRenderTarget;
 	delete mDepthRenderTarget;
 	delete mLightRenderTarget;
 
-	mDiffuseRenderTarget = nullptr;
+	mAlbedoRenderTarget = nullptr;
 	mDepthRenderTarget = nullptr;
 	mLightRenderTarget = nullptr;
-	mNormalsRenderTarget = nullptr;
+	mGeometryRenderTarget = nullptr;
 }
 
 static const std::string PROJECTION_VIEW_MODEL_MATRIX("ProjectionViewModelMatrix");
@@ -97,8 +97,8 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 void DeferredRenderPipeline::DrawGeometry(const Scene& scene, const Camera* camera)
 {
 	RenderState* state = RenderContext::Activate(mGeometryEffect);
-	state->SetRenderTarget(mDiffuseRenderTarget, 0);
-	state->SetRenderTarget(mNormalsRenderTarget, 1);
+	state->SetRenderTarget(mAlbedoRenderTarget, 0);
+	state->SetRenderTarget(mGeometryRenderTarget, 1);
 	state->SetRenderTarget(mDepthRenderTarget, 2);
 	state->Clear(ClearType::COLOR_AND_DEPTH);
 
@@ -121,14 +121,10 @@ void DeferredRenderPipeline::DrawGeometry(const Scene& scene, const Camera* came
 	}
 }
 
-void DeferredRenderPipeline::PrepareSceneGroup(Scene* scene, SceneGroup* group)
-{
-}
-
 bool DeferredRenderPipeline::OnWindowResized(const Size& newSize)
 {
-	mDiffuseRenderTarget->Resize(newSize);
-	mNormalsRenderTarget->Resize(newSize);
+	mAlbedoRenderTarget->Resize(newSize);
+	mGeometryRenderTarget->Resize(newSize);
 	mDepthRenderTarget->Resize(newSize);
 	mLightRenderTarget->Resize(newSize);
 	return true;
@@ -271,7 +267,7 @@ bool DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* c
 	if (clear)
 		state->Clear(ClearType::COLOR);
 
-	state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
+	state->FindUniform("GeometryTexture")->SetTexture(mGeometryRenderTarget);
 
 	state->FindUniform(PROJECTION_MATRIX)->SetMatrix(camera->GetProjectionMatrix());
 	state->FindUniform(VIEW_MATRIX)->SetMatrix(camera->GetViewMatrix());
@@ -281,9 +277,6 @@ bool DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* c
 	const Size& size = ActiveWindow::GetSize();
 	state->FindUniform(SCREEN_SIZE)->SetVector2(Vector2(size.x, size.y));
 	state->FindUniform(FAR_CLIP_DISTANCE)->SetFloat(camera->GetFarClipDistance());
-
-	// Default light texture
-	state->FindUniform("LightTexture")->SetTexture(mWhiteTexture);
 
 	FindQuery query = { camera->GetFrustum(), FindQueryFilter::GEOMETRY | FindQueryFilter::POINT_LIGHTS };
 	if (scene.Find(query, &mPointLightsResultSet)) {
@@ -326,7 +319,7 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 		if (clear)
 			state->Clear(ClearType::COLOR);
 
-		state->FindUniform("GeometryTexture")->SetTexture(mNormalsRenderTarget);
+		state->FindUniform("GeometryTexture")->SetTexture(mGeometryRenderTarget);
 
 		state->FindUniform(PROJECTION_MATRIX)->SetMatrix(camera->GetProjectionMatrix());
 		state->FindUniform(VIEW_MATRIX)->SetMatrix(camera->GetViewMatrix());
@@ -434,12 +427,8 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 	RenderState* state = RenderContext::Activate(mResultEffect);
 	state->Clear(ClearType::COLOR);
 
-	state->FindUniform("DiffuseTexture")->SetTexture(mDiffuseRenderTarget);
-	state->FindUniform("DepthTexture")->SetTexture(mDepthRenderTarget);
-	state->FindUniform("NormalsTexture")->SetTexture(mNormalsRenderTarget);
+	state->FindUniform("AlbedoTexture")->SetTexture(mAlbedoRenderTarget);
 	state->FindUniform("LightTexture")->SetTexture(mLightRenderTarget);
-	state->FindUniform("ShadowMapTexture")->SetTexture(mShadowMaps.begin()->second->renderTarget);
-	//state->FindUniform("ShadowDepthMapTexture")->SetTexture(mShadowDepthRenderTarget);
 
 	state->FindUniform("AmbientColor")->SetColorRGB(scene.GetAmbientLight());
 	state->FindUniform("ProjectionMatrix")->SetMatrix(mUniformProjectionMatrix);

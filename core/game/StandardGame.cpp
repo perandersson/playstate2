@@ -44,6 +44,7 @@
 #include "../integration/KeyboardDevice_script.h"
 #include "../integration/Renderable_script.h"
 #include "../integration/RenderModelSceneNode_script.h"
+#include "../integration/LightSource_script.h"
 #include "../integration/PointLight_script.h"
 #include "../integration/SpotLight_script.h"
 #include "../integration/Resource_script.h"
@@ -153,7 +154,7 @@ bool StandardGame::Initialize()
 	classLoader->GetType("SpatialSceneNode").InheritFrom("SceneNode").Build();
 	classLoader->GetType("Renderable").InheritFrom("SpatialSceneNode").AddFunctions(Renderable_Methods).Build();
 	classLoader->GetType("RenderModelSceneNode").InheritFrom("Renderable").AddFunctions(RenderModelSceneNode_Methods).Build();
-	classLoader->GetType("LightSource").InheritFrom("SpatialSceneNode").Build();
+	classLoader->GetType("LightSource").InheritFrom("SpatialSceneNode").AddFunctions(LightSource_Methods).Build();
 	classLoader->GetType("PointLight").InheritFrom("LightSource").AddFunctions(PointLight_Methods).Build();
 	classLoader->GetType("SpotLight").InheritFrom("LightSource").AddFunctions(SpotLight_Methods).Build();
 
@@ -167,6 +168,9 @@ bool StandardGame::Initialize()
 	// Register enums
 	//
 
+	classLoader->GetEnum("BufferUsage").Enums(BufferUsage::GetValues()).Build();
+	classLoader->GetEnum("CompareFunc").Enums(CompareFunc::GetValues()).Build();
+	classLoader->GetEnum("CompareMode").Enums(CompareMode::GetValues()).Build();
 	classLoader->GetEnum("FrontFace").Enums(FrontFace::GetValues()).Build();
 	classLoader->GetEnum("CullFace").Enums(CullFace::GetValues()).Build();
 	classLoader->GetEnum("DepthFunc").Enums(DepthFunc::GetValues()).Build();
@@ -174,7 +178,9 @@ bool StandardGame::Initialize()
 	classLoader->GetEnum("SrcFactor").Enums(SrcFactor::GetValues()).Build();
 	classLoader->GetEnum("MagFilter").Enums(MagFilter::GetValues()).Build();
 	classLoader->GetEnum("MinFilter").Enums(MinFilter::GetValues()).Build();
+	classLoader->GetEnum("PolygonMode").Enums(PolygonMode::GetValues()).Build();
 	classLoader->GetEnum("TextureWrap").Enums(TextureWrap::GetValues()).Build();
+
 	classLoader->GetEnum("MouseButton").Enums(MouseButton::GetValues()).Build();
 	classLoader->GetEnum("KeyboardKey").Enums(KeyboardKey::GetValues()).Build();
 

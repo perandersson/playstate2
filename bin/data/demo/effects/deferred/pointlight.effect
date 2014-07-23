@@ -36,7 +36,8 @@
 			// View-space position
 			vs_ViewSpacePosition = Vp.xyz;
 			
-			// View-space light position
+			// View-space light position.
+			// Don't multiply with the ModelMatrix. The LightPosition is already in WorldSpace
 			vs_ViewSpaceLightPosition = vec3(ViewMatrix * vec4(LightPosition, 1.0));
 			
 			// Send the texture coordinates to the fragment shader
@@ -47,13 +48,7 @@
 		}
 	]]>
 	</VertexShader>
-	<SamplerState Id="LightTexture">
-		<MinFilter>LINEAR</MinFilter>
-		<MagFilter>LINEAR</MagFilter>
-		<WrapS>CLAMP_TO_EDGE</WrapS>
-		<WrapT>CLAMP_TO_EDGE</WrapT>
-	</SamplerState>
-	<SamplerState Id="NormalsTexture">
+	<SamplerState Id="GeometryTexture">
 		<MinFilter>LINEAR</MinFilter>
 		<MagFilter>LINEAR</MagFilter>
 		<WrapS>CLAMP_TO_EDGE</WrapS>
@@ -64,14 +59,11 @@
 		#version 330
 		
 		// Texture samples to decide if the light should be rendered
-		uniform sampler2D NormalsTexture;
+		uniform sampler2D GeometryTexture;
 		
 		// Screen information
 		uniform vec2 ScreenSize;
 		uniform float FarClipDistance;
-
-		// How the texture looks like
-		uniform sampler2D LightTexture;
 
 		// Variables used by the point light
 		uniform float LightRadius;
@@ -103,15 +95,11 @@
 		
 		void main()
 		{
-			vec4 color = texture2D(LightTexture, vs_TexCoords) * vec4(LightColor, 1.0);
-			if(color.a == 0)
-				discard;
-				
 			// Calculate the screen texture coordinates based on the screen size
 			vec2 screenCoords = gl_FragCoord.xy / ScreenSize;
 				
 			// Retrieves the fragment normal
-			vec4 geometry = texture2D(NormalsTexture, screenCoords);
+			vec4 geometry = texture2D(GeometryTexture, screenCoords);
 			vec3 N = normalize(geometry.xyz * 2.0 - 1.0);
 			
 			// Get view-space position from the depth value
@@ -128,7 +116,7 @@
 			float atten = max(0, 1 - sqrDist * (1 / (LightRadius*LightRadius)));
 			atten *= atten;
 			
-			gl_FragColor = color * atten;
+			gl_FragColor = vec4(LightColor, 1.0) * atten;
 		}
 	]]>
 	</FragmentShader>

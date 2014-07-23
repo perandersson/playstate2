@@ -809,6 +809,9 @@
     <ClInclude Include="..\..\core\window\WindowResizedListener.h">
       <Filter>Source Files\window</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\integration\LightSource_script.h">
+      <Filter>Source Files\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1304,6 +1307,9 @@
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\integration\Renderable_script.cpp">
+      <Filter>Source Files\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\integration\LightSource_script.cpp">
       <Filter>Source Files\integration</Filter>
     </ClCompile>
   </ItemGroup>

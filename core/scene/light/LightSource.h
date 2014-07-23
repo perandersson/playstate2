@@ -21,6 +21,41 @@ namespace core
 		inline uint32 GetUID() const {
 			return mUID;
 		}
+		
+		/*!
+			\brief Enables- or Disables if light sources generate static shadows from this renderable node
+
+			\param b
+		*/
+		void SetStaticShadowCaster(bool b);
+		
+		/*!
+			\brief Enables- or Disables if light sources generate dynamic shadows from this renderable node
+
+			\param b
+		*/
+		void SetDynamicShadowCaster(bool b);
+
+		/*!
+			\brief
+		*/
+		inline bool GetStaticShadowCaster() const {
+			return mStaticShadowCaster;
+		}
+		
+		/*!
+			\brief
+		*/
+		inline bool GetDynamicShadowCaster() const {
+			return mDynamicShadowCaster;
+		}
+		
+		/*!
+			\brief
+		*/
+		inline bool IsShadowCaster() const {
+			return mStaticShadowCaster || mDynamicShadowCaster;
+		}
 
 		/*!
 			\brief Method called whenever we are trying to collect light source information to be drawn
@@ -35,5 +70,7 @@ namespace core
 
 	private:
 		uint32 mUID;
+		bool mStaticShadowCaster;
+		bool mDynamicShadowCaster;
 	};
 }

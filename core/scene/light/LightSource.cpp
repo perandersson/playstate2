@@ -12,12 +12,23 @@ namespace {
 }
 
 LightSource::LightSource()
-: SpatialSceneNode(), mUID(GenUID())
+: SpatialSceneNode(), mUID(GenUID()), mStaticShadowCaster(true), mDynamicShadowCaster(false)
 {
 }
 
 LightSource::~LightSource()
 {
+}
+
+void LightSource::SetStaticShadowCaster(bool b)
+{
+	mStaticShadowCaster = b;
+}
+
+
+void LightSource::SetDynamicShadowCaster(bool b)
+{
+	mDynamicShadowCaster = b;
 }
 
 void LightSource::OnAddedToSceneGroup()

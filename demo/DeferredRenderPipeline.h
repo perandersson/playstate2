@@ -16,7 +16,6 @@ public:
 	virtual ~DeferredRenderPipeline();
 	
 	virtual void Render(const Scene& scene, const Camera* camera);
-	virtual void PrepareSceneGroup(Scene* scene, SceneGroup* group);
 	virtual bool OnWindowResized(const Size& newSize);
 	virtual void OnSceneGroupAdded(SceneGroup* group);
 	virtual void OnSceneGroupRemoved(SceneGroup* group);
@@ -31,7 +30,7 @@ public:
 	void DrawDebugInfo(const Scene& scene, const Camera* camera);
 
 	/*!
-		\brief Retrieves the default shadow texture size
+		\brief Retrieves the shadow texture size based on the projector's far clip distance.
 
 		\param farClipDistance
 				The far clip distance for a point light projector
@@ -56,8 +55,8 @@ private:
 	Resource<Texture2D> mWhiteTexture;
 	Resource<Texture2D> mBlackTexture;
 
-	RenderTarget2D* mDiffuseRenderTarget;
-	RenderTarget2D* mNormalsRenderTarget;
+	RenderTarget2D* mAlbedoRenderTarget;
+	RenderTarget2D* mGeometryRenderTarget;
 	RenderTarget2D* mDepthRenderTarget;
 	RenderTarget2D* mLightRenderTarget;
 
