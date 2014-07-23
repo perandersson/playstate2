@@ -1,3 +1,12 @@
+
+#ifdef _DEBUG
+#include <float.h>
+// Unterupt for when floating points become invalid
+// NOT USABLE WHEN USING gDEBugger
+unsigned int fp_control_state = _controlfp(_EM_INEXACT | _EM_INVALID | _EM_UNDERFLOW | _EM_OVERFLOW, _MCW_EM);
+#endif
+
+
 #include <core/Memory.h>
 #include <iostream>
 #include <core/playstate.h>
