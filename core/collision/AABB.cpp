@@ -25,21 +25,20 @@ AABB::~AABB()
 
 void AABB::SetPosition(const Vector3& position)
 {
-	float32 width = maxPoint.x - minPoint.x;
-	float32 height = maxPoint.y - minPoint.y;
-	float32 depth = maxPoint.z - minPoint.z;
+	const float32 width = maxPoint.x - minPoint.x;
+	const float32 height = maxPoint.y - minPoint.y;
+	const float32 depth = maxPoint.z - minPoint.z;
 
 	Set(position + offset, width, height, depth);
 }
 
 void AABB::SetScale(const Vector3& scale)
 {
-	const Vector3 position = GetPosition() - offset;
 	const float32 width = maxPoint.x - minPoint.x;
 	const float32 height = maxPoint.y - minPoint.y;
 	const float32 depth = maxPoint.z - minPoint.z;
 
-	Set(position, width * scale.x, height * scale.y, depth * scale.z);
+	Set(GetPosition() - offset, width * scale.x, height * scale.y, depth * scale.z);
 }
 
 void AABB::Translate(const Vector3& direction)
@@ -63,6 +62,11 @@ void AABB::SetPositionRotationScale(const Vector3& position, const Vector3& rota
 	const float32 width = maxPoint.x - minPoint.x;
 	const float32 height = maxPoint.y - minPoint.y;
 	const float32 depth = maxPoint.z - minPoint.z;
+
+	// TODO: Fix scale support (scaling will result in an infinte sized bounding box - eventually)
+	assert(scale.x == 1.0f);
+	assert(scale.y == 1.0f);
+	assert(scale.z == 1.0f);
 
 	// TODO: Fix rotation support for AABB
 	//assert(rotation.IsZero() && "No rotation support yet!");
