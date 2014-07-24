@@ -58,6 +58,10 @@ namespace core
 			return Point((int32)(x / rhs), (int32)(y / rhs));
 		}
 
+		inline Point operator * (const float32 rhs) const {
+			return Point((int32)(x * rhs), (int32)(y * rhs));
+		}
+
 		static Point ZERO;
 	};
 
