@@ -52,6 +52,7 @@ void RenderModelSceneNode::PreRender(const FindQuery& query, RenderBlockResultSe
 		}
 		if (BIT_ISSET(filter, FindQueryFilter::TEXTURES)) {
 			block->diffuseTexture = mesh.diffuseTexture.Get();
+			block->normalTexture = mesh.bumpMapTexture.Get();
 		}
 		block->diffuseColor = mesh.diffuseColor;
 		block->startIndex = 0;

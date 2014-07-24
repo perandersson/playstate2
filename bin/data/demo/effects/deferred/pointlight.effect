@@ -106,7 +106,7 @@
 			vec3 P = CalculateVSpacePosition(screenCoords, geometry.a); 
 			
 			// Direction from the light to the direction
-			vec3 L = P - vs_ViewSpaceLightPosition;
+			vec3 L = vs_ViewSpaceLightPosition - P;
 			float Ldist = length(L);
 			L *= (1.0 / Ldist);
 			if( Ldist > LightRadius ) discard;
@@ -116,7 +116,7 @@
 			float atten = max(0, 1 - sqrDist * (1 / (LightRadius*LightRadius)));
 			atten *= atten;
 			
-			gl_FragColor = vec4(LightColor, 1.0) * atten;
+			gl_FragColor = vec4(LightColor, 1.0) * atten * max(0, dot(L, N));
 		}
 	]]>
 	</FragmentShader>

@@ -53,6 +53,7 @@
 
 		// Mesh materials
 		uniform sampler2D DiffuseTexture;
+		uniform sampler2D NormalTexture;
 		uniform vec3 DiffuseColor;
 
 		// Data from vertex shader
@@ -68,8 +69,12 @@
 			// Color
 			albedo = texture(DiffuseTexture, vs_TexCoords).rgb;
 			
+			vec3 normal = texture(NormalTexture, vs_TexCoords).rgb;
+			if(normal.r + normal.g + normal.b == 0)
+				normal = normalize(vs_ViewSpaceNormal) * 0.5 + 0.5;
+			
 			// Put the normal and the linearized depth value
-			geometry = vec4(normalize(vs_ViewSpaceNormal) * 0.5 + 0.5, -vs_ViewSpacePosition.z / FarClipDistance);
+			geometry = vec4(normal, -vs_ViewSpacePosition.z / FarClipDistance);
 		}
 	]]>
 	</FragmentShader>

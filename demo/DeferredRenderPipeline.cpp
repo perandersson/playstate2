@@ -123,12 +123,20 @@ void DeferredRenderPipeline::DrawGeometry(const Scene& scene, const Camera* came
 	auto viewModelMatrix = state->FindUniform(VIEW_MODEL_MATRIX);
 	auto diffuseTexture = state->FindUniform(DIFFUSE_TEXTURE);
 	auto diffuseColor = state->FindUniform(DIFFUSE_COLOR);
+	auto normalTexture = state->FindUniform("NormalTexture");
 
 	const Matrix4x4& viewMatrix = camera->GetViewMatrix();
 	RenderBlockResultSet::Iterator it = mRenderBlockResultSet.GetIterator();
 	RenderBlockResultSet::Type block;
 	while (block = it.Next()) {
-		diffuseTexture->SetTexture(block->diffuseTexture);
+		if (block->diffuseTexture != nullptr)
+			diffuseTexture->SetTexture(block->diffuseTexture);
+		else
+			diffuseTexture->SetTexture(mWhiteTexture);
+		if (block->normalTexture != nullptr)
+			normalTexture->SetTexture(block->normalTexture);
+		else
+			normalTexture->SetTexture(mBlackTexture);
 		diffuseColor->SetColorRGB(block->diffuseColor);
 		viewModelMatrix->SetMatrix(viewMatrix * block->modelMatrix);
 		state->Render(block->vertexBuffer, block->indexBuffer);
@@ -426,6 +434,7 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 
 	state->FindUniform("AlbedoTexture")->SetTexture(mAlbedoRenderTarget);
 	state->FindUniform("LightTexture")->SetTexture(mLightRenderTarget);
+	state->FindUniform("GeometryTexture")->SetTexture(mGeometryRenderTarget);
 
 	state->FindUniform("AmbientColor")->SetColorRGB(scene.GetAmbientLight());
 	state->FindUniform("ProjectionMatrix")->SetMatrix(mUniformProjectionMatrix);
@@ -523,7 +532,6 @@ void DeferredRenderPipeline::BlurRenderTargets(std::vector<RenderTarget2D*>& ren
 	state->FindUniform(PROJECTION_MATRIX)->SetMatrix(mUniformProjectionMatrix);
 	auto textureToBlur = state->FindUniform("TextureToBlur");
 	auto scaleU = state->FindUniform("ScaleU");
-	static const float32 shadowCoef = 0.25f;
 
 	const size_t size = renderTargets.size();
 	for (size_t i = 0; i < size; ++i) {

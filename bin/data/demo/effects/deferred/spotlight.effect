@@ -158,7 +158,7 @@
 			
 			float atten = smoothstep(0.0, CosLightCutoff, clampedCosine);
 			float spotIntensity = pow(abs(smoothstep(CosLightCutoff, 1, clampedCosine)), SpotExponent); 
-			gl_FragColor = color * spotIntensity * shadow;
+			gl_FragColor = color * spotIntensity * shadow * max(0, dot(L, N));
 		}
 	]]>
 	</FragmentShader>

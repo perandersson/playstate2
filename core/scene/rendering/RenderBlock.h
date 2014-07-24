@@ -22,6 +22,7 @@ namespace core
 		uint32 count;
 		Matrix4x4 modelMatrix;
 		const Texture2D* diffuseTexture;
+		const Texture2D* normalTexture;
 		Color diffuseColor;
 	};
 

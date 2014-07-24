@@ -64,6 +64,7 @@ ResourceObject* WavefrontResourceLoader::Load(const IFile* file)
 		Materials::iterator it = materials.find(meshes[i]->material);
 		if (it != materials.end()) {
 			meshesArray[i].diffuseTexture = it->second->diffuseTexture;
+			meshesArray[i].bumpMapTexture = it->second->bumpMap;
 			meshesArray[i].diffuseColor = it->second->diffuseColor;
 		}
 
@@ -169,7 +170,7 @@ void WavefrontResourceLoader::LoadMaterials(const IFile* file, IRenderContext* r
 		}
 		else if (word == "bump") {
 			std::string bumpMap;
-			std::getline(dataStream, bumpMap);
+			dataStream >> bumpMap;
 			if (bumpMap.length() > 0) {
 				currentMaterial->bumpMap = ResourceManager::GetResource<Texture>(file->OpenFile(bumpMap));
 			}
@@ -213,7 +214,7 @@ void WavefrontResourceLoader::LoadMesh(IRenderContext* renderContext, std::istri
 	std::vector<Vector2> texCoords;
 	std::vector<PositionTextureNormalVertexType> items;
 
-	PositionTextureNormalVertexType data[10000];
+	PositionTextureNormalVertexType data[20000];
 	PositionTextureNormalVertexType* ptr = data;
 	unsigned int numVertices = 0;
 
