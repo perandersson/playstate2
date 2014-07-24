@@ -3,6 +3,7 @@
 #include "../math/Point.h"
 #include "TextureFormat.h"
 #include "GLEWMX.h"
+#include <mutex>
 
 namespace core
 {
@@ -42,6 +43,20 @@ namespace core
 		inline TextureFormat::Enum GetTextureFormat() const {
 			return mTextureFormat;
 		}
+		
+		/*!
+			\brief Locks this render target.
+
+			This is to ensure that only one thread is rendering to the same RenderTarget at the same time
+		*/
+		void Lock();
+
+		/*!
+			\brief Unlocks this render target
+
+			This is to ensure that only one thread is rendering to the same RenderTarget at the same time
+		*/
+		void Unlock();
 
 	protected:
 		uint32 mUID;
@@ -49,5 +64,6 @@ namespace core
 		GLenum mTextureTarget;
 		Size mSize;
 		TextureFormat::Enum mTextureFormat;
+		std::recursive_mutex mMutex;
 	};
 }

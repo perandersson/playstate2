@@ -22,3 +22,13 @@ Texture::~Texture()
 		mTextureID = 0;
 	}
 }
+
+void Texture::Lock()
+{
+	mMutex.lock();
+}
+
+void Texture::Unlock()
+{
+	mMutex.unlock();
+}

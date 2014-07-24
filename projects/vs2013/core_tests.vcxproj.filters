@@ -17,6 +17,9 @@
     <Filter Include="Source Files\camera">
       <UniqueIdentifier>{af996877-fff2-4bf3-bb47-b43a0fd3149e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\collision">
+      <UniqueIdentifier>{5b6dcadf-f31d-49b3-8050-d2cac77bc999}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core_tests\main.cpp">
@@ -54,6 +57,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core_tests\camera\CameraUtils_test.cpp">
       <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core_tests\collision\AABB_test.cpp">
+      <Filter>Source Files\collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

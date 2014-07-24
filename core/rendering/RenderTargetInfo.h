@@ -12,7 +12,7 @@ namespace core
 	struct RenderTargetInfo
 	{
 		uint32 uid;
-		const Texture* texture;
+		Texture* texture;
 		GLenum attachmentType;
 		GLenum textureTarget;
 		bool dirty;

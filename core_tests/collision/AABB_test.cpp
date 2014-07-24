@@ -48,7 +48,7 @@ TEST_SUITE(AABB)
 
 		const Vector3 position(50.f, 50.f, 50.f);
 		const Vector3 rotation(0.0f, 0.0f, 0.0f);
-		const Vector3 scale(2.0f, 2.0f, 2.0f);
+		const Vector3 scale(1.0f, 1.0f, 1.0f);
 
 		boundingBox.SetPositionRotationScale(position, rotation, scale);
 

@@ -26,6 +26,19 @@ mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr)
 	mShadowMapEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/shadow.effect");
 	mBlurEffect = ResourceManager::GetResource<Effect>("/demo/effects/deferred/blur.effect");
 
+	// Create depth buffers to use whenever we want to create shadow maps
+	mDepthRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(Size(64, 64), TextureFormat::DEPTH32F)));
+	mDepthRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(Size(128, 128), TextureFormat::DEPTH32F)));
+	mDepthRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(Size(256, 256), TextureFormat::DEPTH32F)));
+	mDepthRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(Size(512, 512), TextureFormat::DEPTH32F)));
+
+	// Create blur render targets, used whenever we want to blur a texture
+	mBlurRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(GetBlurSize(Size(64, 64)), TextureFormat::RGBA32F)));
+	mBlurRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(GetBlurSize(Size(128, 128)), TextureFormat::RGBA32F)));
+	mBlurRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(GetBlurSize(Size(256, 256)), TextureFormat::RGBA32F)));
+	mBlurRenderTargets.push_back(std::shared_ptr<RenderTarget2D>(RenderContext::CreateRenderTarget2D(GetBlurSize(Size(512, 512)), TextureFormat::RGBA32F)));
+
+
 	mSphere = Sphere::Create(1, 10, BufferUsage::STATIC);
 	mFullscreenQuad = VertexBufferUtils::CreateFullscreenQuad();
 	mUniformProjectionMatrix = CameraUtils::GetOrtho2D(-1.0f, 1.0f, -1.0f, 1.0f);
@@ -97,6 +110,7 @@ void DeferredRenderPipeline::Render(const Scene& scene, const Camera* camera)
 void DeferredRenderPipeline::DrawGeometry(const Scene& scene, const Camera* camera)
 {
 	RenderState* state = RenderContext::Activate(mGeometryEffect);
+
 	state->SetRenderTarget(mAlbedoRenderTarget, 0);
 	state->SetRenderTarget(mGeometryRenderTarget, 1);
 	state->SetRenderTarget(mDepthRenderTarget, 2);
@@ -119,6 +133,8 @@ void DeferredRenderPipeline::DrawGeometry(const Scene& scene, const Camera* came
 		viewModelMatrix->SetMatrix(viewMatrix * block->modelMatrix);
 		state->Render(block->vertexBuffer, block->indexBuffer);
 	}
+
+	state->End();
 }
 
 bool DeferredRenderPipeline::OnWindowResized(const Size& newSize)
@@ -139,7 +155,7 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 	// Collect all spotlights in the scene group
 	LightSourceResultSet spotLightResultSet;
 	FindQuery query = { nullptr, FindQueryFilter::SPOT_LIGHTS | FindQueryFilter::STATIC_AND_DYNAMIC_SHADOW_CASTER };
-	std::vector<ShadowMap*> shadowMapsToBlur;
+	std::vector<RenderTarget2D*> renderTargetsToBlur;
 	if (group->Find(query, &spotLightResultSet)) {
 		RenderState* state = RenderContext::Activate(mShadowMapEffect);
 
@@ -147,22 +163,6 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 		LightSourceResultSet::Type block;
 		while (block = it.Next()) {
 			auto lightCamera = block->projector;
-			std::shared_ptr<RenderTarget2D> depthRenderTarget(RenderContext::CreateRenderTarget2D(GetShadowSize(lightCamera->GetFarClipDistance()), TextureFormat::DEPTH32F));
-
-			// Create a shadow map container if non exist for the current SpotLight
-			ShadowMap* shadowMap;
-			auto it = mShadowMaps.find(block->uid);
-			if (it == mShadowMaps.end()) {
-				shadowMap = new ShadowMap();
-				shadowMap->renderTarget = RenderContext::CreateRenderTarget2D(GetShadowSize(lightCamera->GetFarClipDistance()), TextureFormat::RGBA32F);
-				mShadowMaps.insert(std::make_pair(block->uid, shadowMap));
-			}
-			else
-				shadowMap = it->second;
-
-			state->SetRenderTarget(shadowMap->renderTarget, 0);
-			state->SetRenderTarget(depthRenderTarget.get(), 1);
-			state->Clear(ClearType::COLOR_AND_DEPTH);
 
 			// Collect the non-dynamic shadow casters and generate a shadow map with them in it
 			DefaultRenderBlockResultSetSorter sorter;
@@ -170,6 +170,24 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 			FindQuery renderBlocksQuery = { lightCamera->GetFrustum(), FindQueryFilter::STATIC_SHADOW_CASTER | FindQueryFilter::GEOMETRY };
 			if (group->Find(renderBlocksQuery, &renderBlocks)) {
 				renderBlocks.Sort(&sorter);
+
+				// Create a shadow map container if non exist for the current SpotLight
+				ShadowMap* shadowMap;
+				auto it = mShadowMaps.find(block->uid);
+				if (it == mShadowMaps.end()) {
+					shadowMap = new ShadowMap();
+					shadowMap->renderTarget = RenderContext::CreateRenderTarget2D(GetShadowSize(lightCamera->GetFarClipDistance()), TextureFormat::RGBA32F);
+					mShadowMaps.insert(std::make_pair(block->uid, shadowMap));
+				}
+				else
+					shadowMap = it->second;
+
+				// Retrieve and lock a matching depth render target for the shadow map
+				RenderTarget2D* depthRenderTarget = GetDepthRenderTarget(shadowMap->renderTarget);
+				state->SetRenderTarget(shadowMap->renderTarget, 0);
+				state->SetRenderTarget(depthRenderTarget, 1);
+				state->Clear(ClearType::COLOR_AND_DEPTH);
+
 				auto projectionViewModelMatrix = state->FindUniform(PROJECTION_VIEW_MODEL_MATRIX);
 				
 				// Supply the far clip distance so that we can create a linearized depth value
@@ -181,45 +199,17 @@ void DeferredRenderPipeline::OnSceneGroupAdded(SceneGroup* group)
 					projectionViewModelMatrix->SetMatrix(lightCamera->GetProjectionViewMatrix() * renderBlock->modelMatrix);
 					state->Render(renderBlock->vertexBuffer, renderBlock->indexBuffer, renderBlock->startIndex, renderBlock->count);
 				}
+
+				// Flush the rendering queue and then return the depth render target
+				state->Flush();
+
+				renderTargetsToBlur.push_back(shadowMap->renderTarget);
 			}
-			
-			// Make sure that the opengl rendering queue is emptied
-			state->Flush();
-
-			shadowMapsToBlur.push_back(shadowMap);
 		}
+		state->End();
 	}
 
-	// Blur the newly generated shadow maps
-	if (!shadowMapsToBlur.empty()) {
-		RenderState* state = RenderContext::Activate(mBlurEffect);
-		state->FindUniform(PROJECTION_MATRIX)->SetMatrix(mUniformProjectionMatrix);
-		auto textureToBlur = state->FindUniform("TextureToBlur");
-		auto scaleU = state->FindUniform("ScaleU");
-		static const float32 shadowCoef = 0.25f;
-
-		size_t size = shadowMapsToBlur.size();
-		for (size_t i = 0; i < size; ++i) {
-			ShadowMap* shadowMap = shadowMapsToBlur[i];
-			const Size size = shadowMap->renderTarget->GetSize();
-			std::shared_ptr<RenderTarget2D> temp(RenderContext::CreateRenderTarget2D(Size(size.width * shadowCoef, size.height * shadowCoef), shadowMap->renderTarget->GetTextureFormat()));
-			
-			// Blur horizontally
-			state->SetRenderTarget(temp.get(), 0);
-			textureToBlur->SetTexture(shadowMap->renderTarget);
-			scaleU->SetVector2(Vector2(1.0f / temp->GetSize().width, 0.0f));
-			state->Render(mFullscreenQuad);
-
-			// Blur vertically
-			state->SetRenderTarget(shadowMap->renderTarget, 0);
-			textureToBlur->SetTexture(temp.get());
-			scaleU->SetVector2(Vector2(0.0f, 1.0f / temp->GetSize().height));
-			state->Render(mFullscreenQuad);
-
-			// Ensure that the rendering queue is complete
-			state->Flush();
-		}
-	}
+	BlurRenderTargets(renderTargetsToBlur);
 }
 
 void DeferredRenderPipeline::OnSceneGroupRemoved(SceneGroup* group)
@@ -261,6 +251,7 @@ void DeferredRenderPipeline::DrawLighting(const Scene& scene, const Camera* came
 bool DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* camera, bool clear)
 {
 	RenderState* state = RenderContext::Activate(mPointLightEffect);
+
 	state->SetRenderTarget(mLightRenderTarget, 0);
 	state->SetRenderTarget(mDepthRenderTarget, 1);
 	state->SetDepthMask(false);
@@ -303,6 +294,8 @@ bool DeferredRenderPipeline::DrawPointLights(const Scene& scene, const Camera* c
 			state->Render(mSphere->GetVertexBuffer(), mSphere->GetIndexBuffer());
 		}
 	}
+	
+	state->End();
 
 	return mPointLightsResultSet.GetSize() > 0;
 }
@@ -313,6 +306,7 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 	FindQuery query = { camera->GetFrustum(), FindQueryFilter::GEOMETRY | FindQueryFilter::SPOT_LIGHTS | FindQueryFilter::TEXTURES };
 	if (scene.Find(query, &mSpotLightsResultSet)) {
 		RenderState* state = RenderContext::Activate(mSpotLightEffect);
+
 		state->SetRenderTarget(mLightRenderTarget, 0);
 		state->SetRenderTarget(mDepthRenderTarget, 1);
 		state->SetDepthMask(false);
@@ -380,6 +374,8 @@ bool DeferredRenderPipeline::DrawSpotLights(const Scene& scene, const Camera* ca
 			spotExponent->SetFloat(block->spotExponent);
 			state->Render(block->vertexBuffer, block->indexBuffer);
 		}
+
+		state->End();
 	}
 
 	// TODO: Post shadow render requests to multiple threads here
@@ -425,6 +421,7 @@ void DeferredRenderPipeline::DrawSpotLightShadows(const Scene& scene, const Came
 void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const Camera* camera)
 {
 	RenderState* state = RenderContext::Activate(mResultEffect);
+
 	state->Clear(ClearType::COLOR);
 
 	state->FindUniform("AlbedoTexture")->SetTexture(mAlbedoRenderTarget);
@@ -433,6 +430,8 @@ void DeferredRenderPipeline::DrawFinalResultToScreen(const Scene& scene, const C
 	state->FindUniform("AmbientColor")->SetColorRGB(scene.GetAmbientLight());
 	state->FindUniform("ProjectionMatrix")->SetMatrix(mUniformProjectionMatrix);
 	state->Render(mFullscreenQuad);
+
+	state->End();
 }
 
 void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* camera)
@@ -467,10 +466,86 @@ void DeferredRenderPipeline::DrawDebugInfo(const Scene& scene, const Camera* cam
 		state->Render(block->vertexBuffer, block->indexBuffer);
 
 	}
+
+	state->End();
 }
 
 Size DeferredRenderPipeline::GetShadowSize(float32 farClipDistance) const
 {
 	// TODO: Implement support fur customized shadow texture sizes
 	return Size(512, 512);
+}
+
+Size DeferredRenderPipeline::GetBlurSize(Size originalSize) const
+{
+	static const float32 coef = 0.25f;
+	return originalSize * coef;
+}
+
+RenderTarget2D* DeferredRenderPipeline::GetDepthRenderTarget(RenderTarget2D* rt)
+{
+	assert_not_null(rt);
+
+	Size rtSize = rt->GetSize();
+	const size_t size = mDepthRenderTargets.size();
+	for (size_t i = 0; i < size; ++i) {
+		auto sharedRT = mDepthRenderTargets[i].get();
+		if (sharedRT->GetSize() == rtSize) {
+			return sharedRT;
+		}
+	}
+
+	THROW_EXCEPTION(RenderingException, "Could not find depth render target for the size: %d %d", rtSize.width, rtSize.height);
+}
+
+RenderTarget2D* DeferredRenderPipeline::GetBlurRenderTarget(RenderTarget2D* rt)
+{
+	assert_not_null(rt);
+
+	Size rtSize = GetBlurSize(rt->GetSize());
+	const size_t size = mBlurRenderTargets.size();
+	for (size_t i = 0; i < size; ++i) {
+		auto sharedRT = mBlurRenderTargets[i].get();
+		if (sharedRT->GetSize() == rtSize) {
+			return sharedRT;
+		}
+	}
+
+	THROW_EXCEPTION(RenderingException, "Could not find depth render target for the size: %d %d", rtSize.width, rtSize.height);
+}
+
+void DeferredRenderPipeline::BlurRenderTargets(std::vector<RenderTarget2D*>& renderTargets)
+{
+	if (renderTargets.empty())
+		return;
+
+	RenderState* state = RenderContext::Activate(mBlurEffect);
+	state->FindUniform(PROJECTION_MATRIX)->SetMatrix(mUniformProjectionMatrix);
+	auto textureToBlur = state->FindUniform("TextureToBlur");
+	auto scaleU = state->FindUniform("ScaleU");
+	static const float32 shadowCoef = 0.25f;
+
+	const size_t size = renderTargets.size();
+	for (size_t i = 0; i < size; ++i) {
+		RenderTarget2D* rt = renderTargets[i];
+		const Size size = rt->GetSize();
+		auto blurRT = GetBlurRenderTarget(rt);
+
+		// Blur horizontally
+		state->SetRenderTarget(blurRT, 0);
+		textureToBlur->SetTexture(rt);
+		scaleU->SetVector2(Vector2(1.0f / blurRT->GetSize().width, 0.0f));
+		state->Render(mFullscreenQuad);
+
+		// Blur vertically
+		state->SetRenderTarget(rt, 0);
+		textureToBlur->SetTexture(blurRT);
+		scaleU->SetVector2(Vector2(0.0f, 1.0f / blurRT->GetSize().height));
+		state->Render(mFullscreenQuad);
+
+		// Ensure that the rendering queue is complete and return the blur render target
+		state->Flush();
+	}
+
+	state->End();
 }

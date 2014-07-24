@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core_tests\camera\CameraUtils_test.cpp" />
+    <ClCompile Include="..\..\core_tests\collision\AABB_test.cpp" />
     <ClCompile Include="..\..\core_tests\main.cpp" />
     <ClCompile Include="..\..\core_tests\math\Color_test.cpp" />
     <ClCompile Include="..\..\core_tests\math\Matrix4x4_test.cpp" />

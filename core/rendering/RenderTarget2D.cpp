@@ -12,13 +12,3 @@ RenderTarget2D::~RenderTarget2D()
 {
 
 }
-
-void RenderTarget2D::Lock()
-{
-	mMutex.lock();
-}
-
-void RenderTarget2D::Unlock()
-{
-	mMutex.unlock();
-}

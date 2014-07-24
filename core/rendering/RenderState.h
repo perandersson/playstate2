@@ -48,8 +48,15 @@ namespace core
 
 			\param effect
 		*/
-		EffectState* ApplyEffect(const Effect* effect);
+		EffectState* Begin(const Effect* effect);
 		
+		/*!
+			\brief Ends the supplied effect and release all the locked resources
+
+			\param effect
+		*/
+		void End();
+
 		/*!
 			\brief Draw the supplied buffer object using this graphics program.
 
@@ -246,7 +253,7 @@ namespace core
 						The texture index for the render target. Useful if you want to
 						render to multiple textures at once.
 		*/
-		void SetRenderTarget(const RenderTarget2D* renderTarget, uint32 index);
+		void SetRenderTarget(RenderTarget2D* renderTarget, uint32 index);
 		
 		/*!
 			\brief Bind a side of the render target cube at the given index
@@ -262,7 +269,7 @@ namespace core
 						The texture index for the render target. Useful if you want to
 						render to multiple textures at once.
 		*/
-		void SetRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side, uint32 index);
+		void SetRenderTarget(RenderTargetCube* renderTarget, TextureCubeSide::Enum side, uint32 index);
 		
 		/*!
 			\brief Set the render target at the given index
@@ -276,7 +283,7 @@ namespace core
 						The first index for the render target. The upcomming sides are attached to the next 6 attachments. Useful if you want to
 						render to multiple textures at once.
 		*/
-		void SetRenderTarget(const RenderTargetCube* renderTarget, uint32 startIndex);
+		void SetRenderTarget(RenderTargetCube* renderTarget, uint32 startIndex);
 
 		/*!
 			\brief Retrieves a uniform based on it's name in the shader bound to this thread.

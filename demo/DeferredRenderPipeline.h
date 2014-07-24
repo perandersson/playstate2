@@ -39,6 +39,37 @@ public:
 	*/
 	Size GetShadowSize(float32 farClipDistance) const;
 
+	/*!
+		\brief Retrieves the size of the blur texture, based on the original size
+
+		\param originalSize
+		\return
+	*/
+	Size GetBlurSize(Size originalSize) const;
+
+	/*!
+		\brief Retrieves a shared render target based on the supplied render target
+
+		\param rt
+		\return
+	*/
+	RenderTarget2D* GetDepthRenderTarget(RenderTarget2D* rt);
+
+	/*!
+		\brief Retrieves a shared render target based on the supplied render target
+
+		\param rt
+		\return
+	*/
+	RenderTarget2D* GetBlurRenderTarget(RenderTarget2D* rt);
+
+	/*!
+		\brief Blur the supplied render targets
+	
+		\param renderTargets
+	*/
+	void BlurRenderTargets(std::vector<RenderTarget2D*>& renderTargets);
+
 private:
 	Resource<Effect> mGeometryEffect;
 	Resource<Effect> mDebugEffect;
@@ -62,6 +93,8 @@ private:
 
 	Resource<Effect> mShadowMapEffect;
 	ShadowMaps mShadowMaps;
+	std::vector<std::shared_ptr<RenderTarget2D>> mDepthRenderTargets;
+	std::vector<std::shared_ptr<RenderTarget2D>> mBlurRenderTargets;
 
 	Resource<Effect> mBlurEffect;
 

@@ -118,13 +118,9 @@ void RenderState::Clear(uint32 clearBits)
 #endif
 }
 
-EffectState* RenderState::ApplyEffect(const Effect* effect)
+EffectState* RenderState::Begin(const Effect* effect)
 {
 	assert_not_null(effect);
-
-	mApplyRenderTarget = true;
-	InvalidateRenderTargets();
-
 	BindEffect(effect);
 
 	SetDepthTest(effect->GetDepthTest());
@@ -150,6 +146,11 @@ EffectState* RenderState::ApplyEffect(const Effect* effect)
 	return mEffectState;
 }
 
+void RenderState::End()
+{
+	InvalidateRenderTargets();
+}
+
 void RenderState::BindEffect(const Effect* effect)
 {
 	mApplyEffectState = true;
@@ -169,9 +170,11 @@ void RenderState::BindEffect(const Effect* effect)
 
 void RenderState::InvalidateRenderTargets()
 {
+	mApplyRenderTarget = true;
 	for (uint32 i = 0; i < mMaxDrawBuffers; ++i) {
 		RenderTargetInfo& info = mRenderTargetInfo[i];
 		if (info.texture != nullptr) {
+			info.texture->Unlock();
 			info.texture = nullptr;
 			info.uid = 0;
 			info.dirty = true;
@@ -641,13 +644,17 @@ void RenderState::SetLineWidth(float32 lineWidth)
 #endif
 }
 
-void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, uint32 index)
+void RenderState::SetRenderTarget(RenderTarget2D* renderTarget, uint32 index)
 {
 	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
 	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
 	RenderTargetInfo& info = mRenderTargetInfo[index];
 	if (info.uid == uid)
 		return;
+
+	// If a render target is already bound and assigned to the frame buffer then unlock it
+	if (info.texture != nullptr && !info.dirty)
+		info.texture->Unlock();
 
 	info.dirty = true;
 	info.texture = renderTarget;
@@ -675,7 +682,7 @@ void RenderState::SetRenderTarget(const RenderTarget2D* renderTarget, uint32 ind
 	mNumRenderTargets += renderTarget != nullptr ? 1 : -1;
 }
 
-void RenderState::SetRenderTarget(const RenderTargetCube* renderTarget, TextureCubeSide::Enum side, uint32 index)
+void RenderState::SetRenderTarget(RenderTargetCube* renderTarget, TextureCubeSide::Enum side, uint32 index)
 {
 	assert(index < mMaxDrawBuffers && "You are not allowed to bind that many render targets");
 	const uint32 uid = renderTarget != nullptr ? renderTarget->GetUID() : 0;
@@ -683,6 +690,10 @@ void RenderState::SetRenderTarget(const RenderTargetCube* renderTarget, TextureC
 	RenderTargetInfo& info = mRenderTargetInfo[index];
 	if (info.uid == uid && info.textureTarget == textureTarget)
 		return;
+
+	// If a render target is already bound and assigned to the frame buffer then unlock it
+	if (info.texture != nullptr && !info.dirty)
+		info.texture->Unlock();
 
 	info.dirty = true;
 	info.texture = renderTarget;
@@ -710,7 +721,7 @@ void RenderState::SetRenderTarget(const RenderTargetCube* renderTarget, TextureC
 	mNumRenderTargets += renderTarget != nullptr ? 1 : -1;
 }
 
-void RenderState::SetRenderTarget(const RenderTargetCube* renderTarget, uint32 startIndex)
+void RenderState::SetRenderTarget(RenderTargetCube* renderTarget, uint32 startIndex)
 {
 	for (uint32 i = 0; i < TextureCubeSide::SIZE; ++i) {
 		SetRenderTarget(renderTarget, (TextureCubeSide::Enum)i, startIndex + i);
@@ -757,7 +768,6 @@ void RenderState::ApplyRenderTargets()
 		if (mFrameBufferApplied) {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			mFrameBufferApplied = false;
-			InvalidateRenderTargets();
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)
 			GLenum err = glGetError();
@@ -801,8 +811,10 @@ void RenderState::ApplyRenderTargets()
 			rti.dirty = false;
 			GLenum attachmentType = rti.attachmentType;
 			GLuint texture = 0;
-			if (rti.texture != nullptr)
+			if (rti.texture != nullptr) {
+				rti.texture->Lock();
 				texture = rti.texture->GetTextureID();
+			}
 			glFramebufferTexture(GL_FRAMEBUFFER, attachmentType, texture, 0);
 
 #if defined(_DEBUG) || defined(RENDERING_TROUBLESHOOTING)

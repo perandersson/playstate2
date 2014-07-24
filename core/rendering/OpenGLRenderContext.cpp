@@ -46,7 +46,7 @@ RenderState* OpenGLRenderContext::Activate(Effect* effect)
 {
 	assert_not_null(effect);
 	RenderState* state = GetRenderState();
-	state->ApplyEffect(effect);
+	state->Begin(effect);
 	return state;
 }
 
