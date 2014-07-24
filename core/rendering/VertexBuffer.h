@@ -3,6 +3,7 @@
 #include "VertexType.h"
 #include "BufferUsage.h"
 #include "GLEWMX.h"
+#include <mutex>
 
 namespace core
 {
@@ -51,9 +52,21 @@ namespace core
 			\param numVertices
 		*/
 		void Update(const void* vertices, uint32 numVertices);
+		
+		/*!
+			\brief Locks this resource.
 
-		static GLenum GetPrimitiveTypeEnum(PrimitiveType::Enum primitiveType);
+			This is to ensure that only one thread is working on this resourceat the same time
+		*/
+		void Lock();
 
+		/*!
+			\brief Unlocks this resource
+
+			This is to ensure that only one thread is working on this resourceat the same time
+		*/
+		void Unlock();
+		
 	private:
 		uint32 mUID;
 		GLuint mBufferID;
@@ -62,5 +75,6 @@ namespace core
 		uint32 mNumVertices;
 		uint32 mSizeOfOneVertex;
 		BufferUsage::Enum mBufferUsage;
+		std::recursive_mutex mMutex;
 	};
 }

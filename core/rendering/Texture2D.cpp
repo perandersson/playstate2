@@ -36,7 +36,11 @@ void Texture2D::Resize(const Size& newSize)
 	const GLenum _format = OpenGLEnum::ConvertToTextureFormatEnum(format);
 	const GLenum _internalFormat = OpenGLEnum::ConvertToInternalTextureFormatEnum(format);
 
+	Lock();
 	glTexImage2D(this->GetTextureTarget(), 0, _internalFormat, newSize.width, newSize.height, 0, _format, GL_UNSIGNED_BYTE, NULL);
+	glFlush();
+	Unlock();
+
 	mSize = newSize;
 
 	//
@@ -44,12 +48,6 @@ void Texture2D::Resize(const Size& newSize)
 	//
 
 	renderState->UnbindTexture();
-
-	//
-	// Flush the rendering pipeline - in case that this texture is resized in another thread
-	//
-
-	glFlush();
 
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {
@@ -84,8 +82,11 @@ void Texture2D::Update(const Size& size, Color* pixels)
 	const GLenum _format = OpenGLEnum::ConvertToTextureFormatEnum(format);
 	const GLenum _internalFormat = OpenGLEnum::ConvertToInternalTextureFormatEnum(format);
 
+	Lock();
 	glTexImage2D(this->GetTextureTarget(), 0, _internalFormat, size.width, size.height, 0, _format, GL_FLOAT, pixels->_array);
-	
+	glFlush();
+	Unlock();
+
 	mSize = size;
 
 	//
@@ -93,13 +94,7 @@ void Texture2D::Update(const Size& size, Color* pixels)
 	//
 
 	state->UnbindTexture();
-
-	//
-	// Flush the rendering pipeline - in case that this texture is resized in another thread
-	//
-
-	glFlush();
-
+	
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {
 		THROW_EXCEPTION(RenderingException, "Could not create 2D texture. Reason: %d", status);

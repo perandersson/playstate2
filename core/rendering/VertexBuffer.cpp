@@ -3,6 +3,7 @@
 #include "IndexBuffer.h"
 #include "RenderContext.h"
 #include "RenderState.h"
+#include "OpenGLEnum.h"
 #include "exception/RenderingException.h"
 #include <atomic>
 using namespace core;
@@ -46,7 +47,7 @@ void VertexBuffer::Render(uint32 startIndex, uint32 count) const
 		count = mNumVertices - startIndex;
 	}
 
-	glDrawArrays(GetPrimitiveTypeEnum(mPrimitiveType), startIndex, count);
+	glDrawArrays(OpenGLEnum::Convert(mPrimitiveType), startIndex, count);
 }
 
 void VertexBuffer::Render(const IndexBuffer* buffer) const
@@ -66,7 +67,7 @@ void VertexBuffer::Render(const IndexBuffer* buffer, uint32 firstElement, uint32
 	assert(buffer != NULL && "No index buffer was supplied");
 
 	const uint32 count = numElements / PrimitiveType::GetElementCount(mPrimitiveType);
-	const GLenum mode = GetPrimitiveTypeEnum(mPrimitiveType);
+	const GLenum mode = OpenGLEnum::Convert(mPrimitiveType);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, (void*)(firstElement * sizeof(uint32)));
 }
 
@@ -87,8 +88,10 @@ void VertexBuffer::Update(const void* vertices, uint32 numVertices)
 	// Update data
 	//
 
+	Lock();
 	glBufferData(GL_ARRAY_BUFFER, mNumVertices * mSizeOfOneVertex, vertices, GL_DYNAMIC_DRAW);
 	glFlush();
+	Unlock();
 
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {
@@ -102,13 +105,12 @@ void VertexBuffer::Update(const void* vertices, uint32 numVertices)
 	renderState->UnbindVertexBuffer();
 }
 
-GLenum VertexBuffer::GetPrimitiveTypeEnum(PrimitiveType::Enum primitiveType)
+void VertexBuffer::Lock()
 {
-	static const GLenum enums[PrimitiveType::SIZE] = {
-		GL_POINTS,
-		GL_TRIANGLES,
-		GL_TRIANGLE_STRIP,
-		GL_LINE_LOOP,
-	};
-	return enums[primitiveType];
+	mMutex.lock();
+}
+
+void VertexBuffer::Unlock()
+{
+	mMutex.unlock();
 }

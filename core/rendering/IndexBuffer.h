@@ -2,6 +2,7 @@
 #include "../typedefs.h"
 #include "BufferUsage.h"
 #include "GLEWMX.h"
+#include <mutex>
 
 namespace core
 {
@@ -36,11 +37,26 @@ namespace core
 			\param numIndices
 		*/
 		void Update(const uint32* indices, uint32 numIndices);
+		
+		/*!
+			\brief Locks this resource.
 
+			This is to ensure that only one thread is working on this resourceat the same time
+		*/
+		void Lock();
+
+		/*!
+			\brief Unlocks this resource
+
+			This is to ensure that only one thread is working on this resourceat the same time
+		*/
+		void Unlock();
+		
 	private:
 		uint32 mUID;
 		GLuint mBufferID;
 		uint32 mNumElements;
 		BufferUsage::Enum mBufferUsage;
+		std::recursive_mutex mMutex;
 	};
 }

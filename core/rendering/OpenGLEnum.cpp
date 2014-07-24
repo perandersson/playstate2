@@ -183,6 +183,17 @@ GLenum OpenGLEnum::Convert(PolygonMode::Enum mode)
 	return enums[(uint32)mode];
 }
 
+GLenum OpenGLEnum::Convert(PrimitiveType::Enum e)
+{
+	static const GLenum enums[PrimitiveType::SIZE] = {
+		GL_POINTS,
+		GL_TRIANGLES,
+		GL_TRIANGLE_STRIP,
+		GL_LINE_LOOP,
+	};
+	return enums[(uint32)e];
+}
+
 GLenum OpenGLEnum::ConvertToTextureFormatEnum(TextureFormat::Enum format)
 {
 	GLint _format = GL_RGBA;

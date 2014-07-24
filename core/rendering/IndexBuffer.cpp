@@ -60,8 +60,10 @@ void IndexBuffer::Update(const uint32* indices, uint32 numIndices)
 	// Update data
 	//
 
+	Lock();
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(uint32), indices, GL_DYNAMIC_DRAW);
 	glFlush();
+	Unlock();
 
 	GLenum status = glGetError();
 	if (status != GL_NO_ERROR) {
@@ -73,4 +75,14 @@ void IndexBuffer::Update(const uint32* indices, uint32 numIndices)
 	//
 	
 	renderState->UnbindIndexBuffer();
+}
+
+void IndexBuffer::Lock()
+{
+	mMutex.lock();
+}
+
+void IndexBuffer::Unlock()
+{
+	mMutex.unlock();
 }

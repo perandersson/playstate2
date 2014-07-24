@@ -45,16 +45,16 @@ namespace core
 		}
 		
 		/*!
-			\brief Locks this render target.
+			\brief Locks this resource.
 
-			This is to ensure that only one thread is rendering to the same RenderTarget at the same time
+			This is to ensure that only one thread is working on this resourceat the same time
 		*/
 		void Lock();
 
 		/*!
-			\brief Unlocks this render target
+			\brief Unlocks this resource
 
-			This is to ensure that only one thread is rendering to the same RenderTarget at the same time
+			This is to ensure that only one thread is working on this resourceat the same time
 		*/
 		void Unlock();
 

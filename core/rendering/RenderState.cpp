@@ -148,6 +148,9 @@ EffectState* RenderState::Begin(const Effect* effect)
 
 void RenderState::End()
 {
+	// Flush the OpenGL rendering queue. This ensures that no more vertices are drawn to the render targets.
+	glFlush();
+
 	InvalidateRenderTargets();
 }
 
