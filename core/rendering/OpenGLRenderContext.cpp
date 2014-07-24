@@ -120,8 +120,8 @@ RenderTarget2D* OpenGLRenderContext::CreateRenderTarget2D(const Size& size, Text
 	assert(size.y > 0.0f && "You cannot create a render target with 0 height");
 
 	GLenum _minMag = GL_LINEAR;
-	const GLenum _format = GetTextureFormatAsEnum(format);
-	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
+	const GLenum _format = OpenGLEnum::ConvertToTextureFormatEnum(format);
+	const GLenum _internalFormat = OpenGLEnum::ConvertToInternalTextureFormatEnum(format);
 	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
 	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
 	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
@@ -168,8 +168,8 @@ Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat:
 	assert(size.x > 0.0f && "You cannot create a texture with 0 width");
 	assert(size.y > 0.0f && "You cannot create a texture with 0 height");
 
-	const GLenum _format = GetTextureFormatAsEnum(format);
-	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
+	const GLenum _format = OpenGLEnum::ConvertToTextureFormatEnum(format);
+	const GLenum _internalFormat = OpenGLEnum::ConvertToInternalTextureFormatEnum(format);
 	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
 	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
 	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
@@ -194,53 +194,14 @@ Texture2D* OpenGLRenderContext::CreateTexture2D(const Size& size, TextureFormat:
 	return new Texture2D(textureID, size, format);
 }
 
-void OpenGLRenderContext::ResizeTexture2D(Texture2D* texture, const Size& newSize)
-{
-	assert(newSize.x > 0.0f && "You cannot resize a texture to 0 width");
-	assert(newSize.y > 0.0f && "You cannot resize a texture to 0 height");
-
-	auto renderState = GetRenderState();
-
-	//
-	// Bind the texture
-	//
-
-	renderState->BindTexture(texture, 0);
-
-	//
-	// Resize the texture
-	//
-
-	const TextureFormat::Enum format = texture->GetTextureFormat();
-	const GLenum _format = GetTextureFormatAsEnum(format);
-	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
-
-	glTexImage2D(texture->GetTextureTarget(), 0, _internalFormat, newSize.width, newSize.height, 0, _format, GL_UNSIGNED_BYTE, NULL);
-
-	texture->SetSize(newSize);
-
-	//
-	// Make sure that the texture is not bound anymore
-	//
-
-	renderState->UnbindTexture();
-
-	glFlush();
-
-	GLenum status = glGetError();
-	if (status != GL_NO_ERROR) {
-		THROW_EXCEPTION(RenderingException, "Could not resize the supplied 2D texture. Reason: %d", status);
-	}
-}
-
 RenderTargetCube* OpenGLRenderContext::CreateRenderTargetCube(const Size& size, TextureFormat::Enum format)
 {
 	assert(size.x > 0.0f && "You cannot create a render target texture with 0 width");
 	assert(size.y > 0.0f && "You cannot create a render target texture with 0 height");
 
 	GLenum _minMag = GL_LINEAR;
-	const GLenum _format = GetTextureFormatAsEnum(format);
-	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
+	const GLenum _format = OpenGLEnum::ConvertToTextureFormatEnum(format);
+	const GLenum _internalFormat = OpenGLEnum::ConvertToInternalTextureFormatEnum(format);
 	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
 	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
 	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
@@ -275,6 +236,7 @@ RenderTargetCube* OpenGLRenderContext::CreateRenderTargetCube(const Size& size, 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, magFilter);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, textureWrap);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, textureWrap);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, textureWrap);
 
 	GetRenderState()->UnbindTexture();
 
@@ -300,8 +262,8 @@ TextureCube* OpenGLRenderContext::CreateTextureCube(const Size& size, TextureFor
 	assert(size.x > 0.0f && "You cannot create a texture with 0 width");
 	assert(size.y > 0.0f && "You cannot create a texture with 0 height");
 
-	const GLenum _format = GetTextureFormatAsEnum(format);
-	const GLenum _internalFormat = GetInternalTextureFormatAsEnum(format);
+	const GLenum _format = OpenGLEnum::ConvertToTextureFormatEnum(format);
+	const GLenum _internalFormat = OpenGLEnum::ConvertToInternalTextureFormatEnum(format);
 	const GLenum minFilter = OpenGLEnum::Convert(MinFilter::DEFAULT);
 	const GLenum magFilter = OpenGLEnum::Convert(MagFilter::DEFAULT);
 	const GLenum textureWrap = OpenGLEnum::Convert(TextureWrap::DEFAULT);
@@ -346,142 +308,6 @@ TextureCube* OpenGLRenderContext::CreateTextureCube(const Size& size, TextureFor
 	}
 
 	return new TextureCube(textureID, size, format);
-}
-
-GLenum OpenGLRenderContext::GetTextureFormatAsEnum(TextureFormat::Enum format)
-{
-	GLint _format = GL_RGBA;
-	switch (format)
-	{
-	case TextureFormat::RGB:
-		_format = GL_RGB;
-		break;
-	case TextureFormat::RGB8:
-		_format = GL_RGB;
-		break;
-	case TextureFormat::RGB12:
-		_format = GL_RGB;
-		break;
-	case TextureFormat::RGB16:
-		_format = GL_RGB;
-		break;
-	case TextureFormat::RGBA:
-		break;
-	case TextureFormat::RGBA8:
-		_format = GL_RGBA;
-		break;
-	case TextureFormat::RGBA12:
-		_format = GL_RGBA;
-		break;
-	case TextureFormat::RGBA16:
-		_format = GL_RGBA;
-		break;
-	case TextureFormat::RGB10_A2:
-		_format = GL_RGBA;
-		break;
-	case TextureFormat::RGBA16F:
-		_format = GL_RGBA;
-		break;
-	case TextureFormat::RGBA32F:
-		_format = GL_RGBA;
-		break;
-	case TextureFormat::DEPTH24:
-		_format = GL_DEPTH_COMPONENT;
-		break;
-	case TextureFormat::DEPTH32F:
-		_format = GL_DEPTH_COMPONENT;
-		break;
-	case TextureFormat::DEPTH24_STENCIL8:
-		_format = GL_DEPTH_STENCIL;
-		break;
-	case TextureFormat::DEPTH32F_STENCIL8:
-		_format = GL_DEPTH_STENCIL;
-		break;
-	case TextureFormat::R:
-		_format = GL_RED;
-		break;
-	case TextureFormat::R16F:
-		_format = GL_RED;
-		break;
-	case TextureFormat::R32F:
-		_format = GL_RED;
-		break;
-	case TextureFormat::BGR:
-		_format = GL_BGR;
-		break;
-	case TextureFormat::BGRA:
-		_format = GL_BGRA;
-		break;
-	}
-	return _format;
-}
-
-GLenum OpenGLRenderContext::GetInternalTextureFormatAsEnum(TextureFormat::Enum format)
-{
-	GLint _internalFormat = GL_RGBA;
-	switch (format)
-	{
-	case TextureFormat::RGB:
-		_internalFormat = GL_RGB;
-		break;
-	case TextureFormat::RGB8:
-		_internalFormat = GL_RGB8;
-		break;
-	case TextureFormat::RGB12:
-		_internalFormat = GL_RGB12;
-		break;
-	case TextureFormat::RGB16:
-		_internalFormat = GL_RGB16;
-		break;
-	case TextureFormat::RGBA:
-		break;
-	case TextureFormat::RGBA8:
-		_internalFormat = GL_RGBA8;
-		break;
-	case TextureFormat::RGBA12:
-		_internalFormat = GL_RGBA12;
-		break;
-	case TextureFormat::RGBA16:
-		_internalFormat = GL_RGBA16;
-		break;
-	case TextureFormat::RGB10_A2:
-		_internalFormat = GL_RGB10_A2;
-		break;
-	case TextureFormat::RGBA16F:
-		_internalFormat = GL_RGBA16F;
-		break;
-	case TextureFormat::RGBA32F:
-		_internalFormat = GL_RGBA32F;
-		break;
-	case TextureFormat::DEPTH24:
-		_internalFormat = GL_DEPTH_COMPONENT24;
-		break;
-	case TextureFormat::DEPTH32F:
-		_internalFormat = GL_DEPTH_COMPONENT32F;
-		break;
-	case TextureFormat::DEPTH24_STENCIL8:
-		_internalFormat = GL_DEPTH24_STENCIL8;
-		break;
-	case TextureFormat::DEPTH32F_STENCIL8:
-		_internalFormat = GL_DEPTH32F_STENCIL8;
-		break;
-	case TextureFormat::R:
-		_internalFormat = GL_R8;
-		break;
-	case TextureFormat::R16F:
-		_internalFormat = GL_R16F;
-		break;
-	case TextureFormat::R32F:
-		_internalFormat = GL_R32F;
-		break;
-	case TextureFormat::BGR:
-		_internalFormat = GL_RGB;
-		break;
-	case TextureFormat::BGRA:
-		_internalFormat = GL_RGBA;
-		break;
-	}
-	return _internalFormat;
 }
 
 GLuint OpenGLRenderContext::GenTextureID() const

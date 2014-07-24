@@ -350,6 +350,7 @@ namespace core
 	friend class XMLEffectType;
 	friend class VertexBuffer;
 	friend class IndexBuffer;
+	friend class Texture2D;
 	protected:
 		/*!
 			\brief Unbinds the currently bound index buffer

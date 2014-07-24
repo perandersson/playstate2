@@ -43,12 +43,6 @@ namespace core
 			return mTextureFormat;
 		}
 
-	friend class OpenGLRenderContext;
-	protected:
-		inline void SetSize(const Size& size) {
-			mSize = size;
-		}
-
 	protected:
 		uint32 mUID;
 		GLuint mTextureID;
