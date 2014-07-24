@@ -33,5 +33,8 @@ namespace core
 		static GLenum Convert(FrontFace::Enum e);
 		static GLenum Convert(CullFace::Enum e);
 		static GLenum Convert(PolygonMode::Enum e);
+
+		static GLenum ConvertToTextureFormatEnum(TextureFormat::Enum format);
+		static GLenum ConvertToInternalTextureFormatEnum(TextureFormat::Enum format);
 	};
 }
