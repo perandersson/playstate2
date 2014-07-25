@@ -30,6 +30,7 @@ namespace core
 		virtual VertexBuffer* CreateBuffer(const PositionVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		virtual VertexBuffer* CreateBuffer(const PositionTextureVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		virtual VertexBuffer* CreateBuffer(const PositionTextureNormalVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
+		virtual VertexBuffer* CreateBuffer(const PositionTextureNormalTangentVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		virtual VertexBuffer* CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		virtual RenderTarget2D* CreateRenderTarget2D(const Size& size, TextureFormat::Enum format);
 		virtual Texture2D* CreateTexture2D(const Size& size, TextureFormat::Enum format, const byte* bytes);

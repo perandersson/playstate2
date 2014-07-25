@@ -20,6 +20,7 @@ namespace core
 		static VertexBuffer* CreateBuffer(const PositionVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		static VertexBuffer* CreateBuffer(const PositionTextureVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		static VertexBuffer* CreateBuffer(const PositionTextureNormalVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
+		static VertexBuffer* CreateBuffer(const PositionTextureNormalTangentVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		static VertexBuffer* CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage);
 		static RenderTarget2D* CreateRenderTarget2D(const Size& size, TextureFormat::Enum format);
 		static Texture2D* CreateTexture2D(const Size& size, TextureFormat::Enum format, const byte* bytes);

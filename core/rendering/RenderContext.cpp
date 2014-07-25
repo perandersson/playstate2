@@ -48,6 +48,11 @@ VertexBuffer* RenderContext::CreateBuffer(const PositionTextureNormalVertexType*
 	return Kernel::GetRenderContext()->CreateBuffer(vertices, primitiveType, numVertices, usage);
 }
 
+VertexBuffer* RenderContext::CreateBuffer(const PositionTextureNormalTangentVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
+{
+	return Kernel::GetRenderContext()->CreateBuffer(vertices, primitiveType, numVertices, usage);
+}
+
 VertexBuffer* RenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
 	return Kernel::GetRenderContext()->CreateBuffer(vertices, sizeOfOneVertex, vertexDesc, primitiveType, numVertices, usage);

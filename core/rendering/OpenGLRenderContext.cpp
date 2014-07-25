@@ -92,6 +92,11 @@ VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureNormalVerte
 	return CreateBuffer(vertices, sizeof(PositionTextureNormalVertexType), PositionTextureNormalVertexTypeDeclaration, primitiveType, numVertices, usage);
 }
 
+VertexBuffer* OpenGLRenderContext::CreateBuffer(const PositionTextureNormalTangentVertexType* vertices, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
+{
+	return CreateBuffer(vertices, sizeof(PositionTextureNormalTangentVertexType), PositionTextureNormalTangentVertexTypeDeclaration, primitiveType, numVertices, usage);
+}
+
 VertexBuffer* OpenGLRenderContext::CreateBuffer(const void* vertices, uint32 sizeOfOneVertex, const VertexDesc& vertexDesc, PrimitiveType::Enum primitiveType, uint32 numVertices, BufferUsage::Enum usage)
 {
 	assert_not_null(vertices);
