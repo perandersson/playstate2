@@ -1,5 +1,5 @@
 #pragma once
-#include "../IKernel.h"
+#include "../IEventDrivenKernel.h"
 #include "../../configuration/lua/LuaConfiguration.h"
 #include "../../filesystem/win32/Win32FileSystem.h"
 #include "../../input/win32/Win32InputDevices.h"
@@ -14,7 +14,7 @@ namespace core
 	/*!
 		\brief Standard win32 kernel used by the game engine
 	*/
-	class Win32Kernel : public IKernel
+	class Win32Kernel : public IEventDrivenKernel
 	{
 		typedef std::list<OpenGLRenderContext*> FreeRenderContexts;
 	public:

@@ -72,6 +72,7 @@
     <ClInclude Include="..\..\core\integration\SoundEngine_script.h" />
     <ClInclude Include="..\..\core\integration\SoundReceiver_script.h" />
     <ClInclude Include="..\..\core\integration\SpotLight_script.h" />
+    <ClInclude Include="..\..\core\kernel\IEventDrivenKernel.h" />
     <ClInclude Include="..\..\core\kernel\IKernel.h" />
     <ClInclude Include="..\..\core\kernel\Kernel.h" />
     <ClInclude Include="..\..\core\kernel\ThreadPool.h" />

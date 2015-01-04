@@ -1,7 +1,7 @@
 #pragma once
 #include "Game.h"
 #include "../filesystem/IFileChangedListener.h"
-#include "../kernel/IKernel.h"
+#include "../kernel/IEventDrivenKernel.h"
 
 namespace core
 {
@@ -19,7 +19,7 @@ namespace core
 
 	// IGame
 	public:
-		virtual void Start();
+		virtual void Start(IEventDrivenKernel* kernel);
 		virtual void Stop();
 		virtual bool Initialize();
 		virtual void Release();
@@ -36,7 +36,7 @@ namespace core
 		
 	private:
 		bool mRunning;
-		IKernel* mKernel;
+		IEventDrivenKernel* mKernel;
 		Scene mScene;
 		IRenderPipeline* mRenderPipeline;
 	};

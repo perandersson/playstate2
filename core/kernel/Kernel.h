@@ -20,6 +20,5 @@ namespace core
 		static IRenderContext* GetRenderContext();
 		static ThreadPool* GetThreadPool();
 		static void StartGame(IGame* game);
-		static bool ProcessEvents();
 	};
 }

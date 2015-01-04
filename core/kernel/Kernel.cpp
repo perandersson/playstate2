@@ -68,8 +68,3 @@ void Kernel::StartGame(IGame* game)
 {
 	GetInstance()->StartGame(game);
 }
-
-bool Kernel::ProcessEvents()
-{
-	return GetInstance()->ProcessEvents();
-}

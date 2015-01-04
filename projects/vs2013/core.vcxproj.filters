@@ -812,6 +812,9 @@
     <ClInclude Include="..\..\core\integration\LightSource_script.h">
       <Filter>Source Files\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\kernel\IEventDrivenKernel.h">
+      <Filter>Source Files\kernel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">

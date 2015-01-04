@@ -55,7 +55,7 @@ using namespace std::chrono;
 
 
 StandardGame::StandardGame()
-: IGame(), mKernel(Kernel::GetInstance()), mRunning(false), mRenderPipeline(nullptr)
+: IGame(), mKernel(nullptr), mRunning(false), mRenderPipeline(nullptr)
 {
 
 }
@@ -64,8 +64,10 @@ StandardGame::~StandardGame()
 {
 }
 
-void StandardGame::Start()
+void StandardGame::Start(IEventDrivenKernel* kernel)
 {
+	assert_not_null(kernel);
+	mKernel = kernel;
 	if (!Initialize()) {
 		Release();
 		return;

@@ -6,6 +6,8 @@
 
 namespace core
 {
+	class IEventDrivenKernel;
+
 	/*!
 		\brief The IGame interface is used by the game engine as the main entry-point of the game.
 	*/
@@ -18,7 +20,7 @@ namespace core
 		/*!
 			\brief Method which starts the game
 		*/
-		virtual void Start() = 0;
+		virtual void Start(IEventDrivenKernel* kernel) = 0;
 
 		/*!
 			\brief Stops the game from running

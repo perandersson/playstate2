@@ -138,7 +138,7 @@ void Win32Kernel::StartGame(IGame* game)
 
 	mGame = game;
 	try {
-		mGame->Start();
+		mGame->Start(this);
 	}
 	catch (Exception e) {
 		mActiveWindow->Alert("Unhandled exception", e, AlertType::ALERT_ERROR);
@@ -164,12 +164,12 @@ OpenGLRenderContext* Win32Kernel::GetFreeRenderContext()
 	return renderContext;
 }
 
-IKernel* core::CreateKernel(void* params)
+IEventDrivenKernel* core::CreateKernel(void* params)
 {
 	return new Win32Kernel();
 }
 
-void core::DestroyKernel(IKernel* kernel)
+void core::DestroyKernel(IEventDrivenKernel* kernel)
 {
 	delete kernel;
 }
