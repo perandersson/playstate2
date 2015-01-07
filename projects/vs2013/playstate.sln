@@ -3,13 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "playstate", "playstate.vcxproj", "{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "core.vcxproj", "{9E3A0758-7E01-4FC5-8C5F-F41A6DA8E767}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo", "demo.vcxproj", "{98534620-52E3-4571-9B8C-538A65671801}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core_tests", "core_tests.vcxproj", "{9F2B95B6-0346-4432-8DE8-BF17725F2821}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core.kernel.win32", "core.kernel.win32.vcxproj", "{EB6222B5-41FC-4355-A650-FCD8ADF53F31}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9E3A0758-7E01-4FC5-8C5F-F41A6DA8E767} = {9E3A0758-7E01-4FC5-8C5F-F41A6DA8E767}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,16 +24,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Debug|Win32.Build.0 = Debug|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Release|Any CPU.ActiveCfg = Release|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Release|Win32.ActiveCfg = Release|Win32
-		{4E164E1D-F37D-4CD6-A3CD-5556D86F1A4F}.Release|Win32.Build.0 = Release|Win32
 		{9E3A0758-7E01-4FC5-8C5F-F41A6DA8E767}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{9E3A0758-7E01-4FC5-8C5F-F41A6DA8E767}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{9E3A0758-7E01-4FC5-8C5F-F41A6DA8E767}.Debug|Mixed Platforms.Build.0 = Debug|Win32
@@ -61,6 +54,16 @@ Global
 		{9F2B95B6-0346-4432-8DE8-BF17725F2821}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{9F2B95B6-0346-4432-8DE8-BF17725F2821}.Release|Win32.ActiveCfg = Release|Win32
 		{9F2B95B6-0346-4432-8DE8-BF17725F2821}.Release|Win32.Build.0 = Release|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Debug|Win32.Build.0 = Debug|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Release|Any CPU.ActiveCfg = Release|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Release|Win32.ActiveCfg = Release|Win32
+		{EB6222B5-41FC-4355-A650-FCD8ADF53F31}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

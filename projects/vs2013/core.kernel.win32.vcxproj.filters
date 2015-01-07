@@ -9,10 +9,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\kernel">
+      <UniqueIdentifier>{512a986e-a1e0-4d27-afc9-1f4abc29da78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\playstate\main.cpp">
+    <ClCompile Include="..\..\core.kernel.win32\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core.kernel.win32\kernel\Win32Kernel.cpp">
+      <Filter>Source Files\kernel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core.kernel.win32\kernel\Win32Kernel.h">
+      <Filter>Source Files\kernel</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

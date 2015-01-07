@@ -1,4 +1,3 @@
-
 #ifdef _DEBUG
 #include <float.h>
 // Unterupt for when floating points become invalid
@@ -6,11 +5,11 @@
 unsigned int fp_control_state = _controlfp(_EM_INEXACT | _EM_INVALID | _EM_UNDERFLOW | _EM_OVERFLOW, _MCW_EM);
 #endif
 
-
 #include <core/Memory.h>
 #include <iostream>
-#include <core/playstate.h>
-#include <demo/DemoGame.h>
+#include <core/game/IGame.h>
+#include "kernel/Win32Kernel.h"
+using namespace core;
 
 #ifdef _DEBUG
 int main(int argc, char** argv)
@@ -32,25 +31,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR cmdLine, 
 	// Create the game engine kernel
 	//
 
-	auto kernel = CreateKernel(nullptr);
-
-	//
-	// Initialize and start the game
-	//
-
-	if (kernel->Initialize())
-		kernel->StartGame(new DemoGame());
+	auto kernel = new Win32Kernel();
+	if (kernel->Initialize()) {
+		assert(gGameFactory != nullptr && "You have to specify the game with a PLAY_GAME define");
+		auto game = gGameFactory->Create(kernel);
+		kernel->StartGame(game);
+	}
 
 	//
 	// Destroy the game engine kernel
 	//
 
 	kernel->Release();
-	DestroyKernel(kernel);
-
-	//
-	// Register resource type loaders
-	//
+	delete kernel;
 
 	return 0;
 }

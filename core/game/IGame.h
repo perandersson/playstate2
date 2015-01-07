@@ -6,7 +6,7 @@
 
 namespace core
 {
-	class IEventDrivenKernel;
+	class IKernel;
 
 	/*!
 		\brief The IGame interface is used by the game engine as the main entry-point of the game.
@@ -16,11 +16,19 @@ namespace core
 	public:
 		virtual ~IGame() {}
 
+		/*!
+			\brief Start the game
+		*/
+		virtual void Start() = 0;
 
 		/*!
-			\brief Method which starts the game
+			\brief Process the game's internal functionality
+
+			\param dt
+					Time since last update
+			\return TRUE if we want to continue processing the game
 		*/
-		virtual void Start(IEventDrivenKernel* kernel) = 0;
+		virtual bool Process(float64 dt) = 0;
 
 		/*!
 			\brief Stops the game from running
@@ -81,5 +89,26 @@ namespace core
 		virtual void SetRenderPipeline(IRenderPipeline* pipeline) = 0;
 	};
 
+	class IGameFactory {
+	public:
+		virtual ~IGameFactory() {}
 
+		/*!
+			\brief Creates the game instance
+		*/
+		virtual IGame* Create(IKernel* kernel) = 0;
+	};
+
+	/* Pointer to the factory responsible for creating the game */
+	extern IGameFactory* gGameFactory;
 }
+
+#ifndef DECLARE_GAME
+#define DECLARE_GAME(Class) \
+	class Class##_Factory : public core::IGameFactory { \
+	public: \
+		Class##_Factory() { core::gGameFactory = this; } \
+		virtual ~Class##_Factory() {} \
+		virtual IGame* Create(core::IKernel* kernel) { return new Class(kernel); } \
+	} g##Class##GameFactory
+#endif

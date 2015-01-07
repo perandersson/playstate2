@@ -2,13 +2,14 @@
 #include "../configuration/IConfiguration.h"
 #include "../filesystem/IFileSystem.h"
 #include "../input/IInputDevices.h"
-#include "../game/IGame.h"
 #include "../logging/ILogger.h"
 #include "../resource/IResourceManager.h"
 #include "../sound/ISoundEngine.h"
 #include "../window/IActiveWindow.h"
+#include "../script/IScriptManager.h"
 #include "../script/IClassLoader.h"
 #include "../rendering/IRenderContext.h"
+#include "../game/IGame.h"
 #include "ThreadPool.h"
 
 namespace core
@@ -83,11 +84,6 @@ namespace core
 			\brief
 		*/
 		virtual ThreadPool* GetThreadPool() = 0;
-
-		/*!
-			\brief Start the supplied game instance
-		*/
-		virtual void StartGame(IGame* game) = 0;
 	};
 }
 

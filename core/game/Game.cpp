@@ -3,6 +3,8 @@
 #include "../kernel/Kernel.h"
 using namespace core;
 
+core::IGameFactory* core::gGameFactory = nullptr;
+
 void Game::Stop()
 {
 	Kernel::GetGame()->Stop();

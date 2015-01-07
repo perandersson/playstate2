@@ -46,6 +46,13 @@ mDepthRenderTarget(nullptr), mLightRenderTarget(nullptr)
 
 DeferredRenderPipeline::~DeferredRenderPipeline()
 {
+	auto it = mShadowMaps.begin();
+	auto end = mShadowMaps.end();
+	for (; it != end; ++it) {
+		delete it->second->renderTarget;
+		delete it->second;
+	}
+
 	if (mSphere != nullptr) {
 		delete mSphere;
 		mSphere = nullptr;

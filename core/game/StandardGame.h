@@ -1,7 +1,6 @@
 #pragma once
 #include "Game.h"
 #include "../filesystem/IFileChangedListener.h"
-#include "../kernel/IEventDrivenKernel.h"
 
 namespace core
 {
@@ -14,12 +13,20 @@ namespace core
 	class StandardGame : public IGame, public IFileChangedListener
 	{
 	public:
-		StandardGame();
+		/*!
+			\brief The constructor of the game requires a pointer to the kernel. 
+			
+			It is from the kernel where you can get the services used by the game engine to process the game
+
+			\param kernel
+		*/
+		StandardGame(IKernel* kernel);
 		virtual ~StandardGame();
 
 	// IGame
 	public:
-		virtual void Start(IEventDrivenKernel* kernel);
+		virtual void Start();
+		virtual bool Process(float64 dt);
 		virtual void Stop();
 		virtual bool Initialize();
 		virtual void Release();
@@ -34,9 +41,11 @@ namespace core
 	public:
 		virtual void OnFileChanged(const IFile* file, FileChangeAction::Enum action);
 		
+	protected:
+		IKernel* mKernel;
+
 	private:
 		bool mRunning;
-		IEventDrivenKernel* mKernel;
 		Scene mScene;
 		IRenderPipeline* mRenderPipeline;
 	};

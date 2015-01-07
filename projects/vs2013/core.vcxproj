@@ -72,11 +72,9 @@
     <ClInclude Include="..\..\core\integration\SoundEngine_script.h" />
     <ClInclude Include="..\..\core\integration\SoundReceiver_script.h" />
     <ClInclude Include="..\..\core\integration\SpotLight_script.h" />
-    <ClInclude Include="..\..\core\kernel\IEventDrivenKernel.h" />
     <ClInclude Include="..\..\core\kernel\IKernel.h" />
     <ClInclude Include="..\..\core\kernel\Kernel.h" />
     <ClInclude Include="..\..\core\kernel\ThreadPool.h" />
-    <ClInclude Include="..\..\core\kernel\win32\Win32Kernel.h" />
     <ClInclude Include="..\..\core\LinkedList.h" />
     <ClInclude Include="..\..\core\logging\console\StdCoutLogger.h" />
     <ClInclude Include="..\..\core\logging\ILogger.h" />
@@ -289,7 +287,6 @@
     <ClCompile Include="..\..\core\integration\SpotLight_script.cpp" />
     <ClCompile Include="..\..\core\kernel\Kernel.cpp" />
     <ClCompile Include="..\..\core\kernel\ThreadPool.cpp" />
-    <ClCompile Include="..\..\core\kernel\win32\Win32Kernel.cpp" />
     <ClCompile Include="..\..\core\logging\console\StdCoutLogger.cpp" />
     <ClCompile Include="..\..\core\logging\Logger.cpp" />
     <ClCompile Include="..\..\core\math\Color.cpp" />

@@ -5,8 +5,10 @@
 #include <future>
 #include <core/StringUtils.h>
 
-DemoGame::DemoGame()
-: mNumFrames(0), mTotalTime(0), mRenderPipeline(nullptr), mCamera(nullptr)
+DECLARE_GAME(DemoGame);
+
+DemoGame::DemoGame(IKernel* kernel)
+: StandardGame(kernel), mNumFrames(0), mTotalTime(0), mRenderPipeline(nullptr), mCamera(nullptr)
 {
 
 }
@@ -45,6 +47,8 @@ void DemoGame::Release()
 {
 	SetRenderPipeline(nullptr);
 	delete mRenderPipeline;
+
+	StandardGame::Release();
 }
 
 void DemoGame::Update()

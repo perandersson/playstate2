@@ -19,6 +19,5 @@ namespace core
 		static IActiveWindow* GetActiveWindow();
 		static IRenderContext* GetRenderContext();
 		static ThreadPool* GetThreadPool();
-		static void StartGame(IGame* game);
 	};
 }

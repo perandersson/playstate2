@@ -63,8 +63,3 @@ ThreadPool* Kernel::GetThreadPool()
 {
 	return GetInstance()->GetThreadPool();
 }
-
-void Kernel::StartGame(IGame* game)
-{
-	GetInstance()->StartGame(game);
-}

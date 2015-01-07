@@ -1,9 +1,12 @@
-#include "../../Memory.h"
+#include <core/Memory.h>
 #include "Win32Kernel.h"
-#include "../Kernel.h"
-#include "../../sound/openal/OpenALSoundEffectResourceLoader.h"
-#include "../../sound/openal/OpenALMusicResourceLoader.h"
+#include <core/kernel/Kernel.h>
+#include <core/sound/openal/OpenALSoundEffectResourceLoader.h>
+#include <core/sound/openal/OpenALMusicResourceLoader.h>
 using namespace core;
+
+#include <chrono>
+using namespace std::chrono;
 
 Win32Kernel::Win32Kernel()
 : mConfiguration(nullptr), mFileSystem(nullptr), mInputDevices(nullptr), mGame(nullptr),
@@ -19,7 +22,6 @@ Win32Kernel::~Win32Kernel()
 bool Win32Kernel::Initialize()
 {
 	Kernel::SetInstance(this);
-
 	mLogger = new StdCoutLog();
 	mFileSystem = new Win32FileSystem(std::string("data"));
 	mScriptManager = new LuaScriptManager(mFileSystem);
@@ -64,6 +66,7 @@ void Win32Kernel::Release()
 	delete mScriptManager;
 	delete mFileSystem;
 	delete mLogger;
+	Kernel::SetInstance(nullptr);
 }
 
 IConfiguration* Win32Kernel::GetConfiguration()
@@ -138,7 +141,18 @@ void Win32Kernel::StartGame(IGame* game)
 
 	mGame = game;
 	try {
-		mGame->Start(this);
+		if (game->Initialize()) {
+			mGame->Start();
+			high_resolution_clock::time_point prev = high_resolution_clock::now();
+			duration<float> time_span;
+			do
+			{
+				high_resolution_clock::time_point now = high_resolution_clock::now();
+				time_span = now - prev;
+				prev = now;
+			} while (mGame->Process(time_span.count()) && ProcessEvents());
+		}
+		mGame->Release();
 	}
 	catch (Exception e) {
 		mActiveWindow->Alert("Unhandled exception", e, AlertType::ALERT_ERROR);
@@ -162,14 +176,4 @@ OpenGLRenderContext* Win32Kernel::GetFreeRenderContext()
 	OpenGLRenderContext* renderContext = mFreeRenderContexts.front();
 	mFreeRenderContexts.pop_front();
 	return renderContext;
-}
-
-IEventDrivenKernel* core::CreateKernel(void* params)
-{
-	return new Win32Kernel();
-}
-
-void core::DestroyKernel(IEventDrivenKernel* kernel)
-{
-	delete kernel;
 }

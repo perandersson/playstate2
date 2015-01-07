@@ -108,9 +108,6 @@
     <Filter Include="Source Files\kernel">
       <UniqueIdentifier>{d9c51e6d-0342-4231-b98a-1a7073a46e60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\kernel\win32">
-      <UniqueIdentifier>{52e30b84-1a6b-41e3-9dcf-9790a891be6e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\integration">
       <UniqueIdentifier>{079235a9-54a3-4004-bc3c-c3440b015b90}</UniqueIdentifier>
     </Filter>
@@ -533,9 +530,6 @@
     <ClInclude Include="..\..\core\kernel\Kernel.h">
       <Filter>Source Files\kernel</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\kernel\win32\Win32Kernel.h">
-      <Filter>Source Files\kernel\win32</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\script\IClassLoader.h">
       <Filter>Source Files\script</Filter>
     </ClInclude>
@@ -812,9 +806,6 @@
     <ClInclude Include="..\..\core\integration\LightSource_script.h">
       <Filter>Source Files\integration</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\kernel\IEventDrivenKernel.h">
-      <Filter>Source Files\kernel</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\camera\Camera.cpp">
@@ -1086,9 +1077,6 @@
     </ClCompile>
     <ClCompile Include="..\..\core\kernel\Kernel.cpp">
       <Filter>Source Files\kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\core\kernel\win32\Win32Kernel.cpp">
-      <Filter>Source Files\kernel\win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\script\ClassLoader.cpp">
       <Filter>Source Files\script</Filter>

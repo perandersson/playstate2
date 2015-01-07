@@ -6,7 +6,7 @@ using namespace core;
 class DemoGame : public StandardGame
 {
 public:
-	DemoGame();
+	DemoGame(IKernel* kernel);
 	virtual ~DemoGame();
 
 	virtual bool Initialize();
@@ -25,3 +25,4 @@ private:
 	DeferredRenderPipeline* mRenderPipeline;
 	Camera* mCamera;
 };
+

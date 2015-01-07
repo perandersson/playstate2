@@ -48,67 +48,60 @@
 #include "../integration/PointLight_script.h"
 #include "../integration/SpotLight_script.h"
 #include "../integration/Resource_script.h"
-
-#include <chrono>
 using namespace core;
-using namespace std::chrono;
 
 
-StandardGame::StandardGame()
-: IGame(), mKernel(nullptr), mRunning(false), mRenderPipeline(nullptr)
+StandardGame::StandardGame(IKernel* kernel)
+: IGame(), mKernel(kernel), mRunning(true), mRenderPipeline(nullptr)
 {
-
+	assert_not_null(kernel);
 }
 
 StandardGame::~StandardGame()
 {
 }
 
-void StandardGame::Start(IEventDrivenKernel* kernel)
+bool StandardGame::Process(float64 dt)
 {
-	assert_not_null(kernel);
-	mKernel = kernel;
-	if (!Initialize()) {
-		Release();
-		return;
-	}
-	mRunning = true;
+	// Make sure we are allowed to access all features of the resource manager
+	IResourceManager* resourceManager = mKernel->GetResourceManager();
+	resourceManager->SetAccessibility(ResourceAccess::ALL);
 
+	// Update delta time
+	GameDeltaTime = (float32)dt;
+	GameTotalTime += dt;
+	
+	// Set the global variables associated to this frame
+	IScriptManager* scriptManager = mKernel->GetScriptManager();
+	scriptManager->SetGlobalVar("GameDeltaTime", GameDeltaTime);
+	scriptManager->SetGlobalVar("GameTotalTime", GameTotalTime);
+
+	// Update the scene
+	mScene.Update();
+
+	// Update other game logic
+	Update();
+
+	// You are only allowed to perform "load" operations on the resource manager during the render phase
+	resourceManager->SetAccessibility(ResourceAccess::LOADING);
+	Render();
+	return mRunning;
+}
+
+void StandardGame::Start()
+{
 	IResourceManager* resourceManager = mKernel->GetResourceManager();
 	resourceManager->SetAccessibility(ResourceAccess::ALL);
 	LoadContent(resourceManager);
-	IScriptManager* scriptManager = mKernel->GetScriptManager();
 
-	high_resolution_clock::time_point prev = high_resolution_clock::now();
-	do
-	{
-		// Move the timer cursor one tick forward
-		high_resolution_clock::time_point now = high_resolution_clock::now();
-		duration<float> time_span = now - prev;
-		prev = now;
-		GameDeltaTime = time_span.count();
-		GameTotalTime += (float64)GameDeltaTime;
-		
-		// Set the global variables associated to this frame
-		scriptManager->SetGlobalVar("GameDeltaTime", GameDeltaTime);
-		scriptManager->SetGlobalVar("GameTotalTime", GameTotalTime);
-
-		resourceManager->SetAccessibility(ResourceAccess::ALL);
-		mScene.Update();
-		Update();
-
-		resourceManager->SetAccessibility(ResourceAccess::LOADING);
-		Render();
-	} while (mRunning && mKernel->ProcessEvents());
-
-	resourceManager->SetAccessibility(ResourceAccess::ALL);
-	UnloadContent(resourceManager);
-	Release();
+	// The game is now running
+	mRunning = true;
 }
 
 void StandardGame::Stop()
 {
-
+	// Stop the game from running
+	mRunning = false;
 }
 
 bool StandardGame::Initialize()
@@ -196,6 +189,11 @@ bool StandardGame::Initialize()
 
 void StandardGame::Release()
 {
+	// Unload resources
+	IResourceManager* resourceManager = mKernel->GetResourceManager();
+	resourceManager->SetAccessibility(ResourceAccess::ALL);
+	UnloadContent(resourceManager);
+
 	// Stop listening for changes made in .lua files if in development mode
 	if (Configuration::ToBool("script.developmentmode", false)) {
 		FileSystem::RemoveFileChangedListener(this);
@@ -208,6 +206,7 @@ void StandardGame::Update()
 
 void StandardGame::Render()
 {
+	// Render the scene with the attached render pipeline
 	mRenderPipeline->Render(mScene, mScene.GetActiveCamera());
 }
 
